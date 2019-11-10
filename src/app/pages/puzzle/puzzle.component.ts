@@ -11,11 +11,11 @@ export class PuzzleComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.newArray = this.randomSort();
+    this.randomSort();
   }
 
   randomSort() {
-    return [1, 2, 3, 4, 5, 6, 7, 8].sort(() => {
+    this.newArray = [1, 2, 3, 4, 5, 6, 7, 8].sort(() => {
       return Math.random() - 0.5;
     });
   }

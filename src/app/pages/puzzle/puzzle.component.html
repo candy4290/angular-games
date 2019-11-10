@@ -1,4 +1,10 @@
 <div class="puzzle">
-  <app-block *ngFor="let item of newArray" cdkDrag>{{item}}</app-block>
+  <app-block cdkDragBoundary=".puzzle" *ngFor="let item of newArray" cdkDrag>{{item}}</app-block>
   <app-block></app-block>
 </div>
+<button mat-button (click)="randomSort()" style="
+position: absolute;
+top: calc(50% + 200px);
+left: 50%;
+transform: translate(-50%, -50%);
+">重新开始</button>
