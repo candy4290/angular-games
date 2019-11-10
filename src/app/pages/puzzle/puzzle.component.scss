@@ -1,0 +1,14 @@
+.puzzle {
+  width: 340px;
+  height: 340px;
+  display: flex;
+  flex-wrap: wrap;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  justify-content: space-between;
+  align-content: space-between;
+  padding: 10px;
+  border: 1px solid #eee;
+}
