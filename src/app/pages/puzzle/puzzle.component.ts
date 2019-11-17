@@ -20,16 +20,16 @@ export class PuzzleComponent implements OnInit, OnDestroy {
   steps = 0;
   emptyIndex = [0, 0];
   newArray2 = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, '']
   ];
+  gameSize = 4; // 游戏盘规模 3*3
+  successMark: string; // 是否成功的标志
   @ViewChild('puzzle', { static: true }) puzzle: HTMLElement;
   private subscription$ = new Subscription();
   constructor() {
   }
 
   ngOnInit() {
+    this.initArray();
     this.randomSort();
     const keyup$ = fromEvent(window, 'keyup').pipe(
       filter((r: any) => (r.keyCode === 37 || r.keyCode === 38 || r.keyCode === 39 || r.keyCode === 40))
@@ -41,6 +41,24 @@ export class PuzzleComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription$.unsubscribe();
+  }
+
+  /**
+   * 初始化游戏盘
+   *
+   * @memberof PuzzleComponent
+   */
+  initArray() {
+    this.newArray2 = new Array(this.gameSize);
+    for (let i = 0; i < this.gameSize; i++) {
+      this.newArray2[i] = new Array(this.gameSize);
+      for (let j = 0; j < this.gameSize; j++) {
+        this.newArray2[i][j] = this.gameSize * i + j + 1;
+      }
+
+    }
+    this.newArray2[this.gameSize - 1][this.gameSize - 1] = '';
+    this.successMark = this.newArray2.join().split(',').join('');
   }
 
   /**
@@ -67,9 +85,9 @@ export class PuzzleComponent implements OnInit, OnDestroy {
     this.refreshCard(tempArr);
     tempArr.forEach((item: any, index: number) => {
       if (!item) {
-        this.emptyIndex = [Math.floor(index / 3), index % 3];
+        this.emptyIndex = [Math.floor(index / this.gameSize), index % this.gameSize];
       }
-      this.newArray2[Math.floor(index / 3)][index % 3] = item;
+      this.newArray2[Math.floor(index / this.gameSize)][index % this.gameSize] = item;
     });
     this.steps = 0;
   }
@@ -83,16 +101,15 @@ export class PuzzleComponent implements OnInit, OnDestroy {
   }
 
   watchBorderDown(e: any) {
-    console.log(e.keyCode);
     switch (e.keyCode) {
       case 38:
         // 上
-        if (this.emptyIndex[0] === 2) {
+        if (this.emptyIndex[0] === this.gameSize - 1) {
           alert('当前位置无法向上移动');
           return;
         }
         // 交互
-        this.newArray2[this.emptyIndex[0]][this.emptyIndex[1]] = this.newArray2[this.emptyIndex[0] + 1][this.emptyIndex[1]]
+        this.newArray2[this.emptyIndex[0]][this.emptyIndex[1]] = this.newArray2[this.emptyIndex[0] + 1][this.emptyIndex[1]];
         this.newArray2[this.emptyIndex[0] + 1][this.emptyIndex[1]] = '';
         this.emptyIndex = [this.emptyIndex[0] + 1, this.emptyIndex[1]];
         this.check();
@@ -110,7 +127,7 @@ export class PuzzleComponent implements OnInit, OnDestroy {
         break;
       case 37:
         // 左
-        if (this.emptyIndex[1] === 2) {
+        if (this.emptyIndex[1] === this.gameSize - 1) {
           alert('当前位置无法向左移动');
           return;
         }
@@ -143,7 +160,7 @@ export class PuzzleComponent implements OnInit, OnDestroy {
 
 
   checkIfSuccess() {
-    return !this.newArray2[2][2] && this.newArray2.join().split(',').join('') === '12345678';
+    return !this.newArray2[this.gameSize - 1][this.gameSize - 1] && this.newArray2.join().split(',').join('') === this.successMark;
   }
 
 }
