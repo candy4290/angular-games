@@ -1,6 +1,8 @@
-<div class="puzzle">
-  <app-block cdkDragBoundary=".puzzle" *ngFor="let item of newArray" cdkDrag>{{item}}</app-block>
-  <app-block></app-block>
+<h1 style="position: absolute;top: 0;left: 50%;transform: translate(-50%);">步数{{steps}}</h1>
+<div class="puzzle" #puzzle>
+  <ng-container *ngFor="let item of newArray2">
+    <app-block *ngFor="let i of item">{{i}}</app-block>
+  </ng-container>
 </div>
 <button mat-button (click)="randomSort()" style="
 position: absolute;
