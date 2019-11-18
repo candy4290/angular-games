@@ -3,7 +3,9 @@ import { Routes, RouterModule } from '@angular/router';
 
 
 const routes: Routes = [
-  {path: '', loadChildren: () => import('./pages/puzzle/puzzle.module').then(mod => mod.PuzzleModule)}
+  {path: 'blockly', loadChildren: () => import('./pages/blockly/blockly.module').then(mod => mod.BlocklyModule)},
+  {path: 'puzzle', loadChildren: () => import('./pages/puzzle/puzzle.module').then(mod => mod.PuzzleModule)},
+  {path: '', redirectTo: 'blockly', pathMatch: 'full'}
 ];
 
 @NgModule({
