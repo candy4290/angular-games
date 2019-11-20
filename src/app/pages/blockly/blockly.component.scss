@@ -1,0 +1,15 @@
+:host ::ng-deep .blockly-wrapper {
+  width: 100%;
+  height: calc(100% - 64px) !important;
+}
+
+
+:host ::ng-deep .blockly, .blocklySvg {
+  position: absolute !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  height: calc(100% - 64px) !important;
+  min-height: calc(100% - 64px) !important;
+  top: 64px;
+}
+

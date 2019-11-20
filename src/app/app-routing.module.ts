@@ -7,7 +7,7 @@ const routes: Routes = [
   {path: 'puzzle', loadChildren: () => import('./pages/puzzle/puzzle.module').then(mod => mod.PuzzleModule)},
   { path: 'blockly-origin', loadChildren: () => import('./pages/blockly-origin/blockly-origin.module')
   .then(m => m.BlocklyOriginModule) },
-  {path: '', redirectTo: 'blockly-origin', pathMatch: 'full'},
+  {path: '', redirectTo: 'blockly', pathMatch: 'full'},
 ];
 
 @NgModule({
