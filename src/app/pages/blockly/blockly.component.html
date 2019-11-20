@@ -1,2 +1,4 @@
 <!-- <div id="blocklyDiv" style="height: 480px; width: 600px;"></div> -->
-<ngx-blockly [config]="config" [generatorConfig]="generatorConfig" (javascriptCode)="onCode($event)" (pythonCode)="onCode($event)"></ngx-blockly>
+<button (click)="save()">保存</button>
+<button (click)="restore()">还原</button>
+<ngx-blockly [config]="config" [customBlocks]="customBlocks" [generatorConfig]="generatorConfig" (javascriptCode)="onCode($event)" (pythonCode)="onCode($event)"></ngx-blockly>
