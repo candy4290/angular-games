@@ -23,6 +23,7 @@
     "@angular/router": "~8.2.13",
     "blockly": "^3.20191014.4",
     "hammerjs": "^2.0.8",
+    "ng-zorro-antd": "^8.5.1",
     "ngx-blockly": "0.0.45",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
