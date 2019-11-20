@@ -7,3 +7,5 @@ export * from './lib/custom-blocks/variable-get-block';
 export * from './lib/custom-blocks/variable-set-block';
 
 export * from './lib/types/blockly-config';
+
+export * from './lib/constants/custome-block';
