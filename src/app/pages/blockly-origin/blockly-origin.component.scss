@@ -1,5 +1,13 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 .blockly-origin-header {
   height: 64px;
   background: #bb9246;
   box-shadow: 4px 4px 4px rgba(0,0,0,.2);
+}
+#blocklyArea {
+  flex: 1;
 }
