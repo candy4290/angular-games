@@ -36,6 +36,17 @@ export class BlocklyOriginComponent implements OnInit,  OnDestroy, AfterViewInit
   @ViewChild('blocklyArea', {static: true}) blocklyArea: ElementRef;
   private subscription$ = new Subscription();
   constructor() {
+    // extension注册到blockly----->鼠标悬浮的提示
+    // Blockly.Extensions.register('parent_tooltip_extension',
+    //   function() {
+    //  // The methods on the mixin object will be added to each block instance, so this may be used to refer to the block.
+    //     const thisBlock = this;
+    //     this.setTooltip(() => {
+    //       const parent = thisBlock.getParent();
+    //       return (parent && parent.getInputsInline() && parent.tooltip) ||
+    //         Blockly.Msg.MATH_NUMBER_TOOLTIP;
+    //   });
+    // });
     this.loadCustomeBlock([CustomeBlocks.jsonBlock,
       // CustomeBlocks.vGet,
       // CustomeBlocks.vSet,

@@ -50,7 +50,7 @@ export class CustomeBlocks {
     colour: 160,
     tooltip: 'Returns number of letters in the provided text.',
     helpUrl: 'http://www.w3schools.com/jsref/jsref_length_string.asp',
-    // extensions: ['length of']
+    // extensions: ['parent_tooltip_extension']
     // mutator: 'length of'
   };
 

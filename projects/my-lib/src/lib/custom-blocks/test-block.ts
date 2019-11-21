@@ -51,7 +51,6 @@ export class TestBlock extends CustomBlock {
       colour: 160,
       tooltip: 'Returns number of letters in the provided text.',
       helpUrl: 'http://www.w3schools.com/jsref/jsref_length_string.asp',
-      // extensions: ['length of']
       // mutator: 'length of'
     };
 

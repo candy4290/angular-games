@@ -60,10 +60,14 @@ export class Toolboxs {
       <block type="math_arithmetic">
         <field name="VAR" id=".n*OKd.u}2UD9QFicbEX" variabletype="Panda">Bai Yun</field>
       </block>
-      <block type="length of"  id=".I+Y4^!yXG]zE70!ywTT" x="10" y="10" deletable="false" movable="false">
+      <block type="length of"  id=".I+Y4^!yXG]zE70!ywTT" x="10" y="10">
         <field name="VALUE">FALSE</field>
       </block>
       <button text="create Panda" callbackKey="createPanda"></button>
+      <block type="math_number_property">
+        <mutation divisor_input="true"></mutation>
+        <field name="PROPERTY">DIVISIBLE_BY</field>
+      </block>
     </category>
   </xml>`
 }

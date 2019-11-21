@@ -44,7 +44,7 @@
               "node_modules/ngx-blockly/scripts/blockly/php_compressed.js",
               "node_modules/ngx-blockly/scripts/blockly/dart_compressed.js",
               "node_modules/ngx-blockly/scripts/blockly/lua_compressed.js",
-              "node_modules/ngx-blockly/scripts/blockly/msg/js/en.js"
+              "node_modules/ngx-blockly/scripts/blockly/msg/js/zh-hans.js"
             ]
           },
           "configurations": {
