@@ -11,3 +11,14 @@
 #blocklyArea {
   flex: 1;
 }
+:host ::ng-deep {
+  .ant-tabs {
+    height: 100%;
+  }
+  .ant-tabs .ant-tabs-top-content, .ant-tabs .ant-tabs-bottom-content {
+    height: 100%;
+  }
+  .ant-tabs.ant-tabs-card .ant-tabs-card-content > .ant-tabs-tabpane, .ant-tabs.ant-tabs-editable-card .ant-tabs-card-content > .ant-tabs-tabpane {
+    height: 100%;
+  }
+}

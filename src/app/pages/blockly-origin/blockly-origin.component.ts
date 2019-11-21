@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
-import { BlocklyConfig, CustomeBlocks } from 'projects/my-lib/src/public-api';
+import { BlocklyConfig, CustomeBlocks, Toolboxs, CxxTheme } from 'projects/my-lib/src/public-api';
 declare let Blockly: any;
 @Component({
   selector: 'app-blockly-origin',
@@ -9,78 +9,14 @@ declare let Blockly: any;
 })
 export class BlocklyOriginComponent implements OnInit,  OnDestroy, AfterViewInit {
   workspace: any; // blockly workspace
+  customizedTheme = new Blockly.Theme(CxxTheme.blockStyles, CxxTheme.categoryStyles);
   blockConfig: BlocklyConfig = {
-    toolbox: `<xml id="toolbox" style="display: none">
-    <category name="Logic" categorystyle="logic_category"></category>
-    <category name="Loops" colour="120"></category>
-    <category name="Math" colour="230"></category>
-    <category name="Colour" colour="20"></category>
-    <category name="Variables" colour="330" custom="VARIABLE"></category>
-    <category name="Functions" colour="290" custom="PROCEDURE"></category>
-    <category name="Colours" colour="80" custom="COLOUR_PALETTE"></category>
-    <category name="Core" expanded="true">
-      <category name="Control">
-        <block type="controls_if"></block>
-        <block type="controls_whileUntil"></block>
-      </category>
-      <category name="Logic">
-        <block type="logic_compare"></block>
-        <block type="logic_operation"></block>
-        <block type="logic_boolean"></block>
-      </category>
-    </category>
-    <category name="Blocks" colour="0">
-      <block type="logic_boolean"></block>
-
-      <block type="math_number">
-        <field name="NUM">42</field>
-      </block>
-
-      <block type="controls_for">
-        <value name="FROM">
-          <block type="math_number">
-            <field name="NUM">1</field>
-          </block>
-        </value>
-        <value name="TO">
-          <block type="math_number">
-            <field name="NUM">10</field>
-          </block>
-        </value>
-        <value name="BY">
-          <block type="math_number">
-            <field name="NUM">1</field>
-          </block>
-        </value>
-      </block>
-
-      <block type="math_arithmetic">
-        <field name="OP">ADD</field>
-        <value name="A">
-          <shadow type="math_number">
-            <field name="NUM">1</field>
-          </shadow>
-        </value>
-        <value name="B">
-          <shadow type="math_number">
-            <field name="NUM">1</field>
-          </shadow>
-        </value>
-      </block>
-
-      <block type="math_arithmetic">
-        <field name="VAR" id=".n*OKd.u}2UD9QFicbEX" variabletype="Panda">Bai Yun</field>
-      </block>
-      <block type="length of"  id=".I+Y4^!yXG]zE70!ywTT" x="10" y="10" deletable="false" movable="false">
-        <field name="VALUE">FALSE</field>
-      </block>
-      <button text="create Panda" callbackKey="createPanda"></button>
-    </category>
-  </xml>`,
+    toolbox: Toolboxs.defaultToolbox,
     scrollbars: true, // 工作区域可滚动
     trashcan: true, // 显示或隐藏垃圾桶
     sounds: true, // 拖动block拼接时的音效
     media: '/assets/blockly/media/', // blockly媒体路径---默认路径访问不到，需要翻墙
+    theme: this.customizedTheme,
     zoom: {
       controls: true,
       wheel: true,
@@ -113,6 +49,13 @@ export class BlocklyOriginComponent implements OnInit,  OnDestroy, AfterViewInit
   }
 
   ngOnInit() {
+  }
+
+  ngOnDestroy() {
+    this.subscription$.unsubscribe();
+  }
+
+  ngAfterViewInit() {
     this.workspace = Blockly.inject('blocklyDiv', this.blockConfig);
     this.workspace.registerButtonCallback('createPanda', (e) => {
       Blockly.Variables.createVariable(e.getTargetWorkspace(), null, 'panda');
@@ -125,13 +68,6 @@ export class BlocklyOriginComponent implements OnInit,  OnDestroy, AfterViewInit
     this.subscription$.add(onResize$);
     this.onResize();
     Blockly.svgResize(this.workspace);
-  }
-
-  ngOnDestroy() {
-    this.subscription$.unsubscribe();
-  }
-
-  ngAfterViewInit() {
   }
 
   /**
@@ -158,8 +94,8 @@ export class BlocklyOriginComponent implements OnInit,  OnDestroy, AfterViewInit
     const xmlList = [];
     if (Blockly.Blocks['colour_picker']) {
       for (const item of colourList) {
-        const blockText = '<block type="colour_picker">' +
-            '<field name="COLOUR">' + item + '</field>' +
+        const blockText = '<block type=colour_picker>' +
+            '<field name=COLOUR>' + item + '</field>' +
             '</block>';
         const block = Blockly.Xml.textToDom(blockText);
         xmlList.push(block);
@@ -196,11 +132,20 @@ export class BlocklyOriginComponent implements OnInit,  OnDestroy, AfterViewInit
    * 从xml复原
    */
   recorver() {
-    const xml = `<xml xmlns="https://developers.google.com/blockly/xml"><block type="length of"  deletable="false" movable="false" x="10" y="330"> <field name="VALUE">FALSE</field>
-    <field name="FIELDNAME">90</field>
-    <field name="xxx">#ff0000</field>
-  </block>
-</xml>`;
+    const xml = `<xml xmlns=https://developers.google.com/blockly/xml>
+    <block type=turtle_basic id=LDFnCO-k#osS|^tM{]6E x=14 y=-20>
+      <field name=TURTLE pattern=Dots hat=Stovepipe>Yertle</field>
+      <comment pinned=false h=80 w=160>Demonstrates a turtle field with no validator.</comment>
+    </block>
+    <block type=turtle_nullifier  x=10 y=120>
+      <field name=TURTLE pattern=Dots hat=Stovepipe>Yertle</field>
+      <comment pinned=false h=80 w=160>Validates combinations of names and hats to null (invalid) if they could be considered infringe-y. This turns the turtle field red. Infringe-y combinations are: (Leonardo, Mask), (Yertle, Crown), and (Franklin, Propeller).</comment>
+    </block>
+    <block type=turtle_changer id=6KD1p3b|kZVG[(,~SWU* x=10 y=230>
+      <field name=TURTLE pattern=Dots hat=Crown>Yertle</field>
+      <comment pinned=false h=80 w=160>Validates the input so that certain names always have specific hats. The name-hat combinations are: (Leonardo, Mask), (Yertle, Crown), (Franklin, Propeller).</comment>
+    </block>
+  </xml>`;
     Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(xml), this.workspace);
   }
 
