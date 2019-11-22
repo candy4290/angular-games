@@ -1,24 +1,23 @@
-import { OnInit, OnDestroy, Component, ViewChild, Inject } from '@angular/core';
+import { OnInit, OnDestroy, Component, ViewChild, Inject, AfterViewInit } from '@angular/core';
 import { NgxBlocklyConfig, NgxBlocklyGeneratorConfig,
-  NgxBlocklyComponent, CustomBlock, NgxToolboxBuilderService,
-  Category, LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY,
-  TEXT_CATEGORY, Separator, LISTS_CATEGORY, COLOUR_CATEGORY,
-  VARIABLES_CATEGORY, FUNCTIONS_CATEGORY } from 'ngx-blockly';
-import { BlocklyService } from './blockly.service';
+  NgxBlocklyComponent, CustomBlock, NgxToolboxBuilderService, Category } from 'ngx-blockly';
+import { BlocklyService, LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY, VARIABLES_CATEGORY } from './blockly.service';
 import { Subscription } from 'rxjs';
-import { TestBlock, PandaSetBlock, PandaGetBlock } from 'projects/my-lib/src/public-api';
+import { TestBlock, PandaSetBlock, PandaGetBlock, CreateVariableButton } from 'projects/my-lib/src/public-api';
 import { DOCUMENT } from '@angular/common';
-
+import { NzMessageService } from 'ng-zorro-antd';
+declare var Blockly: any;
 @Component({
   selector: 'app-blockly',
   templateUrl: './blockly.component.html',
   styleUrls: ['./blockly.component.scss']
 })
-export class BlocklyComponent implements OnInit, OnDestroy {
+export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
+  selectedLanguage = 'zh-hans'; // 当前选择的语言
   public customBlocks: CustomBlock[] = [
-    new TestBlock('length of', null, null),
-    // new PandaSetBlock('panda set', null, null),
-    // new PandaGetBlock('panda get', null, null),
+    new TestBlock('selt_block_and', null, null),
+    new PandaSetBlock('panda set', null, null),
+    new PandaGetBlock('panda get', null, null),
   ]; // 自定义blocks
   @ViewChild(NgxBlocklyComponent, {static: true}) workspace: NgxBlocklyComponent;
   public config: NgxBlocklyConfig = {
@@ -53,18 +52,12 @@ export class BlocklyComponent implements OnInit, OnDestroy {
   private subscription$ = new Subscription();
   constructor(private blockly: BlocklyService,
               private ngxToolboxBuilder: NgxToolboxBuilderService,
+              private messageService: NzMessageService,
               @Inject(DOCUMENT) private doc: Document) {
     this.ngxToolboxBuilder.nodes = [
-      new Category(this.customBlocks, '#FF00FF', 'TestToolbox', null),
+      new Category(this.customBlocks, '#FF00FF', '自定义', null),
       LOGIC_CATEGORY,
-      LOOP_CATEGORY,
-      MATH_CATEGORY,
-      TEXT_CATEGORY,
-      new Separator(), // Add Separator
-      LISTS_CATEGORY,
-      COLOUR_CATEGORY,
-      VARIABLES_CATEGORY,
-      FUNCTIONS_CATEGORY
+      LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY, VARIABLES_CATEGORY
     ];
     this.config.toolbox = this.ngxToolboxBuilder.build();
   }
@@ -72,18 +65,31 @@ export class BlocklyComponent implements OnInit, OnDestroy {
   ngOnInit() {
   }
 
+  ngAfterViewInit() {
+    this.workspace.workspace.registerButtonCallback('createAge', (e) => {
+      Blockly.Variables.createVariable(e.getTargetWorkspace(), null, 'Number'); // 创建一个类型为Number的变量
+    });
+  }
+
   ngOnDestroy() {
     this.subscription$.unsubscribe();
   }
 
+
+  /**
+   * 实时显示当前工作区的代码
+   *
+   */
   onCode(code: string) {
     console.log(code);
   }
 
+  /**
+   * 将当前工作区保存到xml
+   *
+   */
   save() {
-    console.log(this.workspace);
     const xml = this.workspace.toXml();
-    console.log(xml);
     this.exportToXml(xml);
   }
 
@@ -104,5 +110,31 @@ export class BlocklyComponent implements OnInit, OnDestroy {
       this.workspace.fromXml(r);
     });
     this.subscription$.add(getXml$);
+  }
+
+  /**
+   * 切换语言
+   *
+   */
+  changeLanguage(lang: string) {
+    console.log(lang);
+  }
+
+  /**
+   * 导入文件，获取文件流，读取xml文件内容，并加载到workspace中去
+   *
+   */
+  beforeUpload = (file: File) => {
+    const fileReader = new FileReader();
+    if (typeof FileReader === 'undefined') {
+      this.messageService.error('您的浏览器不支持FileReader!');
+    } else {
+      fileReader.readAsText(file);
+      fileReader.onload = () => {
+        this.messageService.success('文件导入成功！');
+        this.workspace.fromXml(`${fileReader.result}`);
+      };
+    }
+    return false;
   }
 }

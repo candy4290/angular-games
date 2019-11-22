@@ -1,19 +1,17 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { BlocklyRoutingModule } from './blockly-routing.module';
 import { BlocklyComponent } from './blockly.component';
-import { NgxBlocklyModule } from 'ngx-blockly';
+import { SharedModule } from 'src/app/share/shared.module';
 
 
 
 @NgModule({
   declarations: [
-    BlocklyComponent
+    BlocklyComponent,
   ],
   imports: [
-    CommonModule,
+    SharedModule,
     BlocklyRoutingModule,
-    NgxBlocklyModule
   ]
 })
 export class BlocklyModule { }

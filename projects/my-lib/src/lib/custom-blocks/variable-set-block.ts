@@ -11,21 +11,17 @@ export class PandaSetBlock extends CustomBlock {
           type: 'field_variable',
           name: 'VAR',
           variable: '%{BKY_VARIABLES_DEFAULT_NAME}',
-          variableTypes: ['Panda']    // Specifies what types to put in the dropdown
+          variableTypes: ['Panda'],
+          defaultType: 'Panda'
         },
         {
           type: 'input_value',
           name: 'VALUE',
-          check: 'Panda'
+          check: 'Panda'    // Checks that the input value is of type 'Panda'
         }
       ],
-      previousStatement: null, // 前面的连接块-不可与output一起使用, 连接到statement
-      nextStatement: null, // 后面的连接块
-      colour: 160,
-      tooltip: 'Returns number of letters in the provided text.',
-      helpUrl: 'http://www.w3schools.com/jsref/jsref_length_string.asp',
-      // extensions: ['length of']
-      // mutator: 'length of'
+      previousStatement: null,
+      nextStatement: null,
     };
 
     constructor(type: string, block: any, blockMutator: BlockMutator, ...args: any[]) {
@@ -35,12 +31,6 @@ export class PandaSetBlock extends CustomBlock {
 
     defineBlock() {
       this.block.jsonInit(this.jsonBlock);
-      // this.block.appendValueInput('VALUE')
-      //     .appendField(this.type);
-      // this.block.setOutput(true, 'Number');
-      // this.block.setColour(30);
-      // this.block.setTooltip('hhd');
-      // this.block.setHelpUrl('http://www.w3schools.com/jsref/jsref_length_string.asp');
     }
 
     toXML() {

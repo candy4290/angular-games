@@ -1,4 +1,9 @@
-<!-- <div id="blocklyDiv" style="height: 480px; width: 600px;"></div> -->
-<button (click)="save()">保存</button>
-<button (click)="restore()">还原</button>
-<ngx-blockly [config]="config" [customBlocks]="customBlocks" [generatorConfig]="generatorConfig" (javascriptCode)="onCode($event)" (pythonCode)="onCode($event)"></ngx-blockly>
+<button nz-button nzType="default" (click)="save()">导出</button>
+<nz-upload [nzBeforeUpload]="beforeUpload" nzAccept=".xml">
+  <button nz-button><i nz-icon nzType="upload"></i><span>导入</span></button>
+</nz-upload>
+<nz-select style="position: absolute;top: 0;right: 24px;" [(ngModel)]="selectedLanguage" (ngModelChange)="changeLanguage($event)" nzPlaceHolder="请选择语言">
+  <nz-option nzValue="zh-hans" nzLabel="中文"></nz-option>
+  <nz-option nzValue="en" nzLabel="英文"></nz-option>
+</nz-select>
+<ngx-blockly [config]="config" [customBlocks]="customBlocks" [generatorConfig]="generatorConfig" (javascriptCode)="onCode($event)"></ngx-blockly>
