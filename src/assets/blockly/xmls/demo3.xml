@@ -1,0 +1,35 @@
+<xml xmlns="https://developers.google.com/blockly/xml">
+  <block type="selt_block_and" id="l@h#lK-HbC.Lcd)3-Zk[" x="10" y="10">
+    <field name="NAME">and</field>
+    <value name="NAME1">
+      <block type="logic_compare" id="F0pPn-PLKF]vbMx`tJZH">
+        <field name="OP">EQ</field>
+        <value name="A">
+          <block type="math_number" id="]F[af2CwW4YbChqY|p^3">
+            <field name="NUM">0</field>
+          </block>
+        </value>
+        <value name="B">
+          <block type="math_number" id="fx5ZBKz5zFo0z+F/YaM^">
+            <field name="NUM">0</field>
+          </block>
+        </value>
+      </block>
+    </value>
+    <value name="NAME2">
+      <block type="logic_compare" id="CI:t]=E21F;=$r;eU0$Z">
+        <field name="OP">EQ</field>
+        <value name="A">
+          <block type="math_number" id="#JcU$s5wnnDtEPSVy}=e">
+            <field name="NUM">0</field>
+          </block>
+        </value>
+        <value name="B">
+          <block type="math_number" id="U}wc$y}dw|v,Excm[j:-">
+            <field name="NUM">0</field>
+          </block>
+        </value>
+      </block>
+    </value>
+  </block>
+</xml>

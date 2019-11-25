@@ -3,7 +3,6 @@
   height: calc(100% - 64px) !important;
 }
 
-
 :host ::ng-deep .blockly, .blocklySvg {
   position: absolute !important;
   width: 100% !important;
@@ -13,3 +12,20 @@
   top: 64px;
 }
 
+.app-blockly-start {
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 48px;
+  right: 48px;
+  i {
+    font-size: 24px;
+  }
+}
+
+:host ::ng-deep {
+  .ant-tabs {
+    height: calc(100% - 32px);
+  }
+}

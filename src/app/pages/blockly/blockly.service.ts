@@ -91,7 +91,7 @@ export class BlocklyService {
    *
    */
   getXml(path?: string) {
-    return this.http.get(path || 'assets/blockly/xmls/demo1.xml', {
+    return this.http.get(path || 'assets/blockly/xmls/demo3.xml', {
       responseType: 'text'
     });
   }

@@ -13,6 +13,8 @@ declare var Blockly: any;
   styleUrls: ['./blockly.component.scss']
 })
 export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
+  jsCode: string;
+  xml: string;
   selectedLanguage = 'zh-hans'; // 当前选择的语言
   public customBlocks: CustomBlock[] = [
     new TestBlock('selt_block_and', null, null),
@@ -81,7 +83,8 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
    *
    */
   onCode(code: string) {
-    console.log(code);
+    this.jsCode = code;
+    this.xml = this.workspace.toXml()
   }
 
   /**
@@ -102,14 +105,6 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     a.remove();
 
     window.URL.revokeObjectURL(a.href);
-  }
-
-  restore() {
-    const getXml$ = this.blockly.getXml().subscribe(r => {
-      console.log(r);
-      this.workspace.fromXml(r);
-    });
-    this.subscription$.add(getXml$);
   }
 
   /**
@@ -136,5 +131,13 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
       };
     }
     return false;
+  }
+
+  /**
+   * 执行
+   */
+  executeProgram() {
+    // tslint:disable-next-line: no-eval
+    eval(this.jsCode);
   }
 }

@@ -24,10 +24,14 @@
           <block type="variables_set" id="j/_@4e7A!D;dNhs;^6|A">
             <field name="VAR" id="vsEM25z?N!z|l8qVzWr(">target</field>
             <value name="VALUE">
-              <block type="math_round" id="(Uo;H/XkEI]ja|PTnYC]">
-                <field name="OP">ROUND</field>
-                <value name="NUM">
-                  <block type="math_number" id="C%i~ZsE(E;S2ED|ou9pB">
+              <block type="math_random_int" id="SgU4y_8};,7^(Ar@3OSk">
+                <value name="FROM">
+                  <block type="math_number" id="R)0x-L]^vJo5#t@JV2bn">
+                    <field name="NUM">1</field>
+                  </block>
+                </value>
+                <value name="TO">
+                  <block type="math_number" id="VW#xroXEv5Fek`3%monr">
                     <field name="NUM">30</field>
                   </block>
                 </value>

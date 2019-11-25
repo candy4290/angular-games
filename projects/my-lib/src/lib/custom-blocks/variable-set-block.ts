@@ -38,12 +38,9 @@ export class PandaSetBlock extends CustomBlock {
     }
 
     toJavaScriptCode(e: any) {
-      console.log(this.block.getFieldValue('END'));
-      console.log(this.args);
       return '打死你';
     }
 
     onChange(changeEvent: any) {
-        console.log(changeEvent);
     }
 }

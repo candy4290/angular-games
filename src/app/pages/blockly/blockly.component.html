@@ -6,4 +6,21 @@
   <nz-option nzValue="zh-hans" nzLabel="中文"></nz-option>
   <nz-option nzValue="en" nzLabel="英文"></nz-option>
 </nz-select>
-<ngx-blockly [config]="config" [customBlocks]="customBlocks" [generatorConfig]="generatorConfig" (javascriptCode)="onCode($event)"></ngx-blockly>
+<nz-tabset [nzTabPosition]="'top'" [nzType]="'card'">
+  <nz-tab nzTitle="blocks">
+      <ngx-blockly [config]="config" [customBlocks]="customBlocks" [generatorConfig]="generatorConfig" (javascriptCode)="onCode($event)"></ngx-blockly>
+    </nz-tab>
+  <nz-tab nzTitle="js">
+  <pre>
+{{jsCode}}
+  </pre>
+  <button class="app-blockly-start" nz-button  nzType="primary" (click)="executeProgram()">
+    <i nz-icon nzType="play-circle" nzTheme="outline"></i>
+  </button>
+  </nz-tab>
+  <nz-tab nzTitle="xml">
+    <pre>
+{{xml}}
+    </pre>
+  </nz-tab>
+</nz-tabset>
