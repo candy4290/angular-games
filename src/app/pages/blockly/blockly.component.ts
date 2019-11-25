@@ -6,6 +6,9 @@ import { Subscription } from 'rxjs';
 import { TestBlock, PandaSetBlock, PandaGetBlock, CreateVariableButton } from 'projects/my-lib/src/public-api';
 import { DOCUMENT } from '@angular/common';
 import { NzMessageService } from 'ng-zorro-antd';
+import { BlocklySelfAddMutator } from 'projects/my-lib/src/lib/block-mutators/blockly-self-add-mutator';
+import { BooeanBlock } from 'projects/my-lib/src/lib/custom-blocks/boolean-block';
+import { MutatorBlock } from 'projects/my-lib/src/lib/custom-blocks/mutator-block';
 declare var Blockly: any;
 @Component({
   selector: 'app-blockly',
@@ -17,7 +20,9 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   xml: string;
   selectedLanguage = 'zh-hans'; // 当前选择的语言
   public customBlocks: CustomBlock[] = [
-    new TestBlock('selt_block_and', null, null),
+    new BooeanBlock('block_self_boolean', null, null),
+    new MutatorBlock('block_self_mutator', null, null),
+    new TestBlock('block_self_add', null, new BlocklySelfAddMutator('blockly_self_add_mutator')),
     new PandaSetBlock('panda set', null, null),
     new PandaGetBlock('panda get', null, null),
   ]; // 自定义blocks

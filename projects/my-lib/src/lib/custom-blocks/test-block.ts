@@ -48,13 +48,8 @@ export class TestBlock extends CustomBlock {
 
     defineBlock() {
       this.block.jsonInit(this.jsonBlock);
-      Blockly.BlockSvg.START_HAT = true;
-      // this.block.appendValueInput('VALUE')
-      //     .appendField(this.type);
-      // this.block.setOutput(true, 'Number');
-      // this.block.setColour(30);
-      // this.block.setTooltip('hhd');
-      // this.block.setHelpUrl('http://www.w3schools.com/jsref/jsref_length_string.asp');
+      this.block.setMutator(new Blockly.Mutator(['block_self_boolean']));
+      // Blockly.BlockSvg.START_HAT = true;
     }
 
     toXML() {
