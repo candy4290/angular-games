@@ -3,11 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Category, XmlBlock } from 'ngx-blockly';
 
 export const LOGIC_CATEGORY: Category = new Category([
+  new XmlBlock('controls_if'),
   new XmlBlock('logic_compare'),
   new XmlBlock('logic_operation'),
   new XmlBlock('logic_negate'),
   new XmlBlock('logic_boolean'),
   new XmlBlock('logic_null'),
+  new XmlBlock('logic_ternary'),
 ], '%{BKY_LOGIC_HUE}', '逻辑', null );
 
 export const LOOP_CATEGORY: Category = new Category([
