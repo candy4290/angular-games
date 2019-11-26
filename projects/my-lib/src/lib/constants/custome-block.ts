@@ -1,6 +1,66 @@
 declare let Blockly: any;
 Blockly.Msg['VARIABLES_SELF_CXX'] = 'cxx%1';
 export class CustomeBlocks {
+  static andOr = {
+    type: 'block_self_add',
+      message0: '%1 %2 %3',
+      args0: [
+        {
+          type: 'field_dropdown',
+          name: 'NAME',
+          options: [
+            [
+              '且',
+              '&&'
+            ],
+            [
+              '或',
+              '||'
+            ]
+          ]
+        },
+        {
+          type: 'input_value',
+          name: 'NAME1',
+          check: 'Boolean'
+        },
+        {
+          type: 'input_value',
+          name: 'NAME2',
+          check: 'Boolean'
+        }
+      ],
+      mutator: 'blockly_self_add_mutator',
+      inputsInline: false,
+      output: 'Boolean',
+      colour: 230,
+      tooltip: '',
+      helpUrl: ''
+  };
+
+  static booleanB = {
+    type: 'block_self_boolean',
+    message0: '布尔值',
+    inputsInline: false,
+    previousStatement: null,
+    nextStatement: null,
+    colour: 230,
+  }
+
+  static blockSelfMutator = {
+    type: 'block_self_mutator',
+    message0: '%1',
+    args0: [
+      {
+        type: 'input_statement',
+        name: 'NAME',
+        check: 'Boolean'
+      }
+    ],
+    colour: 230,
+    tooltip: '',
+  };
+
   static jsonBlock = {
     type: 'length of',
     // message0: '%{BKY_VARIABLES_SELF_CXX}', // %1指的是第一个参数

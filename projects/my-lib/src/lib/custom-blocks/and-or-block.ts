@@ -23,11 +23,13 @@ export class TestBlock extends CustomBlock {
         },
         {
           type: 'input_value',
-          name: 'NAME1'
+          name: 'NAME1',
+          check: 'Boolean'
         },
         {
           type: 'input_value',
-          name: 'NAME2'
+          name: 'NAME2',
+          check: 'Boolean'
         }
       ],
       mutator: 'blockly_self_add_mutator',

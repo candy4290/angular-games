@@ -1,51 +1,126 @@
 <xml xmlns="https://developers.google.com/blockly/xml">
-  <block type="block_self_add" id="GnMz2y:)$vI`P-H}VcPR" x="470" y="130">
-    <mutation xmlns="http://www.w3.org/1999/xhtml" items="3"></mutation>
-    <field name="NAME">or</field>
-    <value name="NAME1">
-      <block type="logic_compare" id="mp;B?}pV%({t,xjnGnP4">
-        <field name="OP">EQ</field>
-        <value name="A">
-          <block type="math_number" id="%D7Y}Z:$r:j%evJGu#5k">
-            <field name="NUM">0</field>
+  <variables>
+    <variable id="Hiw1Cr%=AIhTY}M38=0q">age</variable>
+    <variable id="iPE.ROtaLSrUqtiZxHWf">sex</variable>
+    <variable id="*(1^B%|%D!(L24fT2aLO">criminalRecord</variable>
+  </variables>
+  <block type="controls_if" id=";pRgRdNpTaiAC/w,|0Vz" x="190" y="-50">
+    <value name="IF0">
+      <block type="block_self_add" id="}+1KSkD`bH!2lnQ~0Q6/">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+        <field name="NAME">||</field>
+        <value name="NAME1">
+          <block type="block_self_add" id="GnMz2y:)$vI`P-H}VcPR">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="3"></mutation>
+            <field name="NAME">&amp;&amp;</field>
+            <value name="NAME1">
+              <block type="logic_compare" id="mp;B?}pV%({t,xjnGnP4">
+                <field name="OP">GT</field>
+                <value name="A">
+                  <block type="variables_get" id="%lE[TLEQ.hE)xx@}:w?H">
+                    <field name="VAR" id="Hiw1Cr%=AIhTY}M38=0q">age</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="math_number" id="):zn_?6){6CU(*nMQn-q">
+                    <field name="NUM">18</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="NAME2">
+              <block type="logic_compare" id="aM$XM4!RvrT/*{+Nj@f:">
+                <field name="OP">EQ</field>
+                <value name="A">
+                  <block type="variables_get" id="oq~U+7+ojTIAuf(~Qr#n">
+                    <field name="VAR" id="iPE.ROtaLSrUqtiZxHWf">sex</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="text" id="-onafA@i:DoqsL56?o[U">
+                    <field name="TEXT">男</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="NAME3">
+              <block type="logic_compare" id="z#}#4uaSQA)!Svb60#Cw">
+                <field name="OP">GT</field>
+                <value name="A">
+                  <block type="variables_get" id="v{J+tIIsP/:)76VDDWWS">
+                    <field name="VAR" id="*(1^B%|%D!(L24fT2aLO">criminalRecord</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="math_number" id="x]5wroZI7`dH_+6/I|/t">
+                    <field name="NUM">5</field>
+                  </block>
+                </value>
+              </block>
+            </value>
           </block>
         </value>
-        <value name="B">
-          <block type="math_number" id="):zn_?6){6CU(*nMQn-q">
-            <field name="NUM">0</field>
+        <value name="NAME2">
+          <block type="block_self_add" id="6XwmFD-AIvevS/WOrkPg">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="3"></mutation>
+            <field name="NAME">&amp;&amp;</field>
+            <value name="NAME1">
+              <block type="logic_compare" id="WX[Qn]WRxYmGvDO:KG)q">
+                <field name="OP">GT</field>
+                <value name="A">
+                  <block type="variables_get" id=")V$zNaFp`^w!}ni5-?hH">
+                    <field name="VAR" id="Hiw1Cr%=AIhTY}M38=0q">age</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="math_number" id="m-7h+N]%,rE!UOEQMU2s">
+                    <field name="NUM">28</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="NAME2">
+              <block type="logic_compare" id="Sw$t=RB{=,~#HJ=ao-pw">
+                <field name="OP">EQ</field>
+                <value name="A">
+                  <block type="variables_get" id="O$Xr*.S)s90_[=r}%NM=">
+                    <field name="VAR" id="iPE.ROtaLSrUqtiZxHWf">sex</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="text" id="K$nVGB3Z1Hjrn=?UA52*">
+                    <field name="TEXT">女</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="NAME3">
+              <block type="logic_compare" id="0~JbnKOQnrx|gG_v{LE6">
+                <field name="OP">GT</field>
+                <value name="A">
+                  <block type="variables_get" id="=cu0]A;Vw/LKT3g)-lYB">
+                    <field name="VAR" id="*(1^B%|%D!(L24fT2aLO">criminalRecord</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="math_number" id="CZg}8iI(z?h@)AX8zk+J">
+                    <field name="NUM">2</field>
+                  </block>
+                </value>
+              </block>
+            </value>
           </block>
         </value>
       </block>
     </value>
-    <value name="NAME2">
-      <block type="logic_compare" id="aM$XM4!RvrT/*{+Nj@f:">
-        <field name="OP">EQ</field>
-        <value name="A">
-          <block type="math_number" id="a!vzWKmO~gQTA,Dc$/gj">
-            <field name="NUM">0</field>
-          </block>
-        </value>
-        <value name="B">
-          <block type="math_number" id="+Z[p~EhnRIWLim]$mu,5">
-            <field name="NUM">0</field>
+    <statement name="DO0">
+      <block type="text_print" id="J/KdKs#j)@^6(S^vPtKb">
+        <value name="TEXT">
+          <block type="text" id="DIG,Bzc9}iZ*hI{pGFi9">
+            <field name="TEXT">可疑人员</field>
           </block>
         </value>
       </block>
-    </value>
-    <value name="NAME3">
-      <block type="logic_compare" id="z#}#4uaSQA)!Svb60#Cw">
-        <field name="OP">EQ</field>
-        <value name="A">
-          <block type="math_number" id="-sQ+.Mcb590:ZgAHm.+H">
-            <field name="NUM">0</field>
-          </block>
-        </value>
-        <value name="B">
-          <block type="math_number" id="x]5wroZI7`dH_+6/I|/t">
-            <field name="NUM">0</field>
-          </block>
-        </value>
-      </block>
-    </value>
+    </statement>
   </block>
 </xml>

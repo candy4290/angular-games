@@ -48,6 +48,9 @@ export class BlocklyOriginComponent implements OnInit,  OnDestroy, AfterViewInit
     //   });
     // });
     this.loadCustomeBlock([CustomeBlocks.jsonBlock,
+      CustomeBlocks.booleanB,
+      CustomeBlocks.andOr,
+      CustomeBlocks.blockSelfMutator
       // CustomeBlocks.vGet,
       // CustomeBlocks.vSet,
       // CustomeBlocks.pG, CustomeBlocks.pS
@@ -73,6 +76,102 @@ export class BlocklyOriginComponent implements OnInit,  OnDestroy, AfterViewInit
     });
     this.workspace.registerToolboxCategoryCallback('COLOUR_PALETTE', () => this.coloursFlyoutCallback());
     window.addEventListener('resize', onresize, false);
+    Blockly.Extensions.registerMutator('blockly_self_add_mutator', {
+      /**
+       * 生成xml时调用此方法
+       */
+      mutationToDom() {
+        console.log('++++');
+        const container = document.createElement('mutation');
+        container.setAttribute('items', this.itemCount_);
+        return container;
+      },
+
+      /**
+       * 从xml复原时调用此方法
+       */
+      domToMutation(xml: any) {
+        this.itemCount_ = parseInt(xml.getAttribute('items'), 10);
+        this.updateShape();
+      },
+
+      /**
+       * 更新source block的形状
+       */
+      updateShape() {
+        let i = 1;
+        for (i; i <= this.itemCount_; i++) {
+          if (!this.getInput(`NAME${i}`)) {
+            const input = this.appendValueInput(`NAME${i}`);
+            if (i === 1) {
+              input.appendField(new Blockly.FieldDropdown([['and', '&&'], ['or', '||']]), 'NAME');
+            }
+          }
+        }
+        while (this.getInput(`NAME${i}`)) {
+          this.removeInput(`NAME${i}`);
+          i++;
+        }
+      },
+
+      /**
+       * 打开mutator对话框时调用 --- 根据当前source block的值输入数量，来创建block_self_mutator的数量
+       */
+      decompose(workspace: any) {
+        const containerBlock = workspace.newBlock('block_self_mutator');
+        containerBlock.initSvg();
+        let connection = containerBlock.getInput('NAME').connection;
+        for (let i = 1; i <= this.itemCount_; i++) {
+          const temp = workspace.newBlock('block_self_boolean');
+          connection.connect(temp.previousConnection);
+          temp.initSvg();
+          connection = temp.nextConnection;
+        }
+        return containerBlock;
+      },
+
+      /**
+       * 当一个mutator对话框保存其内容，被调用，来按照新的设置修改原来的block
+       * 'block_self_boolean'
+       */
+      compose(topBlock: any) {
+        let itemBlock = topBlock.getInputTargetBlock('NAME'); // 获取到'NAME'输入（仅有一个输入）
+        const connections = []; // 当前mutator中‘block_self_boolean’的数量
+        while (itemBlock) {
+          connections.push(itemBlock.valueConnection_);
+          itemBlock = itemBlock.nextConnection && itemBlock.nextConnection.targetBlock();
+        }
+        // Disconnect any children that don't belong.
+        for (let i = 1; i <= this.itemCount_; i++) {
+          const connection = this.getInput(`NAME${i}`).connection.targetConnection;
+          if (connection && connections.indexOf(connection) === -1) {
+            connection.disconnect();
+          }
+        }
+        this.itemCount_ = connections.length;
+        this.updateShape();
+        for (let i = 1; i <= this.itemCount_; i ++) {
+          Blockly.Mutator.reconnect(connections[i - 1], this, `NAME${i}`);
+        }
+      },
+
+      /**
+       * Store pointers to any connected child blocks. 在compose前调用
+       * 'block_self_mutator'
+       */
+      saveConnections(containerBlock: any) {
+        console.log('----');
+        console.log(this);
+        let itemBlock = containerBlock.getInputTargetBlock('NAME');
+        let i = 1;
+        while (itemBlock) {
+          const input = this.getInput('NAME' + i);
+          itemBlock.valueConnection_ = input && input.connection.targetConnection;
+          i++;
+          itemBlock = itemBlock.nextConnection && itemBlock.nextConnection.targetBlock();
+        }
+      }
+    });
     const onResize$ = fromEvent(window, 'resize').subscribe(() => {
       this.onResize(this.workspace);
     });

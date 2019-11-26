@@ -24,8 +24,8 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     new BooeanBlock('block_self_boolean', null, null),
     new MutatorBlock('block_self_mutator', null, null),
     new TestBlock('block_self_add', null, new BlocklySelfAddMutator('blockly_self_add_mutator')),
-    new PandaSetBlock('panda set', null, null),
-    new PandaGetBlock('panda get', null, null),
+    // new PandaSetBlock('panda set', null, null),
+    // new PandaGetBlock('panda get', null, null),
   ]; // 自定义blocks
   @ViewChild(NgxBlocklyComponent, {static: true}) workspace: NgxBlocklyComponent;
   public config: NgxBlocklyConfig = {
