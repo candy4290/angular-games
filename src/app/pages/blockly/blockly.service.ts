@@ -95,4 +95,8 @@ export class BlocklyService {
       responseType: 'text'
     });
   }
+
+  jsToContent(code: string) {
+
+  }
 }

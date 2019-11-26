@@ -4,17 +4,17 @@ declare var Blockly: any;
 
 export class MutatorBlock extends CustomBlock {
   jsonBlock = {
-    "type": "block_self_mutator",
-    "message0": "%1",
-    "args0": [
+    type: 'block_self_mutator',
+    message0: '%1',
+    args0: [
       {
-        "type": "input_statement",
-        "name": "NAME",
-        "check": "Boolean"
+        type: 'input_statement',
+        name: 'NAME',
+        check: 'Boolean'
       }
     ],
-    "colour": 230,
-    "tooltip": "",
+    colour: 230,
+    tooltip: '',
   };
 
   constructor(type: string, block: any, blockMutator: BlockMutator, ...args: any[]) {

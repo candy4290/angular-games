@@ -1,7 +1,6 @@
 import { BlockMutator } from 'ngx-blockly';
-declare const Blockly: any;
 export class BlocklySelfAddMutator extends BlockMutator {
-  inputListLength = 2;
+  inputListLength = 2; // source block的输入数量（不包括下拉列表）
   block: any;
   constructor(name: string) {
     super(name);
@@ -11,35 +10,40 @@ export class BlocklySelfAddMutator extends BlockMutator {
    * 生成xml时调用此方法
    */
   mutationToDom(e: any) {
-    console.log('mutationToDom');
     this.block = e;
-    this.inputListLength =   this.block.inputList.length - 1;
+    this.inputListLength =   this.block.inputList.length;
     const container = document.createElement('mutation');
-    const relationShip = this.block.getFieldValue('NAME');
-    // var divisorInput = (this.getFieldValue('PROPERTY') == 'DIVISIBLE_BY');
-    container.setAttribute('divisor_input', relationShip);
+    container.setAttribute('items', `${this.inputListLength}`);
     return container;
   }
 
   /**
    * 从xml复原时调用此方法
    */
-  domToMutation(xml: any) {
-    console.log('domToMutation' + xml);
-    this.updateShape();  // Helper function for adding/removing 2nd input
+  domToMutation(xml: any, e: any) {
+    this.block = e;
+    this.updateShape(+xml.getAttribute('items'), this.inputListLength);
   }
 
-  updateShape() {
-
+  updateShape(exceptedLength: number, currentLength: number) {
+    if (exceptedLength > currentLength) {
+      // 增加source block的输入
+      for (let i = 1; i <= exceptedLength - currentLength; i++) {
+        this.block.appendValueInput(`NAME${currentLength + i}`);
+      }
+    } else if  (exceptedLength < currentLength) {
+      // 删除source block的输入
+      for (let i = 0; i < currentLength - exceptedLength; i++) {
+        this.block.removeInput(`NAME${currentLength - i}`);
+      }
+    }
   }
- // 打开mutator对话框时调用
+ // 打开mutator对话框时调用 --- 根据当前source block的值输入数量，来创建block_self_mutator的数量
   decompose(workspace: any) {
-    console.log('decompose');
-    console.log(this.block);
     const containerBlock = workspace.newBlock('block_self_mutator');
     containerBlock.initSvg();
-    let connection = containerBlock.inputList[0].connection;
-    this.inputListLength =   this.block.inputList.length - 1;
+    let connection = containerBlock.getInput('NAME').connection;
+    this.inputListLength =   this.block.inputList.length;
     for (let i = 1; i <= this.inputListLength; i++) {
       const temp = workspace.newBlock('block_self_boolean');
       connection.connect(temp.previousConnection);
@@ -50,13 +54,13 @@ export class BlocklySelfAddMutator extends BlockMutator {
   }
  // 当一个mutator对话框保存其内容，被调用，来按照新的设置修改原来的block
   compose(topBlock: any) {
-    console.log();
-    let block = topBlock.getInputTargetBlock('NAME');
-    const connections = [];
+    let block = topBlock.getInputTargetBlock('NAME'); // 获取到'NAME'输入（仅有一个输入）
+    const connections = []; // 当前mutator中‘block_self_boolean’的数量
     while (block) {
-      block = block.getInputTargetBlock('NAME');
       connections.push(block);
+      block = block.getNextBlock();
     }
+    this.updateShape(connections.length, this.inputListLength);
   }
 
 }

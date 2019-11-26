@@ -4,41 +4,38 @@ declare var Blockly: any;
 
 export class TestBlock extends CustomBlock {
     jsonBlock ={
-      "type": "block_self_add",
-      "message0": "%1 %2 %3 %4",
-      "args0": [
+      type: 'block_self_add',
+      message0: '%1 %2 %3',
+      args0: [
         {
-          "type": "input_value",
-          "name": "NAME1"
-        },
-        {
-          "type": "field_dropdown",
-          "name": "NAME",
-          "options": [
+          type: 'field_dropdown',
+          name: 'NAME',
+          options: [
             [
-              "且",
-              "and"
+              '且',
+              '&&'
             ],
             [
-              "或",
-              "or"
+              '或',
+              '||'
             ]
           ]
         },
         {
-          "type": "input_dummy"
+          type: 'input_value',
+          name: 'NAME1'
         },
         {
-          "type": "input_value",
-          "name": "NAME2"
+          type: 'input_value',
+          name: 'NAME2'
         }
       ],
       mutator: 'blockly_self_add_mutator',
-      "inputsInline": false,
-      "output": "Boolean",
-      "colour": 230,
-      "tooltip": "",
-      "helpUrl": ""
+      inputsInline: false,
+      output: 'Boolean',
+      colour: 230,
+      tooltip: '',
+      helpUrl: ''
     };
 
     constructor(type: string, block: any, blockMutator: BlockMutator, ...args: any[]) {
@@ -57,13 +54,17 @@ export class TestBlock extends CustomBlock {
     }
 
     toJavaScriptCode(e: any) {
-      const valueName1 = Blockly.JavaScript.valueToCode(e, 'NAME1', Blockly.JavaScript.ORDER_ATOMIC);
+      const inputList = this.block.inputList;
       const dropdownName = e.getFieldValue('NAME');
-      const valueName2 = Blockly.JavaScript.valueToCode(e, 'NAME2', Blockly.JavaScript.ORDER_ATOMIC);
-      const temp = valueName1 + dropdownName +  valueName2;
-      // TODO: Assemble JavaScript into code variable.
-      const code = temp;
-      console.log(code);
+      let code = '';
+      for (let i = 1; i <= inputList.length; i++) {
+        const temp = Blockly.JavaScript.valueToCode(e, `NAME${i}`, Blockly.JavaScript.ORDER_ATOMIC);
+        if (i < inputList.length) {
+          code +=  (temp + dropdownName);
+        } else {
+          code += temp;
+        }
+      }
       // TODO: Change ORDER_NONE to the correct strength.
       return [code, Blockly.JavaScript.ORDER_NONE];
     }

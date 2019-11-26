@@ -1,31 +1,47 @@
 <xml xmlns="https://developers.google.com/blockly/xml">
-  <block type="selt_block_and" id="l@h#lK-HbC.Lcd)3-Zk[" x="10" y="10">
-    <field name="NAME">and</field>
+  <block type="block_self_add" id="GnMz2y:)$vI`P-H}VcPR" x="470" y="130">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" items="3"></mutation>
+    <field name="NAME">or</field>
     <value name="NAME1">
-      <block type="logic_compare" id="F0pPn-PLKF]vbMx`tJZH">
+      <block type="logic_compare" id="mp;B?}pV%({t,xjnGnP4">
         <field name="OP">EQ</field>
         <value name="A">
-          <block type="math_number" id="]F[af2CwW4YbChqY|p^3">
+          <block type="math_number" id="%D7Y}Z:$r:j%evJGu#5k">
             <field name="NUM">0</field>
           </block>
         </value>
         <value name="B">
-          <block type="math_number" id="fx5ZBKz5zFo0z+F/YaM^">
+          <block type="math_number" id="):zn_?6){6CU(*nMQn-q">
             <field name="NUM">0</field>
           </block>
         </value>
       </block>
     </value>
     <value name="NAME2">
-      <block type="logic_compare" id="CI:t]=E21F;=$r;eU0$Z">
+      <block type="logic_compare" id="aM$XM4!RvrT/*{+Nj@f:">
         <field name="OP">EQ</field>
         <value name="A">
-          <block type="math_number" id="#JcU$s5wnnDtEPSVy}=e">
+          <block type="math_number" id="a!vzWKmO~gQTA,Dc$/gj">
             <field name="NUM">0</field>
           </block>
         </value>
         <value name="B">
-          <block type="math_number" id="U}wc$y}dw|v,Excm[j:-">
+          <block type="math_number" id="+Z[p~EhnRIWLim]$mu,5">
+            <field name="NUM">0</field>
+          </block>
+        </value>
+      </block>
+    </value>
+    <value name="NAME3">
+      <block type="logic_compare" id="z#}#4uaSQA)!Svb60#Cw">
+        <field name="OP">EQ</field>
+        <value name="A">
+          <block type="math_number" id="-sQ+.Mcb590:ZgAHm.+H">
+            <field name="NUM">0</field>
+          </block>
+        </value>
+        <value name="B">
+          <block type="math_number" id="x]5wroZI7`dH_+6/I|/t">
             <field name="NUM">0</field>
           </block>
         </value>

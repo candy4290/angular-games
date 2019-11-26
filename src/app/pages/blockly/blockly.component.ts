@@ -16,6 +16,7 @@ declare var Blockly: any;
   styleUrls: ['./blockly.component.scss']
 })
 export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
+  content: string;
   jsCode: string;
   xml: string;
   selectedLanguage = 'zh-hans'; // 当前选择的语言
@@ -144,5 +145,9 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   executeProgram() {
     // tslint:disable-next-line: no-eval
     eval(this.jsCode);
+  }
+
+  clear() {
+    this.workspace.workspace.clear();
   }
 }
