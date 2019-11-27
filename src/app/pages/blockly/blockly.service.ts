@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Category, XmlBlock } from 'ngx-blockly';
+declare var Blockly: any;
 
 export const LOGIC_CATEGORY: Category = new Category([
   new XmlBlock('controls_if'),
   new XmlBlock('logic_compare'),
   new XmlBlock('logic_operation'),
+  new XmlBlock('logic_block_self_add'),
   new XmlBlock('logic_negate'),
   new XmlBlock('logic_boolean'),
   new XmlBlock('logic_null'),
@@ -98,5 +100,34 @@ export class BlocklyService {
 
   jsToContent(code: string) {
 
+  }
+
+  /**
+   * 加载mutator中使用到的block,这些block不需要转化为代码，只是用来构造source block的结构（例如增删inputs数量）
+   */
+  loadBlockInMutator() {
+    Blockly.defineBlocksWithJsonArray([
+      {
+        type: 'block_self_boolean',
+        message0: '布尔值',
+        inputsInline: false,
+        previousStatement: null,
+        nextStatement: null,
+        colour: '%{BKY_LOGIC_HUE}',
+      },
+      {
+        type: 'block_self_mutator',
+        message0: '%1',
+        args0: [
+          {
+            type: 'input_statement',
+            name: 'NAME',
+            check: 'Boolean'
+          }
+        ],
+        colour: '%{BKY_LOGIC_HUE}',
+        tooltip: '',
+      }
+    ]);
   }
 }

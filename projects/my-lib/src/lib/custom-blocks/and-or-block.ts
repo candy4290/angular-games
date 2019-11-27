@@ -2,9 +2,9 @@ import { CustomBlock, BlockMutator } from 'ngx-blockly';
 
 declare var Blockly: any;
 
-export class TestBlock extends CustomBlock {
+export class AndOrBlock extends CustomBlock {
     jsonBlock ={
-      type: 'block_self_add',
+      type: 'logic_block_self_add',
       message0: '%1 %2 %3',
       args0: [
         {
@@ -35,14 +35,14 @@ export class TestBlock extends CustomBlock {
       mutator: 'blockly_self_add_mutator',
       inputsInline: false,
       output: 'Boolean',
-      colour: 230,
+      colour: '%{BKY_LOGIC_HUE}',
       tooltip: '',
       helpUrl: ''
     };
 
     constructor(type: string, block: any, blockMutator: BlockMutator, ...args: any[]) {
         super(type, block, blockMutator, ...args);
-        this.class = TestBlock;
+        this.class = AndOrBlock;
     }
 
     defineBlock() {

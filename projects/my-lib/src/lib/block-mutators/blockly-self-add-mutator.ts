@@ -1,7 +1,7 @@
 import { BlockMutator } from 'ngx-blockly';
 declare var Blockly: any;
 export class BlocklySelfAddMutator extends BlockMutator {
-  inputListLength = 2; // source需要达到的数量
+  inputListLength = 2; // source block需要达到的数量
   block: any;
   constructor(name: string) {
     super(name);
@@ -35,7 +35,7 @@ export class BlocklySelfAddMutator extends BlockMutator {
       if (!this.block.getInput(`NAME${i}`)) {
         const input = this.block.appendValueInput(`NAME${i}`);
         if (i === 1) {
-          input.appendField(new Blockly.FieldDropdown([['and', '&&'], ['or', '||']]), 'NAME');
+          input.appendField(new Blockly.FieldDropdown([['且', '&&'], ['或', '||']]), 'NAME');
         }
       }
     }
@@ -87,7 +87,7 @@ export class BlocklySelfAddMutator extends BlockMutator {
   }
 
   /**
-   * Store pointers to any connected child blocks. 在compose前调用
+   * Store pointers to any connected child blocks. 在compose前调用；为了确保重新排序时，compse功能可以确保任何已经连接到原始块的块都被连接到正确的输入，
    * 'block_self_mutator'
    */
   saveConnections(containerBlock: any) {

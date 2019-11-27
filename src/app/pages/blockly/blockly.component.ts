@@ -3,12 +3,10 @@ import { NgxBlocklyConfig, NgxBlocklyGeneratorConfig,
   NgxBlocklyComponent, CustomBlock, NgxToolboxBuilderService, Category } from 'ngx-blockly';
 import { BlocklyService, LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY, VARIABLES_CATEGORY } from './blockly.service';
 import { Subscription } from 'rxjs';
-import { TestBlock, PandaSetBlock, PandaGetBlock, CreateVariableButton } from 'projects/my-lib/src/public-api';
+import { AndOrBlock } from 'projects/my-lib/src/public-api';
 import { DOCUMENT } from '@angular/common';
 import { NzMessageService } from 'ng-zorro-antd';
 import { BlocklySelfAddMutator } from 'projects/my-lib/src/lib/block-mutators/blockly-self-add-mutator';
-import { BooeanBlock } from 'projects/my-lib/src/lib/custom-blocks/boolean-block';
-import { MutatorBlock } from 'projects/my-lib/src/lib/custom-blocks/mutator-block';
 declare var Blockly: any;
 @Component({
   selector: 'app-blockly',
@@ -21,11 +19,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   xml: string;
   selectedLanguage = 'zh-hans'; // 当前选择的语言
   public customBlocks: CustomBlock[] = [
-    new BooeanBlock('block_self_boolean', null, null),
-    new MutatorBlock('block_self_mutator', null, null),
-    new TestBlock('block_self_add', null, new BlocklySelfAddMutator('blockly_self_add_mutator')),
-    // new PandaSetBlock('panda set', null, null),
-    // new PandaGetBlock('panda get', null, null),
+    new AndOrBlock('logic_block_self_add', null, new BlocklySelfAddMutator('blockly_self_add_mutator')),
   ]; // 自定义blocks
   @ViewChild(NgxBlocklyComponent, {static: true}) workspace: NgxBlocklyComponent;
   public config: NgxBlocklyConfig = {
@@ -62,8 +56,9 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
               private ngxToolboxBuilder: NgxToolboxBuilderService,
               private messageService: NzMessageService,
               @Inject(DOCUMENT) private doc: Document) {
+    this.blockly.loadBlockInMutator();
     this.ngxToolboxBuilder.nodes = [
-      new Category(this.customBlocks, '#FF00FF', '自定义', null),
+      // new Category(this.customBlocks, '#FF00FF', '自定义', null),
       LOGIC_CATEGORY,
       LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY, VARIABLES_CATEGORY
     ];
