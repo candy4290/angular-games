@@ -30,3 +30,34 @@ $angular-games-theme: mat-light-theme($angular-games-primary, $angular-games-acc
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+// blockly style更新
+.blocklyTreeLabel {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
+
+.blocklyToolboxDiv {
+  background-color: #eee;
+}
+
+.blocklyTreeIconNone, .blocklyTreeSelected>.blocklyTreeIconNone {
+  display: none !important;
+}
+
+.blocklyTreeRow {
+  padding: 4px 12px !important;
+  height: auto;
+  line-height: unset;
+  margin-bottom: 0;
+  padding-right: 0;
+}
+
+.blocklyTreeSelected {
+  background-color: #ddd;
+  .blocklyTreeLabel {
+    color: #bb9246;
+  }
+}

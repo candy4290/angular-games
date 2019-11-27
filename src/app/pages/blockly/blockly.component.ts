@@ -1,6 +1,6 @@
 import { OnInit, OnDestroy, Component, ViewChild, Inject, AfterViewInit } from '@angular/core';
 import { NgxBlocklyConfig, NgxBlocklyGeneratorConfig,
-  NgxBlocklyComponent, CustomBlock, NgxToolboxBuilderService, Category } from 'ngx-blockly';
+  NgxBlocklyComponent, CustomBlock, NgxToolboxBuilderService, Category, Separator } from 'ngx-blockly';
 import { BlocklyService, LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY, VARIABLES_CATEGORY } from './blockly.service';
 import { Subscription } from 'rxjs';
 import { AndOrBlock, ClickDrivenBlock } from 'projects/my-lib/src/public-api';
@@ -58,11 +58,16 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
               private ngxToolboxBuilder: NgxToolboxBuilderService,
               private messageService: NzMessageService,
               @Inject(DOCUMENT) private doc: Document) {
+    this.blockly.changeToolboxStyle();
     this.blockly.loadBlockInMutator();
     this.ngxToolboxBuilder.nodes = [
-      new Category(this.customBlocks, '#FF00FF', '自定义目录', null),
-      LOGIC_CATEGORY,
-      LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY, VARIABLES_CATEGORY
+      new Category(this.customBlocks, '#FF00FF', '自定义', null), new Separator(),
+      LOGIC_CATEGORY, new Separator(),
+      LOOP_CATEGORY,  new Separator(),
+      MATH_CATEGORY, new Separator(),
+      TEXT_CATEGORY, new Separator(),
+      LISTS_CATEGORY, new Separator(),
+      VARIABLES_CATEGORY
     ];
     this.config.toolbox = this.ngxToolboxBuilder.build();
   }

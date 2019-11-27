@@ -130,4 +130,142 @@ export class BlocklyService {
       }
     ]);
   }
+
+  /**
+   * 更改toolbox样式
+   */
+  changeToolboxStyle() {
+    Blockly.Toolbox.prototype.addColour_ = function(opt_tree) {
+    };
+
+    Blockly.Toolbox.prototype.updateSelectedItemColour_ = function(tree) {
+      // var selectedItem = tree.getSelectedItem();
+      // if (selectedItem) {
+        // var hexColour = selectedItem.hexColour || '#57e';
+        // selectedItem.getRowElement().style.backgroundColor = hexColour;
+        // this.addColour_(selectedItem);
+      // }
+    };
+
+    Blockly.Toolbox.prototype.handleBeforeTreeSelected_ = function(node) {
+      if (node === this.tree_) {
+        return false;
+      }
+      // if (this.lastCategory_) {
+      //   this.lastCategory_.getRowElement().style.backgroundColor = '';
+      // }
+      if (node) {
+        // var hexColour = node.hexColour || '#57e';
+        // node.getRowElement().style.backgroundColor = hexColour;
+        // Add colours to child nodes which may have been collapsed and thus
+        // not rendered.
+        // this.addColour_(node);
+      }
+      return true;
+    };
+
+    Blockly.tree.BaseNode.prototype.getRowClassName = function() {
+      let selectedClass = '';
+      if (this.isSelected()) {
+       selectedClass = ' ' + (this.config_.cssSelectedRow || '');
+      }
+      return this.config_.cssTreeRow + selectedClass;
+    };
+
+    Blockly.tree.BaseNode.prototype.getRowDom = function() {
+      const row = document.createElement('div');
+      row.className = this.getRowClassName();
+      row.style['padding-' + (this.isRightToLeft() ? 'right' : 'left')] =
+          this.getPixelIndent_() + 'px';
+      const label = this.getLabelDom();
+      row.appendChild(this.getIconDom());
+      row.appendChild(label);
+      if (label.textContent) {
+        const img = document.createElement('img');
+        img.src = 'https://ng.ant.design/assets/img/logo.svg';
+        img.style.height = '32px';
+        img.style.display = 'block';
+        img.style.margin = '0 auto 4px';
+        label.parentNode.insertBefore(img, label);
+      }
+      return row;
+    };
+
+    Blockly.tree.BaseNode.prototype.getLabelDom = function() {
+      const label = document.createElement('span');
+      label.className = this.config_.cssItemLabel || '';
+      label.textContent = this.getText();
+      return label;
+    };
+
+    // Blockly.utils.dom.createSvgElement = function(name, attrs, parent) {
+    //   console.log(name, attrs, parent);
+    //   const e = /** @type {!SVGElement} */
+    //   (document.createElementNS(Blockly.utils.dom.SVG_NS, name));
+    //   console.log(e);
+    //   for (const key in attrs) {
+    //     if (key) {
+    //       e.setAttribute(key, attrs[key]);
+    //     }
+    //   }
+    //   if (parent) {
+    //     parent.appendChild(e);
+    //   }
+    //   return e;
+    // };
+
+    Blockly.blockRendering.ConstantProvider.prototype.makePuzzleTab = function() {
+      var width = this.TAB_WIDTH;
+      var height = this.TAB_HEIGHT;
+
+      // The main path for the puzzle tab is made out of a few curves (c and s).
+      // Those curves are defined with relative positions.  The 'up' and 'down'
+      // versions of the paths are the same, but the Y sign flips.  Forward and back
+      // are the signs to use to move the cursor in the direction that the path is
+      // being drawn.
+      function makeMainPath(up) {
+        var forward = up ? -1 : 1;
+        var back = -forward;
+
+        var overlap = 2.5;
+        var halfHeight = height / 2;
+        var control1Y = halfHeight + overlap;
+        var control2Y = halfHeight + 0.5;
+        var control3Y = overlap; // 2.5
+
+        var endPoint1 = Blockly.utils.svgPaths.point(-width, forward * halfHeight);
+        var endPoint2 = Blockly.utils.svgPaths.point(width, forward * halfHeight);
+
+        return Blockly.utils.svgPaths.curve('c',
+            [
+              Blockly.utils.svgPaths.point(0, forward * control1Y),
+              Blockly.utils.svgPaths.point(-width, back * control2Y),
+              endPoint1
+            ]) +
+            Blockly.utils.svgPaths.curve('s',
+                [
+                  Blockly.utils.svgPaths.point(width, back * control3Y),
+                  endPoint2
+                ]);
+      }
+
+      // c 0,-10  -8,8  -8,-7.5  s 8,2.5  8,-7.5
+      var pathUp = makeMainPath(true);
+      // c 0,10  -8,-8  -8,7.5  s 8,-2.5  8,7.5
+      var pathDown = makeMainPath(false);
+      console.log({
+        width: width,
+        height: height,
+        pathDown: pathDown,
+        pathUp: pathUp
+      });
+      return {
+        width: width,
+        height: height,
+        pathDown: pathDown,
+        pathUp: pathUp
+      };
+    };
+
+  }
 }
