@@ -6,11 +6,11 @@
   </variables>
   <block type="controls_if" id=";pRgRdNpTaiAC/w,|0Vz" x="190" y="-50">
     <value name="IF0">
-      <block type="block_self_add" id="}+1KSkD`bH!2lnQ~0Q6/">
+      <block type="logic_block_self_add" id="}+1KSkD`bH!2lnQ~0Q6/">
         <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
         <field name="NAME">||</field>
         <value name="NAME1">
-          <block type="block_self_add" id="GnMz2y:)$vI`P-H}VcPR">
+          <block type="logic_block_self_add" id="GnMz2y:)$vI`P-H}VcPR">
             <mutation xmlns="http://www.w3.org/1999/xhtml" items="3"></mutation>
             <field name="NAME">&amp;&amp;</field>
             <value name="NAME1">
@@ -61,7 +61,7 @@
           </block>
         </value>
         <value name="NAME2">
-          <block type="block_self_add" id="6XwmFD-AIvevS/WOrkPg">
+          <block type="logic_block_self_add" id="6XwmFD-AIvevS/WOrkPg">
             <mutation xmlns="http://www.w3.org/1999/xhtml" items="3"></mutation>
             <field name="NAME">&amp;&amp;</field>
             <value name="NAME1">

@@ -3,10 +3,11 @@ import { NgxBlocklyConfig, NgxBlocklyGeneratorConfig,
   NgxBlocklyComponent, CustomBlock, NgxToolboxBuilderService, Category } from 'ngx-blockly';
 import { BlocklyService, LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY, VARIABLES_CATEGORY } from './blockly.service';
 import { Subscription } from 'rxjs';
-import { AndOrBlock } from 'projects/my-lib/src/public-api';
+import { AndOrBlock, ClickDrivenBlock } from 'projects/my-lib/src/public-api';
 import { DOCUMENT } from '@angular/common';
 import { NzMessageService } from 'ng-zorro-antd';
 import { BlocklySelfAddMutator } from 'projects/my-lib/src/lib/block-mutators/blockly-self-add-mutator';
+declare var goog: any;
 declare var Blockly: any;
 @Component({
   selector: 'app-blockly',
@@ -20,6 +21,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedLanguage = 'zh-hans'; // 当前选择的语言
   public customBlocks: CustomBlock[] = [
     new AndOrBlock('logic_block_self_add', null, new BlocklySelfAddMutator('blockly_self_add_mutator')),
+    new ClickDrivenBlock('block_click_driven', null, null)
   ]; // 自定义blocks
   @ViewChild(NgxBlocklyComponent, {static: true}) workspace: NgxBlocklyComponent;
   public config: NgxBlocklyConfig = {
@@ -58,7 +60,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
               @Inject(DOCUMENT) private doc: Document) {
     this.blockly.loadBlockInMutator();
     this.ngxToolboxBuilder.nodes = [
-      // new Category(this.customBlocks, '#FF00FF', '自定义', null),
+      new Category(this.customBlocks, '#FF00FF', '自定义目录', null),
       LOGIC_CATEGORY,
       LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY, VARIABLES_CATEGORY
     ];
