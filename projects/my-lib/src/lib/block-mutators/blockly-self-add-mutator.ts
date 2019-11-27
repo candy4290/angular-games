@@ -1,7 +1,7 @@
 import { BlockMutator } from 'ngx-blockly';
 declare var Blockly: any;
 export class BlocklySelfAddMutator extends BlockMutator {
-  inputListLength = 2; // 当前source block的输入数量
+  inputListLength = 2; // source需要达到的数量
   block: any;
   constructor(name: string) {
     super(name);
@@ -12,14 +12,9 @@ export class BlocklySelfAddMutator extends BlockMutator {
    */
   mutationToDom(e: any) {
     this.block = e;
-    if (!this.inputListLength) {
-      return null;
-    } else {
-      const container = document.createElement('mutation');
-      container.setAttribute('items', `${this.inputListLength}`);
-      console.log(container);
-      return container;
-    }
+    const container = document.createElement('mutation');
+    container.setAttribute('items', `${this.inputListLength}`);
+    return container;
   }
 
   /**
@@ -27,25 +22,27 @@ export class BlocklySelfAddMutator extends BlockMutator {
    */
   domToMutation(xml: any, e: any) {
     this.block = e;
-    this.updateShape(+xml.getAttribute('items'), this.inputListLength);
+    this.inputListLength = parseInt(xml.getAttribute('items'), 10);
+    this.updateShape();
   }
 
   /**
    * 更新source block的形状
    */
-  updateShape(exceptedLength: number, currentLength: number) {
-    if (exceptedLength > currentLength) {
-      // 增加source block的输入
-      for (let i = 1; i <= exceptedLength - currentLength; i++) {
-        this.block.appendValueInput(`NAME${currentLength + i}`);
-      }
-    } else if  (exceptedLength < currentLength) {
-      // 删除source block的输入
-      for (let i = 0; i < currentLength - exceptedLength; i++) {
-        this.block.removeInput(`NAME${currentLength - i}`);
+  updateShape() {
+    let i = 1;
+    for (i; i <= this.inputListLength; i++) {
+      if (!this.block.getInput(`NAME${i}`)) {
+        const input = this.block.appendValueInput(`NAME${i}`);
+        if (i === 1) {
+          input.appendField(new Blockly.FieldDropdown([['and', '&&'], ['or', '||']]), 'NAME');
+        }
       }
     }
-    this.inputListLength = exceptedLength;
+    while (this.block.getInput(`NAME${i}`)) {
+      this.block.removeInput(`NAME${i}`);
+      i++;
+    }
   }
 
   /**
@@ -82,7 +79,8 @@ export class BlocklySelfAddMutator extends BlockMutator {
         connection.disconnect();
       }
     }
-    this.updateShape(connections.length, this.inputListLength);
+    this.inputListLength = connections.length;
+    this.updateShape();
     for (let i = 1; i <= this.inputListLength; i ++) {
       Blockly.Mutator.reconnect(connections[i - 1], this.block, `NAME${i}`);
     }
