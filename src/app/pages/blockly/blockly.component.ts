@@ -6,8 +6,6 @@ import { Subscription } from 'rxjs';
 import { AndOrBlock, ClickDrivenBlock } from 'projects/my-lib/src/public-api';
 import { DOCUMENT } from '@angular/common';
 import { NzMessageService } from 'ng-zorro-antd';
-import { BlocklySelfAddMutator } from 'projects/my-lib/src/lib/block-mutators/blockly-self-add-mutator';
-declare var goog: any;
 declare var Blockly: any;
 @Component({
   selector: 'app-blockly',
@@ -20,7 +18,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   xml: string;
   selectedLanguage = 'zh-hans'; // 当前选择的语言
   public customBlocks: CustomBlock[] = [
-    new AndOrBlock('logic_block_self_add', null, new BlocklySelfAddMutator('blockly_self_add_mutator')),
+    new AndOrBlock('logic_block_self_add', null, null),
     new ClickDrivenBlock('block_click_driven', null, null)
   ]; // 自定义blocks
   @ViewChild(NgxBlocklyComponent, {static: true}) workspace: NgxBlocklyComponent;
@@ -76,7 +74,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.workspace.workspace.registerButtonCallback('createAge', (e) => {
+    this.workspace.workspace.registerButtonCallback('createAge', (e: any) => {
       Blockly.Variables.createVariable(e.getTargetWorkspace(), null, 'Number'); // 创建一个类型为Number的变量
     });
   }

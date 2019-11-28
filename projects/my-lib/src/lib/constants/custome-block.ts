@@ -2,7 +2,7 @@ declare let Blockly: any;
 Blockly.Msg['VARIABLES_SELF_CXX'] = 'cxx%1';
 export class CustomeBlocks {
   static andOr = {
-    type: 'block_self_add',
+    type: 'logic_block_self_add',
       message0: '%1 %2 %3',
       args0: [
         {

@@ -1,12 +1,5 @@
 export class Toolboxs {
   static defaultToolbox = `<xml id="toolbox" style="display: none">
-    <category name="Logic" categorystyle="logic_category"></category>
-    <category name="Loops" colour="120"></category>
-    <category name="Math" colour="230"></category>
-    <category name="Colour" colour="20"></category>
-    <category name="Variables" colour="330" custom="VARIABLE"></category>
-    <category name="Functions" colour="290" custom="PROCEDURE"></category>
-    <category name="Colours" colour="80" custom="COLOUR_PALETTE"></category>
     <category name="Core" expanded="true" categorystyle="cxx_xxx">
       <category name="Control">
         <block type="controls_if"></block>
@@ -68,7 +61,7 @@ export class Toolboxs {
         <mutation divisor_input="true"></mutation>
         <field name="PROPERTY">DIVISIBLE_BY</field>
       </block>
-      <block type="block_self_add">
+      <block type="logic_block_self_add">
         <mutation items="2"></mutation>
         <field name="NAME">&amp;&amp;</field>
       </block>

@@ -18,7 +18,8 @@ export class ClickDrivenBlock extends CustomBlock {
       inputsInline: false,
       colour: 230,
       tooltip: '',
-      helpUrl: ''
+      helpUrl: '',
+      hat: 'cap'
     };
 
     constructor(type: string, block: any, blockMutator: BlockMutator, ...args: any[]) {
@@ -28,7 +29,6 @@ export class ClickDrivenBlock extends CustomBlock {
 
     defineBlock() {
       this.block.jsonInit(this.jsonBlock);
-      Blockly.BlockSvg.START_HAT = true;
     }
 
     toXML() {

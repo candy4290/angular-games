@@ -47,7 +47,7 @@ export class AndOrBlock extends CustomBlock {
 
     defineBlock() {
       this.block.jsonInit(this.jsonBlock);
-      this.block.setMutator(new Blockly.Mutator(['block_self_boolean']));
+      // this.block.setMutator(new Blockly.Mutator(['block_self_boolean']));
     }
 
     toXML() {

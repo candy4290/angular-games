@@ -129,6 +129,99 @@ export class BlocklyService {
         tooltip: '',
       }
     ]);
+    Blockly.Extensions.registerMutator('blockly_self_add_mutator', {
+      /**
+       * 生成xml时调用此方法
+       */
+      mutationToDom() {
+        const container = document.createElement('mutation');
+        container.setAttribute('items', this.itemCount_);
+        return container;
+      },
+
+      /**
+       * 从xml复原时调用此方法
+       */
+      domToMutation(xml: any) {
+        this.itemCount_ = parseInt(xml.getAttribute('items'), 10);
+        this.updateShape();
+      },
+
+      /**
+       * 更新source block的形状
+       */
+      updateShape() {
+        let i = 1;
+        for (i; i <= this.itemCount_; i++) {
+          if (!this.getInput(`NAME${i}`)) {
+            const input = this.appendValueInput(`NAME${i}`);
+            if (i === 1) {
+              input.appendField(new Blockly.FieldDropdown([['and', '&&'], ['or', '||']]), 'NAME');
+            }
+          }
+        }
+        while (this.getInput(`NAME${i}`)) {
+          this.removeInput(`NAME${i}`);
+          i++;
+        }
+      },
+
+      /**
+       * 打开mutator对话框时调用 --- 根据当前source block的值输入数量，来创建block_self_mutator的数量
+       */
+      decompose(workspace: any) {
+        const containerBlock = workspace.newBlock('block_self_mutator');
+        containerBlock.initSvg();
+        let connection = containerBlock.getInput('NAME').connection;
+        for (let i = 1; i <= this.itemCount_; i++) {
+          const temp = workspace.newBlock('block_self_boolean');
+          connection.connect(temp.previousConnection);
+          temp.initSvg();
+          connection = temp.nextConnection;
+        }
+        return containerBlock;
+      },
+
+      /**
+       * 当一个mutator对话框保存其内容，被调用，来按照新的设置修改原来的block
+       * 'block_self_boolean'
+       */
+      compose(topBlock: any) {
+        let itemBlock = topBlock.getInputTargetBlock('NAME'); // 获取到'NAME'输入（仅有一个输入）
+        const connections = []; // 当前mutator中‘block_self_boolean’的数量
+        while (itemBlock) {
+          connections.push(itemBlock.valueConnection_);
+          itemBlock = itemBlock.nextConnection && itemBlock.nextConnection.targetBlock();
+        }
+        // Disconnect any children that don't belong.
+        for (let i = 1; i <= this.itemCount_; i++) {
+          const connection = this.getInput(`NAME${i}`).connection.targetConnection;
+          if (connection && connections.indexOf(connection) === -1) {
+            connection.disconnect();
+          }
+        }
+        this.itemCount_ = connections.length;
+        this.updateShape();
+        for (let i = 1; i <= this.itemCount_; i ++) {
+          Blockly.Mutator.reconnect(connections[i - 1], this, `NAME${i}`);
+        }
+      },
+
+      /**
+       * Store pointers to any connected child blocks. 在compose前调用
+       * 'block_self_mutator'
+       */
+      saveConnections(containerBlock: any) {
+        let itemBlock = containerBlock.getInputTargetBlock('NAME');
+        let i = 1;
+        while (itemBlock) {
+          const input = this.getInput('NAME' + i);
+          itemBlock.valueConnection_ = input && input.connection.targetConnection;
+          i++;
+          itemBlock = itemBlock.nextConnection && itemBlock.nextConnection.targetBlock();
+        }
+      }
+    }, null, ['block_self_boolean']);
   }
 
   /**
@@ -139,9 +232,9 @@ export class BlocklyService {
     };
 
     Blockly.Toolbox.prototype.updateSelectedItemColour_ = function(tree) {
-      // var selectedItem = tree.getSelectedItem();
+      // const selectedItem = tree.getSelectedItem();
       // if (selectedItem) {
-        // var hexColour = selectedItem.hexColour || '#57e';
+        // const hexColour = selectedItem.hexColour || '#57e';
         // selectedItem.getRowElement().style.backgroundColor = hexColour;
         // this.addColour_(selectedItem);
       // }
@@ -155,7 +248,7 @@ export class BlocklyService {
       //   this.lastCategory_.getRowElement().style.backgroundColor = '';
       // }
       if (node) {
-        // var hexColour = node.hexColour || '#57e';
+        // const hexColour = node.hexColour || '#57e';
         // node.getRowElement().style.backgroundColor = hexColour;
         // Add colours to child nodes which may have been collapsed and thus
         // not rendered.
@@ -215,26 +308,26 @@ export class BlocklyService {
     // };
 
     Blockly.blockRendering.ConstantProvider.prototype.makePuzzleTab = function() {
-      var width = this.TAB_WIDTH;
-      var height = this.TAB_HEIGHT;
+      const width = this.TAB_WIDTH;
+      const height = this.TAB_HEIGHT;
 
-      // The main path for the puzzle tab is made out of a few curves (c and s).
+      // 拼图选项卡的main path主要有几个curves(c and s) 组成
       // Those curves are defined with relative positions.  The 'up' and 'down'
       // versions of the paths are the same, but the Y sign flips.  Forward and back
       // are the signs to use to move the cursor in the direction that the path is
       // being drawn.
       function makeMainPath(up) {
-        var forward = up ? -1 : 1;
-        var back = -forward;
+        const forward = up ? -1 : 1;
+        const back = -forward;
 
-        var overlap = 2.5;
-        var halfHeight = height / 2;
-        var control1Y = halfHeight + overlap;
-        var control2Y = halfHeight + 0.5;
-        var control3Y = overlap; // 2.5
+        const overlap = 2.5;
+        const halfHeight = height / 2;
+        const control1Y = halfHeight + overlap;
+        const control2Y = halfHeight + 0.5;
+        const control3Y = overlap; // 2.5
 
-        var endPoint1 = Blockly.utils.svgPaths.point(-width, forward * halfHeight);
-        var endPoint2 = Blockly.utils.svgPaths.point(width, forward * halfHeight);
+        const endPoint1 = Blockly.utils.svgPaths.point(-width, forward * halfHeight);
+        const endPoint2 = Blockly.utils.svgPaths.point(width, forward * halfHeight);
 
         return Blockly.utils.svgPaths.curve('c',
             [
@@ -250,21 +343,91 @@ export class BlocklyService {
       }
 
       // c 0,-10  -8,8  -8,-7.5  s 8,2.5  8,-7.5
-      var pathUp = makeMainPath(true);
+      const pathUp = makeMainPath(true);
       // c 0,10  -8,-8  -8,7.5  s 8,-2.5  8,7.5
-      var pathDown = makeMainPath(false);
+      const pathDown = makeMainPath(false);
       console.log({
-        width: width,
-        height: height,
-        pathDown: pathDown,
-        pathUp: pathUp
+        width,
+        height,
+        pathDown,
+        pathUp
       });
       return {
-        width: width,
-        height: height,
-        pathDown: pathDown,
-        pathUp: pathUp
+        width,
+        height,
+        pathDown,
+        pathUp
       };
+    };
+
+    Blockly.Mutator.prototype.createEditor_ = function() {
+      /* Create the editor.  Here's the markup that will be generated:
+      <svg>
+        [Workspace]
+      </svg>
+      */
+      this.svgDialog_ = Blockly.utils.dom.createSvgElement('svg',
+          {'x': Blockly.Bubble.BORDER_WIDTH, 'y': Blockly.Bubble.BORDER_WIDTH},
+          null);
+      console.log(this.quarkNames_);
+      // Convert the list of names into a list of XML objects for the flyout.
+      if (this.quarkNames_.length) {
+        var quarkXml = Blockly.utils.xml.createElement('xml');
+        for (var i = 0, quarkName; quarkName = this.quarkNames_[i]; i++) {
+          var element = Blockly.utils.xml.createElement('block');
+          element.setAttribute('type', quarkName);
+          quarkXml.appendChild(element);
+        }
+      } else {
+        var quarkXml = null;
+      }
+      var workspaceOptions = {
+        // If you want to enable disabling, also remove the
+        // event filter from workspaceChanged_ .
+        disable: false,
+        disabledPatternId: this.block_.workspace.options.disabledPatternId,
+        languageTree: quarkXml,
+        parentWorkspace: this.block_.workspace,
+        pathToMedia: this.block_.workspace.options.pathToMedia,
+        RTL: this.block_.RTL,
+        toolboxPosition: this.block_.RTL ? Blockly.TOOLBOX_AT_RIGHT :
+            Blockly.TOOLBOX_AT_LEFT,
+        horizontalLayout: false,
+        getMetrics: this.getFlyoutMetrics_.bind(this),
+        setMetrics: null,
+        renderer: this.block_.workspace.options.renderer
+      };
+      this.workspace_ = new Blockly.WorkspaceSvg(workspaceOptions);
+      this.workspace_.isMutator = true;
+      this.workspace_.addChangeListener(Blockly.Events.disableOrphans);
+
+      // Mutator flyouts go inside the mutator workspace's <g> rather than in
+      // a top level svg. Instead of handling scale themselves, mutators
+      // inherit scale from the parent workspace.
+      // To fix this, scale needs to be applied at a different level in the dom.
+      var flyoutSvg = this.workspace_.addFlyout_('g');
+      var background = this.workspace_.createDom('blocklyMutatorBackground');
+
+      // Insert the flyout after the <rect> but before the block canvas so that
+      // the flyout is underneath in z-order.  This makes blocks layering during
+      // dragging work properly.
+      background.insertBefore(flyoutSvg, this.workspace_.svgBlockCanvas_);
+      this.svgDialog_.appendChild(background);
+
+      return this.svgDialog_;
+    };
+
+    Blockly.Xml.domToField_ = function(block, fieldName, xml) {
+      console.log(xml);
+      console.log(block);
+      console.log(fieldName);
+      var field = block.getField(fieldName);
+      if (!field) {
+        console.warn('Ignoring non-existent field ' + fieldName + ' in block ' +
+            block.type);
+        return;
+      }
+      field.fromXml(xml);
     };
 
   }

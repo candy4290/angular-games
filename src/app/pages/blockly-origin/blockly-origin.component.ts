@@ -36,52 +36,68 @@ export class BlocklyOriginComponent implements OnInit,  OnDestroy, AfterViewInit
   @ViewChild('blocklyArea', {static: true}) blocklyArea: ElementRef;
   private subscription$ = new Subscription();
   constructor() {
-    // extension注册到blockly----->鼠标悬浮的提示
-    // Blockly.Extensions.register('parent_tooltip_extension',
-    //   function() {
-    //  // The methods on the mixin object will be added to each block instance, so this may be used to refer to the block.
-    //     const thisBlock = this;
-    //     this.setTooltip(() => {
-    //       const parent = thisBlock.getParent();
-    //       return (parent && parent.getInputsInline() && parent.tooltip) ||
-    //         Blockly.Msg.MATH_NUMBER_TOOLTIP;
-    //   });
-    // });
-    this.loadCustomeBlock([CustomeBlocks.jsonBlock,
-      CustomeBlocks.booleanB,
-      CustomeBlocks.andOr,
-      CustomeBlocks.blockSelfMutator
-      // CustomeBlocks.vGet,
-      // CustomeBlocks.vSet,
-      // CustomeBlocks.pG, CustomeBlocks.pS
-    ]);
+    Blockly.Mutator.prototype.createEditor_ = function() {
+      /* Create the editor.  Here's the markup that will be generated:
+      <svg>
+        [Workspace]
+      </svg>
+      */
+      this.svgDialog_ = Blockly.utils.dom.createSvgElement('svg',
+          {'x': Blockly.Bubble.BORDER_WIDTH, 'y': Blockly.Bubble.BORDER_WIDTH},
+          null);
+      // Convert the list of names into a list of XML objects for the flyout.
+      if (this.quarkNames_.length) {
+        var quarkXml = Blockly.utils.xml.createElement('xml');
+        for (var i = 0, quarkName; quarkName = this.quarkNames_[i]; i++) {
+          var element = Blockly.utils.xml.createElement('block');
+          element.setAttribute('type', quarkName);
+          quarkXml.appendChild(element);
+        }
+      } else {
+        var quarkXml = null;
+      }
+      var workspaceOptions = {
+        // If you want to enable disabling, also remove the
+        // event filter from workspaceChanged_ .
+        disable: false,
+        disabledPatternId: this.block_.workspace.options.disabledPatternId,
+        languageTree: quarkXml,
+        parentWorkspace: this.block_.workspace,
+        pathToMedia: this.block_.workspace.options.pathToMedia,
+        RTL: this.block_.RTL,
+        toolboxPosition: this.block_.RTL ? Blockly.TOOLBOX_AT_RIGHT :
+            Blockly.TOOLBOX_AT_LEFT,
+        horizontalLayout: false,
+        getMetrics: this.getFlyoutMetrics_.bind(this),
+        setMetrics: null,
+        renderer: this.block_.workspace.options.renderer
+      };
+      this.workspace_ = new Blockly.WorkspaceSvg(workspaceOptions);
+      this.workspace_.isMutator = true;
+      this.workspace_.addChangeListener(Blockly.Events.disableOrphans);
 
-    // 返回js代码
-    Blockly.JavaScript['length of'] = (block: any) => {
-      return '打死你';
+      // Mutator flyouts go inside the mutator workspace's <g> rather than in
+      // a top level svg. Instead of handling scale themselves, mutators
+      // inherit scale from the parent workspace.
+      // To fix this, scale needs to be applied at a different level in the dom.
+      var flyoutSvg = this.workspace_.addFlyout_('g');
+      var background = this.workspace_.createDom('blocklyMutatorBackground');
+
+      // Insert the flyout after the <rect> but before the block canvas so that
+      // the flyout is underneath in z-order.  This makes blocks layering during
+      // dragging work properly.
+      background.insertBefore(flyoutSvg, this.workspace_.svgBlockCanvas_);
+      this.svgDialog_.appendChild(background);
+
+      return this.svgDialog_;
     };
-  }
-
-  ngOnInit() {
-  }
-
-  ngOnDestroy() {
-    this.subscription$.unsubscribe();
-  }
-
-  ngAfterViewInit() {
-    this.workspace = Blockly.inject('blocklyDiv', this.blockConfig);
-    this.workspace.registerButtonCallback('createPanda', (e) => {
-      Blockly.Variables.createVariable(e.getTargetWorkspace(), null, 'panda');
-    });
-    this.workspace.registerToolboxCategoryCallback('COLOUR_PALETTE', () => this.coloursFlyoutCallback());
-    window.addEventListener('resize', onresize, false);
     Blockly.Extensions.registerMutator('blockly_self_add_mutator', {
       /**
        * 生成xml时调用此方法
        */
       mutationToDom() {
         console.log('++++');
+        console.log(this);
         const container = document.createElement('mutation');
         container.setAttribute('items', this.itemCount_);
         return container;
@@ -118,6 +134,7 @@ export class BlocklyOriginComponent implements OnInit,  OnDestroy, AfterViewInit
        * 打开mutator对话框时调用 --- 根据当前source block的值输入数量，来创建block_self_mutator的数量
        */
       decompose(workspace: any) {
+        console.log('decompose');
         const containerBlock = workspace.newBlock('block_self_mutator');
         containerBlock.initSvg();
         let connection = containerBlock.getInput('NAME').connection;
@@ -171,7 +188,47 @@ export class BlocklyOriginComponent implements OnInit,  OnDestroy, AfterViewInit
           itemBlock = itemBlock.nextConnection && itemBlock.nextConnection.targetBlock();
         }
       }
+    }, null, ['block_self_boolean']);
+    // extension注册到blockly----->鼠标悬浮的提示
+    // Blockly.Extensions.register('parent_tooltip_extension',
+    //   function() {
+    //  // The methods on the mixin object will be added to each block instance, so this may be used to refer to the block.
+    //     const thisBlock = this;
+    //     this.setTooltip(() => {
+    //       const parent = thisBlock.getParent();
+    //       return (parent && parent.getInputsInline() && parent.tooltip) ||
+    //         Blockly.Msg.MATH_NUMBER_TOOLTIP;
+    //   });
+    // });
+    this.loadCustomeBlock([CustomeBlocks.jsonBlock,
+      CustomeBlocks.andOr,
+      CustomeBlocks.booleanB,
+      CustomeBlocks.blockSelfMutator
+      // CustomeBlocks.vGet,
+      // CustomeBlocks.vSet,
+      // CustomeBlocks.pG, CustomeBlocks.pS
+    ]);
+
+    // 返回js代码
+    Blockly.JavaScript['length of'] = (block: any) => {
+      return '打死你';
+    };
+  }
+
+  ngOnInit() {
+  }
+
+  ngOnDestroy() {
+    this.subscription$.unsubscribe();
+  }
+
+  ngAfterViewInit() {
+    this.workspace = Blockly.inject('blocklyDiv', this.blockConfig);
+    this.workspace.registerButtonCallback('createPanda', (e) => {
+      Blockly.Variables.createVariable(e.getTargetWorkspace(), null, 'panda');
     });
+    this.workspace.registerToolboxCategoryCallback('COLOUR_PALETTE', () => this.coloursFlyoutCallback());
+    window.addEventListener('resize', onresize, false);
     const onResize$ = fromEvent(window, 'resize').subscribe(() => {
       this.onResize(this.workspace);
     });
@@ -242,20 +299,133 @@ export class BlocklyOriginComponent implements OnInit,  OnDestroy, AfterViewInit
    * 从xml复原
    */
   recorver() {
-    const xml = `<xml xmlns=https://developers.google.com/blockly/xml>
-    <block type=turtle_basic id=LDFnCO-k#osS|^tM{]6E x=14 y=-20>
-      <field name=TURTLE pattern=Dots hat=Stovepipe>Yertle</field>
-      <comment pinned=false h=80 w=160>Demonstrates a turtle field with no validator.</comment>
+    const xml = `<xml xmlns="https://developers.google.com/blockly/xml">
+    <variables>
+      <variable id="Hiw1Cr%=AIhTY}M38=0q">age</variable>
+      <variable id="iPE.ROtaLSrUqtiZxHWf">sex</variable>
+      <variable id="*(1^B%|%D!(L24fT2aLO">criminalRecord</variable>
+    </variables>
+    <block type="controls_if" id=";pRgRdNpTaiAC/w,|0Vz" x="190" y="-50">
+      <value name="IF0">
+        <block type="logic_block_self_add">
+          <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+          <field name="NAME">||</field>
+          <value name="NAME1">
+            <block type="logic_block_self_add">
+              <mutation xmlns="http://www.w3.org/1999/xhtml" items="3"></mutation>
+              <field name="NAME">&amp;&amp;</field>
+              <value name="NAME1">
+                <block type="logic_compare" id="mp;B?}pV%({t,xjnGnP4">
+                  <field name="OP">GT</field>
+                  <value name="A">
+                    <block type="variables_get" id="%lE[TLEQ.hE)xx@}:w?H">
+                      <field name="VAR" id="Hiw1Cr%=AIhTY}M38=0q">age</field>
+                    </block>
+                  </value>
+                  <value name="B">
+                    <block type="math_number" id="):zn_?6){6CU(*nMQn-q">
+                      <field name="NUM">18</field>
+                    </block>
+                  </value>
+                </block>
+              </value>
+              <value name="NAME2">
+                <block type="logic_compare" id="aM$XM4!RvrT/*{+Nj@f:">
+                  <field name="OP">EQ</field>
+                  <value name="A">
+                    <block type="variables_get" id="oq~U+7+ojTIAuf(~Qr#n">
+                      <field name="VAR" id="iPE.ROtaLSrUqtiZxHWf">sex</field>
+                    </block>
+                  </value>
+                  <value name="B">
+                    <block type="text" id="-onafA@i:DoqsL56?o[U">
+                      <field name="TEXT">男</field>
+                    </block>
+                  </value>
+                </block>
+              </value>
+              <value name="NAME3">
+                <block type="logic_compare" id="z#}#4uaSQA)!Svb60#Cw">
+                  <field name="OP">GT</field>
+                  <value name="A">
+                    <block type="variables_get" id="v{J+tIIsP/:)76VDDWWS">
+                      <field name="VAR" id="*(1^B%|%D!(L24fT2aLO">criminalRecord</field>
+                    </block>
+                  </value>
+                  <value name="B">
+                    <block type="math_number">
+                      <field name="NUM">5</field>
+                    </block>
+                  </value>
+                </block>
+              </value>
+            </block>
+          </value>
+          <value name="NAME2">
+            <block type="logic_block_self_add" id="6XwmFD-AIvevS/WOrkPg">
+              <mutation xmlns="http://www.w3.org/1999/xhtml" items="3"></mutation>
+              <field name="NAME">&amp;&amp;</field>
+              <value name="NAME1">
+                <block type="logic_compare" id="WX[Qn]WRxYmGvDO:KG)q">
+                  <field name="OP">GT</field>
+                  <value name="A">
+                    <block type="variables_get">
+                      <field name="VAR" id="Hiw1Cr%=AIhTY}M38=0q">age</field>
+                    </block>
+                  </value>
+                  <value name="B">
+                    <block type="math_number" id="m-7h+N]%,rE!UOEQMU2s">
+                      <field name="NUM">28</field>
+                    </block>
+                  </value>
+                </block>
+              </value>
+              <value name="NAME2">
+                <block type="logic_compare" id="Sw$t=RB{=,~#HJ=ao-pw">
+                  <field name="OP">EQ</field>
+                  <value name="A">
+                    <block type="variables_get" id="O$Xr*.S)s90_[=r}%NM=">
+                      <field name="VAR" id="iPE.ROtaLSrUqtiZxHWf">sex</field>
+                    </block>
+                  </value>
+                  <value name="B">
+                    <block type="text" id="K$nVGB3Z1Hjrn=?UA52*">
+                      <field name="TEXT">女</field>
+                    </block>
+                  </value>
+                </block>
+              </value>
+              <value name="NAME3">
+                <block type="logic_compare" id="0~JbnKOQnrx|gG_v{LE6">
+                  <field name="OP">GT</field>
+                  <value name="A">
+                    <block type="variables_get" id="=cu0]A;Vw/LKT3g)-lYB">
+                      <field name="VAR" id="*(1^B%|%D!(L24fT2aLO">criminalRecord</field>
+                    </block>
+                  </value>
+                  <value name="B">
+                    <block type="math_number" id="CZg}8iI(z?h@)AX8zk+J">
+                      <field name="NUM">2</field>
+                    </block>
+                  </value>
+                </block>
+              </value>
+            </block>
+          </value>
+        </block>
+      </value>
+      <statement name="DO0">
+        <block type="text_print" id="J/KdKs#j)@^6(S^vPtKb">
+          <value name="TEXT">
+            <block type="text" id="DIG,Bzc9}iZ*hI{pGFi9">
+              <field name="TEXT">可疑人员</field>
+            </block>
+          </value>
+        </block>
+      </statement>
     </block>
-    <block type=turtle_nullifier  x=10 y=120>
-      <field name=TURTLE pattern=Dots hat=Stovepipe>Yertle</field>
-      <comment pinned=false h=80 w=160>Validates combinations of names and hats to null (invalid) if they could be considered infringe-y. This turns the turtle field red. Infringe-y combinations are: (Leonardo, Mask), (Yertle, Crown), and (Franklin, Propeller).</comment>
-    </block>
-    <block type=turtle_changer id=6KD1p3b|kZVG[(,~SWU* x=10 y=230>
-      <field name=TURTLE pattern=Dots hat=Crown>Yertle</field>
-      <comment pinned=false h=80 w=160>Validates the input so that certain names always have specific hats. The name-hat combinations are: (Leonardo, Mask), (Yertle, Crown), (Franklin, Propeller).</comment>
-    </block>
-  </xml>`;
+  </xml>
+  `;
     Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(xml), this.workspace);
   }
 
