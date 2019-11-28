@@ -307,128 +307,17 @@ export class BlocklyService {
     //   return e;
     // };
 
-    Blockly.blockRendering.ConstantProvider.prototype.makePuzzleTab = function() {
-      const width = this.TAB_WIDTH;
-      const height = this.TAB_HEIGHT;
+    // Blockly.blockRendering.ConstantProvider.prototype.makePuzzleTab = function() {
+    //   const width = this.TAB_WIDTH;
+    //   const height = this.TAB_HEIGHT;
 
-      // 拼图选项卡的main path主要有几个curves(c and s) 组成
-      // Those curves are defined with relative positions.  The 'up' and 'down'
-      // versions of the paths are the same, but the Y sign flips.  Forward and back
-      // are the signs to use to move the cursor in the direction that the path is
-      // being drawn.
-      function makeMainPath(up) {
-        const forward = up ? -1 : 1;
-        const back = -forward;
-
-        const overlap = 2.5;
-        const halfHeight = height / 2;
-        const control1Y = halfHeight + overlap;
-        const control2Y = halfHeight + 0.5;
-        const control3Y = overlap; // 2.5
-
-        const endPoint1 = Blockly.utils.svgPaths.point(-width, forward * halfHeight);
-        const endPoint2 = Blockly.utils.svgPaths.point(width, forward * halfHeight);
-
-        return Blockly.utils.svgPaths.curve('c',
-            [
-              Blockly.utils.svgPaths.point(0, forward * control1Y),
-              Blockly.utils.svgPaths.point(-width, back * control2Y),
-              endPoint1
-            ]) +
-            Blockly.utils.svgPaths.curve('s',
-                [
-                  Blockly.utils.svgPaths.point(width, back * control3Y),
-                  endPoint2
-                ]);
-      }
-
-      // c 0,-10  -8,8  -8,-7.5  s 8,2.5  8,-7.5
-      const pathUp = makeMainPath(true);
-      // c 0,10  -8,-8  -8,7.5  s 8,-2.5  8,7.5
-      const pathDown = makeMainPath(false);
-      console.log({
-        width,
-        height,
-        pathDown,
-        pathUp
-      });
-      return {
-        width,
-        height,
-        pathDown,
-        pathUp
-      };
-    };
-
-    Blockly.Mutator.prototype.createEditor_ = function() {
-      /* Create the editor.  Here's the markup that will be generated:
-      <svg>
-        [Workspace]
-      </svg>
-      */
-      this.svgDialog_ = Blockly.utils.dom.createSvgElement('svg',
-          {'x': Blockly.Bubble.BORDER_WIDTH, 'y': Blockly.Bubble.BORDER_WIDTH},
-          null);
-      console.log(this.quarkNames_);
-      // Convert the list of names into a list of XML objects for the flyout.
-      if (this.quarkNames_.length) {
-        var quarkXml = Blockly.utils.xml.createElement('xml');
-        for (var i = 0, quarkName; quarkName = this.quarkNames_[i]; i++) {
-          var element = Blockly.utils.xml.createElement('block');
-          element.setAttribute('type', quarkName);
-          quarkXml.appendChild(element);
-        }
-      } else {
-        var quarkXml = null;
-      }
-      var workspaceOptions = {
-        // If you want to enable disabling, also remove the
-        // event filter from workspaceChanged_ .
-        disable: false,
-        disabledPatternId: this.block_.workspace.options.disabledPatternId,
-        languageTree: quarkXml,
-        parentWorkspace: this.block_.workspace,
-        pathToMedia: this.block_.workspace.options.pathToMedia,
-        RTL: this.block_.RTL,
-        toolboxPosition: this.block_.RTL ? Blockly.TOOLBOX_AT_RIGHT :
-            Blockly.TOOLBOX_AT_LEFT,
-        horizontalLayout: false,
-        getMetrics: this.getFlyoutMetrics_.bind(this),
-        setMetrics: null,
-        renderer: this.block_.workspace.options.renderer
-      };
-      this.workspace_ = new Blockly.WorkspaceSvg(workspaceOptions);
-      this.workspace_.isMutator = true;
-      this.workspace_.addChangeListener(Blockly.Events.disableOrphans);
-
-      // Mutator flyouts go inside the mutator workspace's <g> rather than in
-      // a top level svg. Instead of handling scale themselves, mutators
-      // inherit scale from the parent workspace.
-      // To fix this, scale needs to be applied at a different level in the dom.
-      var flyoutSvg = this.workspace_.addFlyout_('g');
-      var background = this.workspace_.createDom('blocklyMutatorBackground');
-
-      // Insert the flyout after the <rect> but before the block canvas so that
-      // the flyout is underneath in z-order.  This makes blocks layering during
-      // dragging work properly.
-      background.insertBefore(flyoutSvg, this.workspace_.svgBlockCanvas_);
-      this.svgDialog_.appendChild(background);
-
-      return this.svgDialog_;
-    };
-
-    Blockly.Xml.domToField_ = function(block, fieldName, xml) {
-      console.log(xml);
-      console.log(block);
-      console.log(fieldName);
-      var field = block.getField(fieldName);
-      if (!field) {
-        console.warn('Ignoring non-existent field ' + fieldName + ' in block ' +
-            block.type);
-        return;
-      }
-      field.fromXml(xml);
-    };
+    //   return {
+    //     width,
+    //     height,
+    //     pathDown: 'a 4 4 90 1 0 0,16',
+    //     pathUp:  'a 4 4 90 1 1 0,-16'
+    //   };
+    // };
 
   }
 }

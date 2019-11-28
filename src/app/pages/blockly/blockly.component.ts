@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { AndOrBlock, ClickDrivenBlock } from 'projects/my-lib/src/public-api';
 import { DOCUMENT } from '@angular/common';
 import { NzMessageService } from 'ng-zorro-antd';
+// import * as parser from 'xml2json';
 declare var Blockly: any;
 @Component({
   selector: 'app-blockly',
@@ -99,6 +100,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   save() {
     const xml = this.workspace.toXml();
+    // console.log(parser.toJson(xml));
     this.exportToXml(xml);
   }
 
