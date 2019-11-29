@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Category, XmlBlock } from 'ngx-blockly';
 import { NzModalService } from 'ng-zorro-antd';
+import { map } from 'rxjs/operators';
+import { VariableGetBlock } from 'projects/my-lib/src/public-api';
 declare var Blockly: any;
 
 export const LOGIC_CATEGORY: Category = new Category([
@@ -100,6 +102,23 @@ export class BlocklyService {
     });
   }
 
+  /**
+   *  获取标签（变量）
+   */
+  getVariables(path?: string) {
+    return this.http.get(path || 'assets/blockly/variables/variables.json', {}).pipe(
+      map((rsp: any) => {
+        const tempBlocks = [];
+        const variables = rsp.variables || [];
+        for (let i = 0, len = variables.length; i < len; i++) {
+          const temp = new VariableGetBlock(`variables_get_${variables[i].key}`, null, null, variables[i].value, [variables[i].type], variables[i].type);
+          tempBlocks.push(temp);
+        }
+        return tempBlocks;
+      })
+    );
+  }
+
   jsToContent(code: string) {
 
   }
@@ -156,7 +175,7 @@ export class BlocklyService {
         let i = 1;
         for (i; i <= this.itemCount_; i++) {
           if (!this.getInput(`NAME${i}`)) {
-            const input = this.appendValueInput(`NAME${i}`);
+            const input = this.appendValueInput(`NAME${i}`).setCheck('Boolean');
             if (i === 1) {
               input.appendField(new Blockly.FieldDropdown([['且', '&&'], ['或', '||']]), 'NAME');
             }

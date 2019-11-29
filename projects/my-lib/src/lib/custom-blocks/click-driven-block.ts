@@ -28,6 +28,7 @@ export class ClickDrivenBlock extends CustomBlock {
     }
 
     defineBlock() {
+      // Blockly.BlockSvg.START_HAT = true
       this.block.jsonInit(this.jsonBlock);
     }
 

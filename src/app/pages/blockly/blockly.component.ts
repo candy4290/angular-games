@@ -3,7 +3,7 @@ import { NgxBlocklyConfig, NgxBlocklyGeneratorConfig,
   NgxBlocklyComponent, CustomBlock, NgxToolboxBuilderService, Category, Separator } from 'ngx-blockly';
 import { BlocklyService, LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY, VARIABLES_CATEGORY } from './blockly.service';
 import { Subscription } from 'rxjs';
-import { AndOrBlock, ClickDrivenBlock, CreateVariableButton, PandaSetBlock, PandaGetBlock } from 'projects/my-lib/src/public-api';
+import { AndOrBlock, ClickDrivenBlock, CreateVariableButton, PandaSetBlock, VariableGetBlock } from 'projects/my-lib/src/public-api';
 import { DOCUMENT } from '@angular/common';
 import { NzMessageService } from 'ng-zorro-antd';
 // import * as parser from 'xml2json';
@@ -20,9 +20,10 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedLanguage = 'zh-hans'; // 当前选择的语言
   public customBlocks: CustomBlock[] = [
     new AndOrBlock('logic_block_self_add', null, null),
-    new ClickDrivenBlock('block_click_driven', null, null),
-    new PandaGetBlock('variables_get_panda', null, null),
-    new PandaSetBlock('variables_set_panda', null, null)
+    // new ClickDrivenBlock('block_click_driven', null, null),
+    // new VariableGetBlock('variables_get_age', null, null, '年龄', ['int'], 'int'),
+    // new VariableGetBlock('variables_get_sex', null, null, '性别', ['string'], 'string'),
+    // new VariableGetBlock('variables_get_criminal', null, null, '犯罪记录', ['int'], 'int'),
   ]; // 自定义blocks
   @ViewChild(NgxBlocklyComponent, {static: true}) workspace: NgxBlocklyComponent;
   public config: NgxBlocklyConfig = {
@@ -74,6 +75,11 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
+    const getVariables$ = this.blockly.getVariables().subscribe(rsp => {
+      console.log(rsp);
+      this.customBlocks.push(...rsp);
+    });
+    this.subscription$.add(getVariables$);
   }
 
   ngAfterViewInit() {

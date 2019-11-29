@@ -1,0 +1,19 @@
+{
+  "variables": [
+    {
+      "key": "age",
+      "value": "年龄",
+      "type": "int"
+    },
+    {
+      "key": "sex",
+      "value": "性别",
+      "type": "string"
+    },
+    {
+      "key": "criminalRecord",
+      "value": "犯罪记录",
+      "type": "int"
+    }
+  ]
+}
