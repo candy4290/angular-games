@@ -36,61 +36,6 @@ export class BlocklyOriginComponent implements OnInit,  OnDestroy, AfterViewInit
   @ViewChild('blocklyArea', {static: true}) blocklyArea: ElementRef;
   private subscription$ = new Subscription();
   constructor() {
-    Blockly.Mutator.prototype.createEditor_ = function() {
-      /* Create the editor.  Here's the markup that will be generated:
-      <svg>
-        [Workspace]
-      </svg>
-      */
-      this.svgDialog_ = Blockly.utils.dom.createSvgElement('svg',
-          {'x': Blockly.Bubble.BORDER_WIDTH, 'y': Blockly.Bubble.BORDER_WIDTH},
-          null);
-      // Convert the list of names into a list of XML objects for the flyout.
-      if (this.quarkNames_.length) {
-        var quarkXml = Blockly.utils.xml.createElement('xml');
-        for (var i = 0, quarkName; quarkName = this.quarkNames_[i]; i++) {
-          var element = Blockly.utils.xml.createElement('block');
-          element.setAttribute('type', quarkName);
-          quarkXml.appendChild(element);
-        }
-      } else {
-        var quarkXml = null;
-      }
-      var workspaceOptions = {
-        // If you want to enable disabling, also remove the
-        // event filter from workspaceChanged_ .
-        disable: false,
-        disabledPatternId: this.block_.workspace.options.disabledPatternId,
-        languageTree: quarkXml,
-        parentWorkspace: this.block_.workspace,
-        pathToMedia: this.block_.workspace.options.pathToMedia,
-        RTL: this.block_.RTL,
-        toolboxPosition: this.block_.RTL ? Blockly.TOOLBOX_AT_RIGHT :
-            Blockly.TOOLBOX_AT_LEFT,
-        horizontalLayout: false,
-        getMetrics: this.getFlyoutMetrics_.bind(this),
-        setMetrics: null,
-        renderer: this.block_.workspace.options.renderer
-      };
-      this.workspace_ = new Blockly.WorkspaceSvg(workspaceOptions);
-      this.workspace_.isMutator = true;
-      this.workspace_.addChangeListener(Blockly.Events.disableOrphans);
-
-      // Mutator flyouts go inside the mutator workspace's <g> rather than in
-      // a top level svg. Instead of handling scale themselves, mutators
-      // inherit scale from the parent workspace.
-      // To fix this, scale needs to be applied at a different level in the dom.
-      var flyoutSvg = this.workspace_.addFlyout_('g');
-      var background = this.workspace_.createDom('blocklyMutatorBackground');
-
-      // Insert the flyout after the <rect> but before the block canvas so that
-      // the flyout is underneath in z-order.  This makes blocks layering during
-      // dragging work properly.
-      background.insertBefore(flyoutSvg, this.workspace_.svgBlockCanvas_);
-      this.svgDialog_.appendChild(background);
-
-      return this.svgDialog_;
-    };
     Blockly.Extensions.registerMutator('blockly_self_add_mutator', {
       /**
        * 生成xml时调用此方法
@@ -203,9 +148,9 @@ export class BlocklyOriginComponent implements OnInit,  OnDestroy, AfterViewInit
     this.loadCustomeBlock([CustomeBlocks.jsonBlock,
       CustomeBlocks.andOr,
       CustomeBlocks.booleanB,
-      CustomeBlocks.blockSelfMutator
-      // CustomeBlocks.vGet,
-      // CustomeBlocks.vSet,
+      CustomeBlocks.blockSelfMutator,
+      CustomeBlocks.vGet,
+      CustomeBlocks.vSet,
       // CustomeBlocks.pG, CustomeBlocks.pS
     ]);
 
@@ -225,8 +170,10 @@ export class BlocklyOriginComponent implements OnInit,  OnDestroy, AfterViewInit
   ngAfterViewInit() {
     this.workspace = Blockly.inject('blocklyDiv', this.blockConfig);
     this.workspace.registerButtonCallback('createPanda', (e) => {
-      Blockly.Variables.createVariable(e.getTargetWorkspace(), null, 'panda');
+      Blockly.Variables.createVariableButtonHandler(e.getTargetWorkspace(), () => {
+      }, 'panda');
     });
+    new Blockly.Toolbox(this.workspace).selectFirstCategory();
     this.workspace.registerToolboxCategoryCallback('COLOUR_PALETTE', () => this.coloursFlyoutCallback());
     window.addEventListener('resize', onresize, false);
     const onResize$ = fromEvent(window, 'resize').subscribe(() => {

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Category, XmlBlock } from 'ngx-blockly';
+import { NzModalService } from 'ng-zorro-antd';
 declare var Blockly: any;
 
 export const LOGIC_CATEGORY: Category = new Category([
@@ -85,7 +86,8 @@ export const VARIABLES_CATEGORY: Category = new Category([], '%{BKY_VARIABLES_HU
 
 export class BlocklyService {
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+              private modalService: NzModalService) {
   }
 
   /**
@@ -319,5 +321,25 @@ export class BlocklyService {
     //   };
     // };
 
+  }
+
+  changeBrowserDialog() {
+    // window.prompt = (a, b) =>  {
+    //   return this.createModal(a, b);
+    // };
+    // window.alert = (message) => {
+    //   this.modalService.warning(message);
+    // }
+  }
+
+  createModal(message?: string, defaultValue?: string) {
+    this.modalService.create({
+      nzTitle: '来了',
+      nzContent: '打死你',
+      nzOnOk: () => {
+        console.log('开始创建');
+      }
+    });
+    return 'a';
   }
 }

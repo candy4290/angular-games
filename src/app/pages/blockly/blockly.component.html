@@ -3,6 +3,7 @@
   <nz-upload [nzBeforeUpload]="beforeUpload" nzAccept=".xml">
     <button nz-button><i nz-icon nzType="upload"></i><span>导入</span></button>
   </nz-upload>
+  <button nz-button nzType="default" (click)="undo()">撤销</button>
   <button nz-button nzType="default" (click)="clear()">清空</button>
 </div>
 <nz-select style="position: absolute;top: 0;right: 24px;" [(ngModel)]="selectedLanguage" (ngModelChange)="changeLanguage($event)" nzPlaceHolder="请选择语言">

@@ -3,7 +3,7 @@ import { NgxBlocklyConfig, NgxBlocklyGeneratorConfig,
   NgxBlocklyComponent, CustomBlock, NgxToolboxBuilderService, Category, Separator } from 'ngx-blockly';
 import { BlocklyService, LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY, VARIABLES_CATEGORY } from './blockly.service';
 import { Subscription } from 'rxjs';
-import { AndOrBlock, ClickDrivenBlock } from 'projects/my-lib/src/public-api';
+import { AndOrBlock, ClickDrivenBlock, CreateVariableButton } from 'projects/my-lib/src/public-api';
 import { DOCUMENT } from '@angular/common';
 import { NzMessageService } from 'ng-zorro-antd';
 // import * as parser from 'xml2json';
@@ -20,7 +20,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedLanguage = 'zh-hans'; // 当前选择的语言
   public customBlocks: CustomBlock[] = [
     new AndOrBlock('logic_block_self_add', null, null),
-    new ClickDrivenBlock('block_click_driven', null, null)
+    new ClickDrivenBlock('block_click_driven', null, null),
   ]; // 自定义blocks
   @ViewChild(NgxBlocklyComponent, {static: true}) workspace: NgxBlocklyComponent;
   public config: NgxBlocklyConfig = {
@@ -60,7 +60,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     this.blockly.changeToolboxStyle();
     this.blockly.loadBlockInMutator();
     this.ngxToolboxBuilder.nodes = [
-      new Category(this.customBlocks, '#FF00FF', '自定义', null), new Separator(),
+    new Category([...this.customBlocks, new CreateVariableButton('创建变量', 'createAge' )], '#FF00FF', '自定义', null), new Separator(),
       LOGIC_CATEGORY, new Separator(),
       LOOP_CATEGORY,  new Separator(),
       MATH_CATEGORY, new Separator(),
@@ -76,7 +76,9 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.workspace.workspace.registerButtonCallback('createAge', (e: any) => {
-      Blockly.Variables.createVariable(e.getTargetWorkspace(), null, 'Number'); // 创建一个类型为Number的变量
+      Blockly.Variables.createVariable(e.getTargetWorkspace(), (a) => {
+        console.log(a);
+      }, 'int'); // 创建一个类型为Number的变量
     });
   }
 
@@ -149,7 +151,17 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     eval(this.jsCode);
   }
 
+  /**
+   * 清空工作区间
+   */
   clear() {
     this.workspace.workspace.clear();
+  }
+
+  /**
+   * 撤销
+   */
+  undo() {
+    this.workspace.workspace.undo();
   }
 }
