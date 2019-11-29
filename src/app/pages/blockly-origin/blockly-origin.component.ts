@@ -171,7 +171,8 @@ export class BlocklyOriginComponent implements OnInit,  OnDestroy, AfterViewInit
     this.workspace = Blockly.inject('blocklyDiv', this.blockConfig);
     this.workspace.registerButtonCallback('createPanda', (e) => {
       Blockly.Variables.createVariableButtonHandler(e.getTargetWorkspace(), () => {
-        this.workspace.refreshToolboxSelection();
+        this.workspace.updateToolbox(Toolboxs.defaultToolbox2);
+        // this.workspace.refreshToolboxSelection();
       }, 'panda');
     });
     // new Blockly.Toolbox(this.workspace).selectFirstCategory();
