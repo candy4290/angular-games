@@ -3,7 +3,7 @@ import { NgxBlocklyConfig, NgxBlocklyGeneratorConfig,
   NgxBlocklyComponent, CustomBlock, NgxToolboxBuilderService, Category, Separator } from 'ngx-blockly';
 import { BlocklyService, LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY, VARIABLES_CATEGORY } from './blockly.service';
 import { Subscription } from 'rxjs';
-import { AndOrBlock, ClickDrivenBlock, CreateVariableButton } from 'projects/my-lib/src/public-api';
+import { AndOrBlock, ClickDrivenBlock, CreateVariableButton, PandaSetBlock, PandaGetBlock } from 'projects/my-lib/src/public-api';
 import { DOCUMENT } from '@angular/common';
 import { NzMessageService } from 'ng-zorro-antd';
 // import * as parser from 'xml2json';
@@ -21,6 +21,8 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   public customBlocks: CustomBlock[] = [
     new AndOrBlock('logic_block_self_add', null, null),
     new ClickDrivenBlock('block_click_driven', null, null),
+    new PandaGetBlock('variables_get_panda', null, null),
+    new PandaSetBlock('variables_set_panda', null, null)
   ]; // 自定义blocks
   @ViewChild(NgxBlocklyComponent, {static: true}) workspace: NgxBlocklyComponent;
   public config: NgxBlocklyConfig = {

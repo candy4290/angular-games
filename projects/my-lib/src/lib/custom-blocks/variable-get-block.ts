@@ -10,7 +10,7 @@ export class PandaGetBlock extends CustomBlock {
         {
           type: 'field_variable',
           name: 'VAR',
-          variable: '%{BKY_VARIABLES_DEFAULT_NAME}',
+          variable: 'item',
           variableTypes: ['Panda'],    // Specifies what types to put in the dropdown
           defaultType: 'Panda'
         }
@@ -32,9 +32,7 @@ export class PandaGetBlock extends CustomBlock {
     }
 
     toJavaScriptCode(e: any) {
-      console.log(this.block.getFieldValue('END'));
-      console.log(this.args);
-      return '打死你';
+      return ['', Blockly.JavaScript.ORDER_NONE];
     }
 
     onChange(changeEvent: any) {

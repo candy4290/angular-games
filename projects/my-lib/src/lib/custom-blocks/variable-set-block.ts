@@ -10,7 +10,7 @@ export class PandaSetBlock extends CustomBlock {
         {
           type: 'field_variable',
           name: 'VAR',
-          variable: '%{BKY_VARIABLES_DEFAULT_NAME}',
+          variable: 'item',
           variableTypes: ['Panda'],
           defaultType: 'Panda'
         },
@@ -38,7 +38,7 @@ export class PandaSetBlock extends CustomBlock {
     }
 
     toJavaScriptCode(e: any) {
-      return '打死你';
+      return  ['', Blockly.JavaScript.ORDER_NONE];
     }
 
     onChange(changeEvent: any) {

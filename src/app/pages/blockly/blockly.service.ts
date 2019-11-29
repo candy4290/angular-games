@@ -158,7 +158,7 @@ export class BlocklyService {
           if (!this.getInput(`NAME${i}`)) {
             const input = this.appendValueInput(`NAME${i}`);
             if (i === 1) {
-              input.appendField(new Blockly.FieldDropdown([['and', '&&'], ['or', '||']]), 'NAME');
+              input.appendField(new Blockly.FieldDropdown([['且', '&&'], ['或', '||']]), 'NAME');
             }
           }
         }
