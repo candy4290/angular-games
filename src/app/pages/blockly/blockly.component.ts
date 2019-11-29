@@ -63,7 +63,8 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     this.blockly.changeToolboxStyle();
     this.blockly.loadBlockInMutator();
     this.ngxToolboxBuilder.nodes = [
-    new Category([...this.customBlocks, new CreateVariableButton('创建变量', 'createAge' )], '#FF00FF', '自定义', null), new Separator(),
+    new Category([...this.customBlocks, new CreateVariableButton('加载变量', 'loadVariables' ),
+    new CreateVariableButton('创建变量', 'createAge' )], '#FF00FF', '自定义', null), new Separator(),
       LOGIC_CATEGORY, new Separator(),
       LOOP_CATEGORY,  new Separator(),
       MATH_CATEGORY, new Separator(),
@@ -75,22 +76,6 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-      const getVariables$ = this.blockly.getVariables().subscribe(rsp => {
-        // 更新toolbox
-        this.customBlocks.push(...rsp);
-        this.ngxToolboxBuilder.nodes = [
-          new Category([...this.customBlocks, new CreateVariableButton('创建变量', 'createAge' )], '#FF00FF', '自定义', null), new Separator(),
-            LOGIC_CATEGORY, new Separator(),
-            LOOP_CATEGORY,  new Separator(),
-            MATH_CATEGORY, new Separator(),
-            TEXT_CATEGORY, new Separator(),
-            LISTS_CATEGORY, new Separator(),
-            VARIABLES_CATEGORY
-          ];
-        this.workspace.workspace.updateToolbox(this.ngxToolboxBuilder.build());
-
-      });
-      this.subscription$.add(getVariables$);
   }
 
   ngAfterViewInit() {
@@ -99,6 +84,28 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log(a);
       }, 'int'); // 创建一个类型为Number的变量
     });
+    this.workspace.workspace.registerButtonCallback('loadVariables', (e: any) => {
+      this.loadVariables();
+    });
+  }
+
+  loadVariables() {
+    const getVariables$ = this.blockly.getVariables().subscribe(rsp => {
+      // 更新toolbox
+      this.customBlocks.push(...rsp);
+      this.ngxToolboxBuilder.nodes = [
+        new Category([...this.customBlocks, new CreateVariableButton('加载变量', 'loadVariables' ),
+          new CreateVariableButton('创建变量', 'createAge' )], '#FF00FF', '自定义', null), new Separator(),
+          LOGIC_CATEGORY, new Separator(),
+          LOOP_CATEGORY,  new Separator(),
+          MATH_CATEGORY, new Separator(),
+          TEXT_CATEGORY, new Separator(),
+          LISTS_CATEGORY, new Separator(),
+          VARIABLES_CATEGORY
+        ];
+      this.workspace.workspace.updateToolbox(this.ngxToolboxBuilder.build());
+    });
+    this.subscription$.add(getVariables$);
   }
 
   ngOnDestroy() {
