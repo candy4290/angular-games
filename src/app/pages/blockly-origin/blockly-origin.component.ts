@@ -171,9 +171,10 @@ export class BlocklyOriginComponent implements OnInit,  OnDestroy, AfterViewInit
     this.workspace = Blockly.inject('blocklyDiv', this.blockConfig);
     this.workspace.registerButtonCallback('createPanda', (e) => {
       Blockly.Variables.createVariableButtonHandler(e.getTargetWorkspace(), () => {
+        this.workspace.refreshToolboxSelection();
       }, 'panda');
     });
-    new Blockly.Toolbox(this.workspace).selectFirstCategory();
+    // new Blockly.Toolbox(this.workspace).selectFirstCategory();
     this.workspace.registerToolboxCategoryCallback('COLOUR_PALETTE', () => this.coloursFlyoutCallback());
     window.addEventListener('resize', onresize, false);
     const onResize$ = fromEvent(window, 'resize').subscribe(() => {
@@ -207,13 +208,15 @@ export class BlocklyOriginComponent implements OnInit,  OnDestroy, AfterViewInit
     const colourList =  ['#4286f4', '#ef0447'];
     const xmlList = [];
     if (Blockly.Blocks['colour_picker']) {
-      for (const item of colourList) {
-        const blockText = '<block type=colour_picker>' +
-            '<field name=COLOUR>' + item + '</field>' +
-            '</block>';
+      for (let i = 0; i < colourList.length; i++) {
+        const blockText = '<block type="colour_picker">' +
+            '<field name="COLOUR">' + colourList[i] + '</field>' +
+            '</block>' ;
         const block = Blockly.Xml.textToDom(blockText);
         xmlList.push(block);
       }
+      const btn = Blockly.Xml.textToDom('<button text="createPanda" callbackKey="createPanda"></button>');
+      xmlList.push(btn);
     }
     return xmlList;
   }

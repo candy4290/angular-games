@@ -103,7 +103,7 @@ export class BlocklyService {
   }
 
   /**
-   *  获取标签（变量）
+   *  获取标签（变量）,并生成block及其javascript方法
    */
   getVariables(path?: string) {
     return this.http.get(path || 'assets/blockly/variables/variables.json', {}).pipe(
@@ -111,8 +111,32 @@ export class BlocklyService {
         const tempBlocks = [];
         const variables = rsp.variables || [];
         for (let i = 0, len = variables.length; i < len; i++) {
-          const temp = new VariableGetBlock(`variables_get_${variables[i].key}`, null, null, variables[i].value, [variables[i].type], variables[i].type);
-          tempBlocks.push(temp);
+          const temp = {
+            type: `variables_get_${variables[i].key}` ,
+            message0: '%1',
+            args0: [
+              {
+                type: 'field_variable',
+                name: 'VAR',
+                variable:  variables[i].key || 'item',
+                variableTypes: [variables[i].type],    // Specifies what types to put in the dropdown
+                defaultType:  variables[i].type
+              }
+            ],
+            colour: '%{BKY_LOGIC_HUE}',
+            output:  variables[i].type || null,    // Returns a value of 'Panda'
+          };
+          tempBlocks.push(
+            new VariableGetBlock(`variables_get_${variables[i].key}`, null, null, variables[i].value, [variables[i].type], variables[i].type)
+          );
+          Blockly.Blocks[`variables_get_${variables[i].key}` ] = {
+            init() {
+              this.jsonInit(temp);
+            }
+          };
+          Blockly.JavaScript[`variables_get_${variables[i].key}`] = () => {
+            return [variables[i].value, Blockly.JavaScript.ORDER_NONE];
+          };
         }
         return tempBlocks;
       })
@@ -339,6 +363,13 @@ export class BlocklyService {
     //     pathUp:  'a 4 4 90 1 1 0,-16'
     //   };
     // };
+    Blockly.Toolbox.prototype.refreshSelection = function() {
+      var selectedItem = this.tree_.getSelectedItem();
+      console.log(selectedItem);
+      if (selectedItem && selectedItem.blocks) {
+        this.flyout_.show(selectedItem.blocks);
+      }
+    };
 
   }
 

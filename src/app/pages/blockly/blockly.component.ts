@@ -75,11 +75,22 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    const getVariables$ = this.blockly.getVariables().subscribe(rsp => {
-      console.log(rsp);
-      this.customBlocks.push(...rsp);
-    });
-    this.subscription$.add(getVariables$);
+      const getVariables$ = this.blockly.getVariables().subscribe(rsp => {
+        // 更新toolbox
+        this.customBlocks.push(...rsp);
+        this.ngxToolboxBuilder.nodes = [
+          new Category([...this.customBlocks, new CreateVariableButton('创建变量', 'createAge' )], '#FF00FF', '自定义', null), new Separator(),
+            LOGIC_CATEGORY, new Separator(),
+            LOOP_CATEGORY,  new Separator(),
+            MATH_CATEGORY, new Separator(),
+            TEXT_CATEGORY, new Separator(),
+            LISTS_CATEGORY, new Separator(),
+            VARIABLES_CATEGORY
+          ];
+        this.workspace.workspace.updateToolbox(this.ngxToolboxBuilder.build());
+
+      });
+      this.subscription$.add(getVariables$);
   }
 
   ngAfterViewInit() {
