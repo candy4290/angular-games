@@ -61,6 +61,10 @@ export class Toolboxs {
         <mutation divisor_input="true"></mutation>
         <field name="PROPERTY">DIVISIBLE_BY</field>
       </block>
+      <block type="logic_block_self_add">
+        <mutation items="2"></mutation>
+        <field name="NAME">&amp;&amp;</field>
+      </block>
     </category>
     <category name="dynamic" custom="COLOUR_PALETTE"></category>
   </xml>`;

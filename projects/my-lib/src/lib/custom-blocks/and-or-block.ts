@@ -3,7 +3,7 @@ import { CustomBlock, BlockMutator } from 'ngx-blockly';
 declare var Blockly: any;
 
 export class AndOrBlock extends CustomBlock {
-    jsonBlock ={
+    jsonBlock = {
       type: 'logic_block_self_add',
       message0: '%1 %2 %3',
       args0: [
@@ -51,7 +51,10 @@ export class AndOrBlock extends CustomBlock {
     }
 
     toXML() {
-        return `<block type='${this.type}'></block>`;
+        return `<block type='${this.type}'>
+          <mutation items="2"></mutation>
+          <field name="NAME">&amp;&amp;</field>
+        </block>`;
     }
 
     toJavaScriptCode(e: any) {
