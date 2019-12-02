@@ -100,13 +100,12 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     // const preSelectedItem = treeControl.getSelectedItem();
     const getVariables$ = this.blockly.getVariables().subscribe(rsp => {
       // 更新toolbox
-      this.customBlocks.push(...rsp);
       const index = this.ngxToolboxBuilder.nodes.findIndex(item => item['name'] === '变量');
       this.ngxToolboxBuilder.nodes[index] = new Category(
         [
           new CreateVariableButton('加载变量', 'loadVariables' ),
           new CreateVariableButton('创建变量', 'createAge' ),
-          ...this.customBlocks,
+          ...rsp,
         ], '#FF00FF', '变量', null);
       this.workspace.workspace.updateToolbox(this.ngxToolboxBuilder.build());
       this.workspace.workspace.getToolbox().selectFirstCategory();

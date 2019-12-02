@@ -117,7 +117,7 @@ export class BlocklyService {
               {
                 type: 'field_variable',
                 name: 'VAR',
-                variable:  variables[i].key || 'item',
+                variable:  variables[i].value || 'item',
                 variableTypes: [variables[i].type],    // Specifies what types to put in the dropdown
                 defaultType:  variables[i].type
               }
@@ -126,7 +126,7 @@ export class BlocklyService {
             output:  variables[i].type || null,    // Returns a value of 'Panda'
           };
           tempBlocks.push(
-            new VariableGetBlock(`variables_get_${variables[i].key}`, null, null, variables[i].value, [variables[i].type], variables[i].type)
+            new VariableGetBlock(`variables_get_${variables[i].key}`, null, null, variables[i].value, [variables[i].type], variables[i].type, variables[i].key)
           );
           Blockly.Blocks[`variables_get_${variables[i].key}` ] = {
             init() {
@@ -345,7 +345,7 @@ export class BlocklyService {
       if (nodes[i] instanceof Category) {
         const blocks = nodes[i].blocks || [];
         for (let j = 0, len2 = blocks.length; j < len2; j ++) {
-          const variablesName = ((blocks[j].args || [])[0] || '') + ((blocks[j].args || [])[2] || '');
+          const variablesName = ((blocks[j].args || [])[0] || '') + ((blocks[j].args || [])[3] || ''); // 变量的中文+英文名
           if (variablesName.includes(keyWords)) {
             result.push(blocks[j]);
           }
