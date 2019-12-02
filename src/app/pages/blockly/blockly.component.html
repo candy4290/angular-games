@@ -31,3 +31,9 @@
 {{content}}
   </nz-tab>
 </nz-tabset>
+  <nz-input-group class="app-blockly-search" [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="搜索变量..." (keyup)="keyup($event)" [(ngModel)]="keyWords" (focus)="focus()" />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>

@@ -22,6 +22,11 @@
   i {
     font-size: 24px;
   }
+
+}
+.app-blockly-search {
+  display: none;
+  width:136px;
 }
 
 :host ::ng-deep {

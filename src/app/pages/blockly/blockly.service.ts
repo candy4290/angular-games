@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Renderer2, ElementRef, RendererFactory2 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Category, XmlBlock } from 'ngx-blockly';
 import { NzModalService } from 'ng-zorro-antd';
 import { map } from 'rxjs/operators';
-import { VariableGetBlock } from 'projects/my-lib/src/public-api';
+import { VariableGetBlock, CustomLabel } from 'projects/my-lib/src/public-api';
+import { of } from 'rxjs';
 declare var Blockly: any;
 
 export const LOGIC_CATEGORY: Category = new Category([
@@ -82,12 +83,9 @@ export const VARIABLES_CATEGORY: Category = new Category([], '%{BKY_VARIABLES_HU
 
 // export const FUNCTIONS_CATEGORY: Category = new Category([], '%{BKY_PROCEDURES_HUE}', 'Functions', 'PROCEDURE');
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 
 export class BlocklyService {
-
   constructor(private http: HttpClient,
               private modalService: NzModalService) {
   }
@@ -325,23 +323,59 @@ export class BlocklyService {
 
   }
 
-  changeBrowserDialog() {
-    // window.prompt = (a, b) =>  {
-    //   return this.createModal(a, b);
-    // };
-    // window.alert = (message) => {
-    //   this.modalService.warning(message);
-    // }
+  /**
+   * 在toolbox目录上方插入搜索框，并resize()
+   */
+  insertSearchInputIntoToolbox(render2: Renderer2, ele: ElementRef, workspace: any) {
+    const treeRoot =  ele.nativeElement.querySelector('.blocklyToolboxDiv');
+    const searchInput =  ele.nativeElement.querySelector('.ant-input-affix-wrapper');
+    render2.setStyle(searchInput, 'display', 'block');
+    render2.insertBefore(treeRoot, searchInput, ele.nativeElement.querySelector('.blocklyTreeRoot'));
+    workspace.workspace.resize();
   }
 
-  createModal(message?: string, defaultValue?: string) {
-    this.modalService.create({
-      nzTitle: '来了',
-      nzContent: '打死你',
-      nzOnOk: () => {
-        console.log('开始创建');
+  /**
+   * 根据名称搜索block，并且创建一个目录，将搜索结果放入其中
+   */
+  searchBlockByName(keyWords: string, workspace: any, ngxToolboxBuilder: any) {
+    const nodes = ngxToolboxBuilder._nodes;
+    const result = [];
+    for (let i = 0, len = nodes.length; i < len; i ++) {
+      if (nodes[i] instanceof Category) {
+        const blocks = nodes[i].blocks || [];
+        for (let j = 0, len2 = blocks.length; j < len2; j ++) {
+          console.log(blocks[j]);
+          const variablesName = ((blocks[j].args || [])[0] || '') + ((blocks[j].args || [])[2] || '');
+          console.log(variablesName, keyWords);
+          if (variablesName.includes(keyWords)) {
+            result.push(blocks[j]);
+          }
+        }
       }
-    });
-    return 'a';
+    }
+    const toolbox = ngxToolboxBuilder.build();
+    const ifExistSearchResultCategory = toolbox.includes('查询结果');
+    if (keyWords) {
+      if (!ifExistSearchResultCategory) {
+        if (result && result.length > 0) {
+          ngxToolboxBuilder.nodes.unshift(new Category([
+            ...result
+          ], '#ff00ff', '查询结果', null));
+        } else {
+          ngxToolboxBuilder.nodes.unshift(new Category([
+            new CustomLabel('暂无搜索结果')
+          ], '#ff00ff', '查询结果', null));
+        }
+      }
+      workspace.workspace.updateToolbox(ngxToolboxBuilder.build());
+      workspace.workspace.getToolbox().selectFirstCategory();
+    } else {
+      if (ifExistSearchResultCategory) {
+        ngxToolboxBuilder.nodes.shift();
+        workspace.workspace.updateToolbox(ngxToolboxBuilder.build());
+        workspace.workspace.getToolbox().selectFirstCategory();
+      }
+    }
+    return of();
   }
 }
