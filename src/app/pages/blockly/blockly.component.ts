@@ -63,7 +63,8 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     this.blockly.changeToolboxStyle();
     this.blockly.loadBlockInMutator();
     this.ngxToolboxBuilder.nodes = [
-    new Category([...this.customBlocks, new CreateVariableButton('加载变量', 'loadVariables' ),
+    new Category([new CreateVariableButton('加载变量', 'loadVariables' ),
+    ...this.customBlocks,
     new CreateVariableButton('创建变量', 'createAge' )], '#FF00FF', '自定义', null), new Separator(),
       LOGIC_CATEGORY, new Separator(),
       LOOP_CATEGORY,  new Separator(),
@@ -90,11 +91,13 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   loadVariables() {
+    // const treeControl = this.workspace.workspace.getToolbox().tree_; // 每次调用renderTree都会生成新的TreeControl
+    // const preSelectedItem = treeControl.getSelectedItem();
     const getVariables$ = this.blockly.getVariables().subscribe(rsp => {
       // 更新toolbox
       this.customBlocks.push(...rsp);
       this.ngxToolboxBuilder.nodes = [
-        new Category([...this.customBlocks, new CreateVariableButton('加载变量', 'loadVariables' ),
+        new Category([new CreateVariableButton('加载变量', 'loadVariables' ), ...this.customBlocks,
           new CreateVariableButton('创建变量', 'createAge' )], '#FF00FF', '自定义', null), new Separator(),
           LOGIC_CATEGORY, new Separator(),
           LOOP_CATEGORY,  new Separator(),
@@ -104,6 +107,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
           VARIABLES_CATEGORY
         ];
       this.workspace.workspace.updateToolbox(this.ngxToolboxBuilder.build());
+      this.workspace.workspace.getToolbox().selectFirstCategory();
     });
     this.subscription$.add(getVariables$);
   }

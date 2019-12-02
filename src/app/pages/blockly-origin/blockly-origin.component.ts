@@ -172,10 +172,8 @@ export class BlocklyOriginComponent implements OnInit,  OnDestroy, AfterViewInit
     this.workspace.registerButtonCallback('createPanda', (e) => {
       Blockly.Variables.createVariableButtonHandler(e.getTargetWorkspace(), () => {
         this.workspace.updateToolbox(Toolboxs.defaultToolbox2);
-        // this.workspace.refreshToolboxSelection();
       }, 'panda');
     });
-    // new Blockly.Toolbox(this.workspace).selectFirstCategory();
     this.workspace.registerToolboxCategoryCallback('COLOUR_PALETTE', () => this.coloursFlyoutCallback());
     window.addEventListener('resize', onresize, false);
     const onResize$ = fromEvent(window, 'resize').subscribe(() => {

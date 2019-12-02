@@ -273,25 +273,13 @@ export class BlocklyService {
    * 更改toolbox样式
    */
   changeToolboxStyle() {
-    Blockly.Toolbox.prototype.addColour_ = function(opt_tree) {
-    };
-
-    Blockly.Toolbox.prototype.updateSelectedItemColour_ = function(tree) {
-      // const selectedItem = tree.getSelectedItem();
-      // if (selectedItem) {
-        // const hexColour = selectedItem.hexColour || '#57e';
-        // selectedItem.getRowElement().style.backgroundColor = hexColour;
-        // this.addColour_(selectedItem);
-      // }
-    };
-
+    // 目录左侧的颜色条
+    Blockly.Toolbox.prototype.addColour_ = () => {};
+    // 给选中的条目加上背景色
     Blockly.Toolbox.prototype.handleBeforeTreeSelected_ = function(node) {
       if (node === this.tree_) {
         return false;
       }
-      // if (this.lastCategory_) {
-      //   this.lastCategory_.getRowElement().style.backgroundColor = '';
-      // }
       if (node) {
         // const hexColour = node.hexColour || '#57e';
         // node.getRowElement().style.backgroundColor = hexColour;
@@ -302,14 +290,7 @@ export class BlocklyService {
       return true;
     };
 
-    Blockly.tree.BaseNode.prototype.getRowClassName = function() {
-      let selectedClass = '';
-      if (this.isSelected()) {
-       selectedClass = ' ' + (this.config_.cssSelectedRow || '');
-      }
-      return this.config_.cssTreeRow + selectedClass;
-    };
-
+    // 给目录加上图片
     Blockly.tree.BaseNode.prototype.getRowDom = function() {
       const row = document.createElement('div');
       row.className = this.getRowClassName();
@@ -329,29 +310,7 @@ export class BlocklyService {
       return row;
     };
 
-    Blockly.tree.BaseNode.prototype.getLabelDom = function() {
-      const label = document.createElement('span');
-      label.className = this.config_.cssItemLabel || '';
-      label.textContent = this.getText();
-      return label;
-    };
-
-    // Blockly.utils.dom.createSvgElement = function(name, attrs, parent) {
-    //   console.log(name, attrs, parent);
-    //   const e = /** @type {!SVGElement} */
-    //   (document.createElementNS(Blockly.utils.dom.SVG_NS, name));
-    //   console.log(e);
-    //   for (const key in attrs) {
-    //     if (key) {
-    //       e.setAttribute(key, attrs[key]);
-    //     }
-    //   }
-    //   if (parent) {
-    //     parent.appendChild(e);
-    //   }
-    //   return e;
-    // };
-
+    // 更新input,和output的卡槽形状
     // Blockly.blockRendering.ConstantProvider.prototype.makePuzzleTab = function() {
     //   const width = this.TAB_WIDTH;
     //   const height = this.TAB_HEIGHT;
@@ -363,75 +322,6 @@ export class BlocklyService {
     //     pathUp:  'a 4 4 90 1 1 0,-16'
     //   };
     // };
-    Blockly.Toolbox.prototype.renderTree = function(languageTree) {
-      if (this.tree_) {
-        this.tree_.dispose();  // Delete any existing content.
-        this.lastCategory_ = null;
-      }
-      var tree = new Blockly.tree.TreeControl(this,
-          /** @type {!Blockly.tree.BaseNode.Config} */ (this.config_));
-      this.tree_ = tree;
-      tree.setSelectedItem(null);
-      tree.onBeforeSelected(this.handleBeforeTreeSelected_);
-      tree.onAfterSelected(this.handleAfterTreeSelected_);
-      var openNode = null;
-      console.log(languageTree);
-      console.log(this.tree_);
-
-      if (languageTree) {
-        this.tree_.blocks = [];
-        this.hasColours_ = false;
-        var openNode =
-          this.syncTrees_(languageTree, this.tree_, this.workspace_.options.pathToMedia);
-        console.log(openNode);
-        if (this.tree_.blocks.length) {
-          throw Error('Toolbox cannot have both blocks and categories ' +
-              'in the root level.');
-        }
-        // Fire a resize event since the toolbox may have changed width and height.
-        this.workspace_.resizeContents();
-      }
-      tree.render(this.HtmlDiv);
-      if (openNode) {
-        tree.setSelectedItem(openNode);
-      }
-      this.addColour_();
-      this.position();
-
-      // Trees have an implicit orientation of vertical, so we only need to set this
-      // when the toolbox is in horizontal mode.
-      if (this.horizontalLayout_) {
-        Blockly.utils.aria.setState(/** @type {!Element} */ (this.tree_.getElement()),
-            Blockly.utils.aria.State.ORIENTATION, 'horizontal');
-      }
-    };
-    Blockly.tree.TreeControl.prototype.setSelectedItem = function(node) {
-      if (node == this.selectedItem_) {
-        return;
-      }
-
-      if (this.onBeforeSelected_ &&
-        !this.onBeforeSelected_.call(this.toolbox_, node)) {
-        return;
-      }
-
-      var oldNode = this.getSelectedItem();
-      console.log(oldNode);
-      if (this.selectedItem_) {
-        this.selectedItem_.setSelectedInternal(false);
-      }
-
-      this.selectedItem_ = node;
-
-      if (node) {
-        node.setSelectedInternal(true);
-      }
-
-      if (this.onAfterSelected_) {
-        this.onAfterSelected_.call(this.toolbox_, oldNode, node);
-      }
-    };
-
 
   }
 
