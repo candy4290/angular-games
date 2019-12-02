@@ -363,13 +363,75 @@ export class BlocklyService {
     //     pathUp:  'a 4 4 90 1 1 0,-16'
     //   };
     // };
-    Blockly.Toolbox.prototype.refreshSelection = function() {
-      var selectedItem = this.tree_.getSelectedItem();
-      console.log(selectedItem);
-      if (selectedItem && selectedItem.blocks) {
-        this.flyout_.show(selectedItem.blocks);
+    Blockly.Toolbox.prototype.renderTree = function(languageTree) {
+      if (this.tree_) {
+        this.tree_.dispose();  // Delete any existing content.
+        this.lastCategory_ = null;
+      }
+      var tree = new Blockly.tree.TreeControl(this,
+          /** @type {!Blockly.tree.BaseNode.Config} */ (this.config_));
+      this.tree_ = tree;
+      tree.setSelectedItem(null);
+      tree.onBeforeSelected(this.handleBeforeTreeSelected_);
+      tree.onAfterSelected(this.handleAfterTreeSelected_);
+      var openNode = null;
+      console.log(languageTree);
+      console.log(this.tree_);
+
+      if (languageTree) {
+        this.tree_.blocks = [];
+        this.hasColours_ = false;
+        var openNode =
+          this.syncTrees_(languageTree, this.tree_, this.workspace_.options.pathToMedia);
+        console.log(openNode);
+        if (this.tree_.blocks.length) {
+          throw Error('Toolbox cannot have both blocks and categories ' +
+              'in the root level.');
+        }
+        // Fire a resize event since the toolbox may have changed width and height.
+        this.workspace_.resizeContents();
+      }
+      tree.render(this.HtmlDiv);
+      if (openNode) {
+        tree.setSelectedItem(openNode);
+      }
+      this.addColour_();
+      this.position();
+
+      // Trees have an implicit orientation of vertical, so we only need to set this
+      // when the toolbox is in horizontal mode.
+      if (this.horizontalLayout_) {
+        Blockly.utils.aria.setState(/** @type {!Element} */ (this.tree_.getElement()),
+            Blockly.utils.aria.State.ORIENTATION, 'horizontal');
       }
     };
+    Blockly.tree.TreeControl.prototype.setSelectedItem = function(node) {
+      if (node == this.selectedItem_) {
+        return;
+      }
+
+      if (this.onBeforeSelected_ &&
+        !this.onBeforeSelected_.call(this.toolbox_, node)) {
+        return;
+      }
+
+      var oldNode = this.getSelectedItem();
+      console.log(oldNode);
+      if (this.selectedItem_) {
+        this.selectedItem_.setSelectedInternal(false);
+      }
+
+      this.selectedItem_ = node;
+
+      if (node) {
+        node.setSelectedInternal(true);
+      }
+
+      if (this.onAfterSelected_) {
+        this.onAfterSelected_.call(this.toolbox_, oldNode, node);
+      }
+    };
+
 
   }
 

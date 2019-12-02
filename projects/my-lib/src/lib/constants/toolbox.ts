@@ -124,5 +124,7 @@ export class Toolboxs {
       <field name="NAME">&amp;&amp;</field>
     </block>
   </category>
+  <category name="dynamic" custom="COLOUR_PALETTE">
+  </category>
 </xml>`;
 }
