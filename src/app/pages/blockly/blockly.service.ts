@@ -3,11 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Category, XmlBlock } from 'ngx-blockly';
 import { NzModalService } from 'ng-zorro-antd';
 import { map } from 'rxjs/operators';
-import { VariableGetBlock, CustomLabel } from 'projects/my-lib/src/public-api';
+import { VariableGetBlock, CustomLabel, AndOrBlock } from 'projects/my-lib/src/public-api';
 import { of } from 'rxjs';
 declare var Blockly: any;
 
 export const LOGIC_CATEGORY: Category = new Category([
+  new AndOrBlock('logic_block_self_add', null, null),
   new XmlBlock('controls_if'),
   new XmlBlock('logic_compare'),
   new XmlBlock('logic_operation'),
@@ -344,9 +345,7 @@ export class BlocklyService {
       if (nodes[i] instanceof Category) {
         const blocks = nodes[i].blocks || [];
         for (let j = 0, len2 = blocks.length; j < len2; j ++) {
-          console.log(blocks[j]);
           const variablesName = ((blocks[j].args || [])[0] || '') + ((blocks[j].args || [])[2] || '');
-          console.log(variablesName, keyWords);
           if (variablesName.includes(keyWords)) {
             result.push(blocks[j]);
           }

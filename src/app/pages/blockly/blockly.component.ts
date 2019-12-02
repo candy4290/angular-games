@@ -1,9 +1,9 @@
 import { OnInit, OnDestroy, Component, ViewChild, Inject, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
 import { NgxBlocklyConfig, NgxBlocklyGeneratorConfig,
   NgxBlocklyComponent, CustomBlock, NgxToolboxBuilderService, Category, Separator } from 'ngx-blockly';
-import { BlocklyService, LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY, VARIABLES_CATEGORY } from './blockly.service';
+import { BlocklyService, LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY } from './blockly.service';
 import { Subscription, Subject } from 'rxjs';
-import { AndOrBlock, ClickDrivenBlock, CreateVariableButton, PandaSetBlock, VariableGetBlock } from 'projects/my-lib/src/public-api';
+import { AndOrBlock, CreateVariableButton } from 'projects/my-lib/src/public-api';
 import { DOCUMENT } from '@angular/common';
 import { NzMessageService } from 'ng-zorro-antd';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -22,10 +22,6 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   public searchResult: CustomBlock[] = []; // 变量搜索结果
   public customBlocks: CustomBlock[] = [
     new AndOrBlock('logic_block_self_add', null, null),
-    // new ClickDrivenBlock('block_click_driven', null, null),
-    // new VariableGetBlock('variables_get_age', null, null, '年龄', ['int'], 'int'),
-    // new VariableGetBlock('variables_get_sex', null, null, '性别', ['string'], 'string'),
-    // new VariableGetBlock('variables_get_criminal', null, null, '犯罪记录', ['int'], 'int'),
   ]; // 自定义blocks
   @ViewChild(NgxBlocklyComponent, {static: true}) workspace: NgxBlocklyComponent;
   public config: NgxBlocklyConfig = {
@@ -66,14 +62,13 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     this.blockly.loadBlockInMutator();
     this.ngxToolboxBuilder.nodes = [
     new Category([new CreateVariableButton('加载变量', 'loadVariables' ),
-    ...this.customBlocks,
-    new CreateVariableButton('创建变量', 'createAge' )], '#FF00FF', '自定义', null), new Separator(),
+    new CreateVariableButton('创建变量', 'createAge' )], '#FF00FF', '变量', null), new Separator(),
       LOGIC_CATEGORY, new Separator(),
       LOOP_CATEGORY,  new Separator(),
       MATH_CATEGORY, new Separator(),
       TEXT_CATEGORY, new Separator(),
       LISTS_CATEGORY, new Separator(),
-      VARIABLES_CATEGORY
+      // VARIABLES_CATEGORY
     ];
     this.config.toolbox = this.ngxToolboxBuilder.build();
   }
@@ -92,7 +87,6 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.workspace.workspace.registerButtonCallback('createAge', (e: any) => {
       Blockly.Variables.createVariable(e.getTargetWorkspace(), (a) => {
-        console.log(a);
       }, 'int'); // 创建一个类型为Number的变量
     });
     this.blockly.insertSearchInputIntoToolbox(this.render2, this.el, this.workspace);
@@ -107,10 +101,13 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     const getVariables$ = this.blockly.getVariables().subscribe(rsp => {
       // 更新toolbox
       this.customBlocks.push(...rsp);
-      const index = this.ngxToolboxBuilder.nodes.findIndex(item => item['name'] === '自定义');
+      const index = this.ngxToolboxBuilder.nodes.findIndex(item => item['name'] === '变量');
       this.ngxToolboxBuilder.nodes[index] = new Category(
-        [new CreateVariableButton('加载变量', 'loadVariables' ),  ...this.customBlocks,
-      new CreateVariableButton('创建变量', 'createAge' )], '#FF00FF', '自定义', null);
+        [
+          new CreateVariableButton('加载变量', 'loadVariables' ),
+          new CreateVariableButton('创建变量', 'createAge' ),
+          ...this.customBlocks,
+        ], '#FF00FF', '变量', null);
       this.workspace.workspace.updateToolbox(this.ngxToolboxBuilder.build());
       this.workspace.workspace.getToolbox().selectFirstCategory();
     });
