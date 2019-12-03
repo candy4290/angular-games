@@ -20,6 +20,7 @@ export class VariableGetBlock extends CustomBlock {
           }
         ],
         colour: '%{BKY_VARIABLES_HUE}',
+        tooltip: `类型为：${args[2]}`,
         output: args[2],    // Returns a value of 'Panda'
       };
       this.class = VariableGetBlock;

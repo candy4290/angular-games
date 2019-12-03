@@ -68,7 +68,7 @@
               <block type="logic_compare" id="t~BXh^mP/2LfBOK=G`m~">
                 <field name="OP">GT</field>
                 <value name="A">
-                  <block type="variables_get" id="Qypxa)2x._bFYzm:t5!d">
+                  <block type="variables_get_age" id="Y?`1(Yk{^fn~$SJJDJ7n">
                     <field name="VAR" id="V.te7xe;E=x9*X_C%}9B" variabletype="Number">年龄</field>
                   </block>
                 </value>
@@ -83,7 +83,7 @@
               <block type="logic_compare" id="47CU_un+vd}4s|E?^6FT">
                 <field name="OP">EQ</field>
                 <value name="A">
-                  <block type="variables_get" id="2jBx_G9BYw93V|Tz8;Ot">
+                  <block type="variables_get_sex" id="EKzYHk]F_SePMo[~XDGy">
                     <field name="VAR" id="9$/FR)!6tUacfI5o-DPT" variabletype="String">性别</field>
                   </block>
                 </value>
