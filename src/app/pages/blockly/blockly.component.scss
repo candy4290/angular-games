@@ -1,15 +1,15 @@
 :host ::ng-deep .blockly-wrapper {
   width: 100%;
-  height: calc(100% - 64px) !important;
+  height: calc(100% - 48px) !important;
 }
 
 :host ::ng-deep .blockly, .blocklySvg {
   position: absolute !important;
   width: 100% !important;
   min-width: 100% !important;
-  height: calc(100% - 64px) !important;
-  min-height: calc(100% - 64px) !important;
-  top: 64px;
+  height: calc(100% - 48px) !important;
+  min-height: calc(100% - 48px) !important;
+  top: 48px;
 }
 
 .app-blockly-start {
@@ -22,7 +22,6 @@
   i {
     font-size: 24px;
   }
-
 }
 .app-blockly-search {
   display: none;
@@ -32,5 +31,15 @@
 :host ::ng-deep {
   .ant-tabs {
     height: calc(100% - 32px);
+  }
+  .ant-tabs-bar {
+    margin: 0 0 8px 0;
+  }
+  .ant-tabs-content {
+    height: 100%;
+  }
+  .ant-tabs-tabpane {
+    max-height: calc(100% - 48px);
+    overflow: auto;
   }
 }

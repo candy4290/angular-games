@@ -1,20 +1,20 @@
 <div style="display: flex;">
-  <button nz-button nzType="default" (click)="save()">导出</button>
+  <button nz-button nzType="default" (click)="save()"><i nz-icon nzType="export" nzTheme="outline"></i>导出</button>
   <nz-upload [nzBeforeUpload]="beforeUpload" nzAccept=".xml">
-    <button nz-button><i nz-icon nzType="upload"></i><span>导入</span></button>
+    <button nz-button><i nz-icon nzType="import" nzTheme="outline"></i><span>导入</span></button>
   </nz-upload>
-  <button nz-button nzType="default" (click)="undo()">撤销</button>
-  <button nz-button nzType="default" (click)="clear()">清空</button>
+  <button nz-button nzType="default" (click)="undo()"><i nz-icon nzType="undo" nzTheme="outline"></i>撤销</button>
+  <button nz-button nzType="default" (click)="clear()"><i nz-icon nzType="delete" nzTheme="outline"></i>清空</button>
 </div>
 <nz-select style="position: absolute;top: 0;right: 24px;" [(ngModel)]="selectedLanguage" (ngModelChange)="changeLanguage($event)" nzPlaceHolder="请选择语言">
   <nz-option nzValue="zh-hans" nzLabel="中文"></nz-option>
   <nz-option nzValue="en" nzLabel="英文"></nz-option>
 </nz-select>
 <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'">
-  <nz-tab nzTitle="blocks">
+  <nz-tab nzTitle="工作区">
       <ngx-blockly [config]="config" [customBlocks]="customBlocks" [generatorConfig]="generatorConfig" (javascriptCode)="onCode($event)"></ngx-blockly>
     </nz-tab>
-  <nz-tab nzTitle="js">
+  <nz-tab nzTitle="代码区">
   <pre>
 {{jsCode}}
   </pre>
