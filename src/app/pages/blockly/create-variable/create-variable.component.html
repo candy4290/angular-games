@@ -2,7 +2,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="variableName">变量名称</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback nzErrorTip="变量名称不能为空！">
-      <input nz-input formControlName="variableName" id="variableName" />
+      <input nz-input formControlName="variableName" id="variableName" nzPlaceHolder="请输入变量名称" />
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
@@ -15,13 +15,13 @@
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="variableDescription">变量描述</nz-form-label>
-        <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback nzErrorTip="变量描述不能为空！">
-          <textarea [nzAutosize]="{minRows: 3, maxRows: 3}" nz-input  formControlName="variableDescription" id="variableDescription"></textarea>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="variableDescription">变量描述</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+          <textarea [nzAutosize]="{minRows: 3, maxRows: 3}" nz-input  formControlName="variableDescription" id="variableDescription" nzPlaceHolder="请输入描述信息"></textarea>
         </nz-form-control>
       </nz-form-item>
 </form>
 <ng-template #tplFooter>
     <button nz-button nzType="default" (click)="handleCancel()">取消</button>
-    <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">提交</button>
+    <button nz-button nzType="primary" (click)="handleOk()" [disabled]="!createVariableForm.valid" [nzLoading]="isConfirmLoading">提交</button>
 </ng-template>

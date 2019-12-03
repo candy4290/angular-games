@@ -1,6 +1,6 @@
 import { Injectable, Renderer2, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Category } from 'ngx-blockly';
+import { Category, CustomBlock } from 'ngx-blockly';
 import { NzModalService } from 'ng-zorro-antd';
 import { map } from 'rxjs/operators';
 import { VariableGetBlock, CustomLabel } from 'projects/my-lib/src/public-api';
@@ -10,6 +10,7 @@ declare var Blockly: any;
 @Injectable()
 
 export class BlocklyService {
+  variables: CustomBlock[] = []; // 当前toolbox中包含的变量
   constructor(private http: HttpClient,
               private modalService: NzModalService) {
   }

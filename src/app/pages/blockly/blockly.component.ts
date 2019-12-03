@@ -6,7 +6,7 @@ import { LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATE
 import { Subscription, Subject } from 'rxjs';
 import { AndOrBlock, CreateVariableButton } from 'projects/my-lib/src/public-api';
 import { DOCUMENT } from '@angular/common';
-import { NzMessageService, NzModalService } from 'ng-zorro-antd';
+import { NzMessageService, NzModalService, NzModalRef } from 'ng-zorro-antd';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { CreateVariableComponent } from './create-variable/create-variable.component';
 // import * as parser from 'xml2json';
@@ -21,7 +21,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   jsCode: string;
   xml: string;
   selectedLanguage = 'zh-hans'; // 当前选择的语言
-  public searchResult: CustomBlock[] = []; // 变量搜索结果
+
   public customBlocks: CustomBlock[] = [
     new AndOrBlock('logic_block_self_add', null, null),
   ]; // 自定义blocks
@@ -50,8 +50,9 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   public generatorConfig: NgxBlocklyGeneratorConfig = {
     javascript: true,
   };
-  private subscription$ = new Subscription();
   keyWords: string;
+  private subscription$ = new Subscription();
+  private nzModalRef$: NzModalRef;
   private searchItems$ = new Subject<string>();
   @ViewChild('searchInput', {static: true}) searchInput: any;
   constructor(private blockly: BlocklyService,
@@ -65,13 +66,12 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     this.blockly.loadBlockInMutator();
     this.ngxToolboxBuilder.nodes = [
     new Category([new CreateVariableButton('加载变量', 'loadVariables' ),
-    new CreateVariableButton('创建变量', 'createAge' )], '#FF00FF', '变量', null), new Separator(),
+    new CreateVariableButton('创建变量', 'createAge' ), ...this.blockly.variables], '#FF00FF', '变量', null), new Separator(),
       LOGIC_CATEGORY, new Separator(),
       LOOP_CATEGORY,  new Separator(),
       MATH_CATEGORY, new Separator(),
       TEXT_CATEGORY, new Separator(),
       LISTS_CATEGORY, new Separator(),
-      // VARIABLES_CATEGORY
     ];
     this.config.toolbox = this.ngxToolboxBuilder.build();
   }
@@ -88,19 +88,9 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.workspace.workspace.registerButtonCallback('createAge', (e: any) => {
-      // Blockly.Variables.createVariable(e.getTargetWorkspace(), (a) => {
-      // }, 'int'); // 创建一个类型为Number的变量
-      this.modalService.create({
-        nzTitle: '创建变量',
-        nzContent: CreateVariableComponent,
-        nzMaskClosable: false
-      });
-    });
     this.blockly.insertSearchInputIntoToolbox(this.render2, this.el, this.workspace);
-    this.workspace.workspace.registerButtonCallback('loadVariables', (e: any) => {
-      this.loadVariables();
-    });
+    this.workspace.workspace.registerButtonCallback('createAge', () => {this.createVariableDialog(); });
+    this.workspace.workspace.registerButtonCallback('loadVariables', () => {this.loadVariables(); });
   }
 
   loadVariables() {
@@ -108,12 +98,14 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     const preSelectedItem = treeControl.getSelectedItem();
     const getVariables$ = this.blockly.getVariables().subscribe(rsp => {
       // 更新toolbox
+      // tslint:disable-next-line: no-string-literal
       const index = this.ngxToolboxBuilder.nodes.findIndex(item => item['name'] === '变量');
+      this.blockly.variables.push(...rsp[0]);
       this.ngxToolboxBuilder.nodes[index] = new Category(
         [
           new CreateVariableButton('加载变量', 'loadVariables' ),
           new CreateVariableButton('创建变量', 'createAge' ),
-          ...rsp[0],
+          ...this.blockly.variables,
         ], '#FF00FF', '变量', null);
       const xml = Blockly.Xml.textToDom(`<xml>
       ${rsp[1]}
@@ -126,6 +118,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription$.unsubscribe();
+    this.nzModalRef$.close();
   }
 
 
@@ -224,5 +217,17 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   focus() {
 
+  }
+
+  createVariableDialog() {
+    this.nzModalRef$ = this.modalService.create({
+      nzTitle: '创建变量',
+      nzContent: CreateVariableComponent,
+      nzComponentParams: {
+        ngxToolboxBuilder: this.ngxToolboxBuilder,
+        workspace: this.workspace
+      },
+      nzMaskClosable: false
+    });
   }
 }

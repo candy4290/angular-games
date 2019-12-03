@@ -7,7 +7,7 @@ import { environment } from './environments/environment';
 
 //  Chrome51 版本以后，Chrome 增加了新的事件捕获机制－Passive Event Listeners；解决警告：
 // Added non-passive event listener to a scroll-blocking 'mousewheel' event. Consider marking event handler as 'passive' to make the page more responsive.
-import 'default-passive-events';
+// import 'default-passive-events';
 
 if (environment.production) {
   enableProdMode();
