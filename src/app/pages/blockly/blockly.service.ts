@@ -287,7 +287,7 @@ export class BlocklyService {
       if (ifExistSearchResultCategory) {
         ngxToolboxBuilder.nodes.shift();
         workspace.workspace.updateToolbox(ngxToolboxBuilder.build());
-        workspace.workspace.getToolbox().selectFirstCategory();
+        workspace.workspace.getToolbox().flyout_.hide();
       }
     }
     return of();
