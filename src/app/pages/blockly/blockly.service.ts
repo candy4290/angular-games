@@ -188,15 +188,27 @@ export class BlocklyService {
     Blockly.Toolbox.prototype.addColour_ = () => {};
     // 给选中的条目加上背景色
     Blockly.Toolbox.prototype.handleBeforeTreeSelected_ = function(node) {
+      const categoryConfig = this.tree_.getCategoryConfig(node.content_);
       if (node === this.tree_) {
         return false;
       }
+      if (this.lastCategory_) {
+        this.lastCategory_.getRowElement().style.backgroundColor = '';
+        const children =   this.lastCategory_.getRowElement().children;
+        if (children && children.length > 1) {
+          children[1].src = categoryConfig.itemImg.commonUrl;
+        }
+      }
       if (node) {
-        // const hexColour = node.hexColour || '#57e';
-        // node.getRowElement().style.backgroundColor = hexColour;
+        const hexColour = node.hexColour || '#57e';
+        node.getRowElement().style.backgroundColor = hexColour;
+        const children = node.getRowElement().children;
+        if (children && children.length > 1) {
+          children[1].src = categoryConfig.itemImg.activeUrl;
+        }
         // Add colours to child nodes which may have been collapsed and thus
         // not rendered.
-        // this.addColour_(node);
+        this.addColour_(node);
       }
       return true;
     };
@@ -212,13 +224,47 @@ export class BlocklyService {
       row.appendChild(label);
       if (label.textContent) {
         const img = document.createElement('img');
-        img.src = 'https://ng.ant.design/assets/img/logo.svg';
+        img.src = this.getCategoryConfig(label.textContent).itemImg.commonUrl;
         img.style.height = '32px';
         img.style.display = 'block';
         img.style.margin = '0 auto 4px';
         label.parentNode.insertBefore(img, label);
       }
       return row;
+    };
+
+    Blockly.tree.BaseNode.prototype.getCategoryConfig = function(labelContext: string) {
+      let commonUrl: string;
+      let activeUrl: string;
+      switch (labelContext) {
+        case '查询结果':
+          commonUrl = 'https://ng.ant.design/assets/img/logo.svg';
+          activeUrl = 'https://ng.ant.design/assets/img/logo.svg';
+          break;
+        case '变量':
+        case '逻辑':
+        case '循环':
+        case '数学':
+        case '文本':
+        case '列表':
+          commonUrl = 'https://ng.ant.design/assets/img/logo.svg';
+          activeUrl = 'https://www.primefaces.org/primeng/assets/showcase/images/mask.svg';
+          break;
+        default:
+          commonUrl = 'https://ng.ant.design/assets/img/logo.svg';
+          activeUrl = 'https://ng.ant.design/assets/img/logo.svg';
+      }
+      return {
+        itemImg: {
+          commonUrl, activeUrl
+        },
+        itemColor: {
+
+        },
+        itemBackgroundColor: {
+
+        }
+      };
     };
 
     // 更新input,和output的卡槽形状

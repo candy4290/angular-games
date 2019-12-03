@@ -66,7 +66,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     this.blockly.loadBlockInMutator();
     this.ngxToolboxBuilder.nodes = [
     new Category([new CreateVariableButton('加载变量', 'loadVariables' ),
-    new CreateVariableButton('创建变量', 'createAge' ), ...this.blockly.variables], '#FF00FF', '变量', null), new Separator(),
+    new CreateVariableButton('创建变量', 'createAge' ), ...this.blockly.variables], '%{BKY_VARIABLES_HUE}', '变量', null), new Separator(),
       LOGIC_CATEGORY, new Separator(),
       LOOP_CATEGORY,  new Separator(),
       MATH_CATEGORY, new Separator(),
