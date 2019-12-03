@@ -1,0 +1,27 @@
+<form nz-form [formGroup]="createVariableForm">
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="variableName">变量名称</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback nzErrorTip="变量名称不能为空！">
+      <input nz-input formControlName="variableName" id="variableName" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="variableType">变量类型</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback nzErrorTip="变量类型不能为空！">
+        <nz-select formControlName="variableType" id="variableType" nzAllowClear nzPlaceHolder="请选择变量类型">
+          <nz-option nzValue="String" nzLabel="字符串"></nz-option>
+          <nz-option nzValue="Number" nzLabel="数字"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="variableDescription">变量描述</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback nzErrorTip="变量描述不能为空！">
+          <textarea [nzAutosize]="{minRows: 3, maxRows: 3}" nz-input  formControlName="variableDescription" id="variableDescription"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+</form>
+<ng-template #tplFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">取消</button>
+    <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">提交</button>
+</ng-template>

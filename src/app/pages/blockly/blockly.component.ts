@@ -6,8 +6,9 @@ import { LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATE
 import { Subscription, Subject } from 'rxjs';
 import { AndOrBlock, CreateVariableButton } from 'projects/my-lib/src/public-api';
 import { DOCUMENT } from '@angular/common';
-import { NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { CreateVariableComponent } from './create-variable/create-variable.component';
 // import * as parser from 'xml2json';
 declare var Blockly: any;
 @Component({
@@ -58,7 +59,8 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
               private messageService: NzMessageService,
               @Inject(DOCUMENT) private doc: Document,
               private el: ElementRef,
-              private render2: Renderer2) {
+              private render2: Renderer2,
+              private modalService: NzModalService) {
     this.blockly.changeToolboxStyle();
     this.blockly.loadBlockInMutator();
     this.ngxToolboxBuilder.nodes = [
@@ -87,8 +89,13 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.workspace.workspace.registerButtonCallback('createAge', (e: any) => {
-      Blockly.Variables.createVariable(e.getTargetWorkspace(), (a) => {
-      }, 'int'); // 创建一个类型为Number的变量
+      // Blockly.Variables.createVariable(e.getTargetWorkspace(), (a) => {
+      // }, 'int'); // 创建一个类型为Number的变量
+      this.modalService.create({
+        nzTitle: '创建变量',
+        nzContent: CreateVariableComponent,
+        nzMaskClosable: false
+      });
     });
     this.blockly.insertSearchInputIntoToolbox(this.render2, this.el, this.workspace);
     this.workspace.workspace.registerButtonCallback('loadVariables', (e: any) => {
@@ -136,9 +143,14 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
    *
    */
   save() {
-    const xml = this.workspace.toXml();
-    // console.log(parser.toJson(xml));
-    this.exportToXml(xml);
+    const blocksInWorkspace = this.workspace.workspace.getAllBlocks();
+    if (blocksInWorkspace && blocksInWorkspace.length > 0) {
+      const xml = this.workspace.toXml();
+      // console.log(parser.toJson(xml));
+      this.exportToXml(xml);
+    } else {
+      this.messageService.warning('工作区空空如也~');
+    }
   }
 
   exportToXml(content: string) {
