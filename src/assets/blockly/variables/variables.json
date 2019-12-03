@@ -3,17 +3,17 @@
     {
       "key": "age",
       "value": "年龄",
-      "type": "int"
+      "type": "Number"
     },
     {
       "key": "sex",
       "value": "性别",
-      "type": "string"
+      "type": "String"
     },
     {
       "key": "criminalRecord",
       "value": "犯罪记录",
-      "type": "int"
+      "type": "Number"
     }
   ]
 }

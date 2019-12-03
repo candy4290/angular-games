@@ -19,8 +19,8 @@ export class VariableGetBlock extends CustomBlock {
             defaultType: args[2]
           }
         ],
-        colour: '%{BKY_LOGIC_HUE}',
-        output: args[2] || null,    // Returns a value of 'Panda'
+        colour: '%{BKY_VARIABLES_HUE}',
+        output: args[2],    // Returns a value of 'Panda'
       };
       this.class = VariableGetBlock;
     }
