@@ -276,18 +276,13 @@ export class BlocklyService {
     // Blockly.blockRendering.ConstantProvider.prototype.makePuzzleTab = function() {
     //   const width = this.TAB_WIDTH;
     //   const height = this.TAB_HEIGHT;
-
     //   return {
     //     width,
     //     height,
-    //     pathDown: 'a 4 4 90 1 0 0,16',
-    //     pathUp:  'a 4 4 90 1 1 0,-16'
+    //     pathDown: 'a 4 4 90 1 0 0,15',
+    //     pathUp:  'a 4 4 90 1 1 0,-15'
     //   };
     // };
-
-    // HTML标签转化为Block对象
-    // Blockly.Xml.domToBlock
-    // blockToDom ---- Block对象转化为HTML标签
 
   }
 
