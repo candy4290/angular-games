@@ -1,7 +1,8 @@
 import { OnInit, OnDestroy, Component, ViewChild, Inject, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
 import { NgxBlocklyConfig, NgxBlocklyGeneratorConfig,
   NgxBlocklyComponent, CustomBlock, NgxToolboxBuilderService, Category, Separator } from 'ngx-blockly';
-import { BlocklyService, LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY } from './blockly.service';
+import { BlocklyService } from './blockly.service';
+import { LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY } from './category';
 import { Subscription, Subject } from 'rxjs';
 import { AndOrBlock, CreateVariableButton } from 'projects/my-lib/src/public-api';
 import { DOCUMENT } from '@angular/common';
@@ -96,8 +97,8 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   loadVariables() {
-    // const treeControl = this.workspace.workspace.getToolbox().tree_; // 每次调用renderTree都会生成新的TreeControl
-    // const preSelectedItem = treeControl.getSelectedItem();
+    const treeControl = this.workspace.workspace.getToolbox().tree_; // 每次调用renderTree都会生成新的TreeControl
+    const preSelectedItem = treeControl.getSelectedItem();
     const getVariables$ = this.blockly.getVariables().subscribe(rsp => {
       // 更新toolbox
       const index = this.ngxToolboxBuilder.nodes.findIndex(item => item['name'] === '变量');
@@ -105,10 +106,13 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
         [
           new CreateVariableButton('加载变量', 'loadVariables' ),
           new CreateVariableButton('创建变量', 'createAge' ),
-          ...rsp,
+          ...rsp[0],
         ], '#FF00FF', '变量', null);
-      this.workspace.workspace.updateToolbox(this.ngxToolboxBuilder.build());
-      this.workspace.workspace.getToolbox().selectFirstCategory();
+      const xml = Blockly.Xml.textToDom(`<xml>
+      ${rsp[1]}
+      </xml>`);
+      preSelectedItem.blocks.push(...xml.children);
+      this.workspace.workspace.getToolbox().refreshSelection();
     });
     this.subscription$.add(getVariables$);
   }
