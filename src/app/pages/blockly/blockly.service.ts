@@ -188,18 +188,23 @@ export class BlocklyService {
     Blockly.Toolbox.prototype.addColour_ = () => {};
     // 给选中的条目加上背景色
     Blockly.Toolbox.prototype.handleBeforeTreeSelected_ = function(node) {
-      const categoryConfig = this.tree_.getCategoryConfig(node.content_);
       if (node === this.tree_) {
         return false;
       }
       if (this.lastCategory_) {
+        let categoryConfig: any;
+        categoryConfig = this.tree_.getCategoryConfig(this.lastCategory_.content_);
         this.lastCategory_.getRowElement().style.backgroundColor = '';
         const children =   this.lastCategory_.getRowElement().children;
-        if (children && children.length > 1) {
+        if (categoryConfig && children && children.length > 1) {
           children[1].src = categoryConfig.itemImg.commonUrl;
         }
       }
       if (node) {
+        let categoryConfig: any;
+        if (node && node.content_) {
+          categoryConfig = this.tree_.getCategoryConfig(node.content_);
+        }
         const hexColour = node.hexColour || '#57e';
         node.getRowElement().style.backgroundColor = hexColour;
         const children = node.getRowElement().children;
