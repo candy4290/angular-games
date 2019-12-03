@@ -43,8 +43,16 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   background-color: #eee;
 }
 
+.blocklyTreeIcon {
+  position: absolute;
+}
+
+.blocklyTreeLabel {
+  line-height: 16px;
+}
+
 .blocklyTreeRow {
-  padding: 4px 12px !important;
+  padding: 8px 12px !important;
   height: auto;
   line-height: unset;
   margin-bottom: 0;
