@@ -1,0 +1,73 @@
+{
+  "categories": [
+      {
+        "id": "1",
+        "name": "系统级",
+        "expanded": false,
+        "colour": "#bb9246",
+        "children": [
+          {
+            "id": "11",
+            "name": "人",
+            "expanded": false,
+            "parentId": "1",
+            "children": [
+              {
+                "id": "113",
+                "name": "基础标签",
+                "expanded": false,
+                "parentId": "11",
+                "children": [
+                  {
+                    "id": "1131",
+                    "name": "常暂住人口",
+                    "parentId":"113"
+                  },
+                  {
+                    "id": "1132",
+                    "name": "出生地省",
+                    "parentId":"113"
+                  },
+                  {
+                    "id": "1133",
+                    "name": "出生地市",
+                    "parentId":"113"
+                  }
+                ]
+              },
+              {
+                "id": "114",
+                "name": "重点人员类",
+                "expanded": false,
+                "parentId": "11"
+              }
+            ]
+          },
+          {
+            "id": "12",
+            "name": "事",
+            "expanded": false,
+            "parentId": "1",
+              "children": [
+                {
+                  "id": "111",
+                  "name": "交管类",
+                  "expanded": false,
+                  "parentId": "12"
+                },
+                {
+                  "id": "112",
+                  "name": "涉案类",
+                  "expanded": false,
+                  "parentId": "12"
+                }
+              ]
+           }
+        ]
+      },
+      {
+        "id": "2",
+        "name": "自定义"
+      }
+  ]
+}

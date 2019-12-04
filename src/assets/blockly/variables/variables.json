@@ -1,19 +1,41 @@
 {
-  "variables": [
+  "variables":
     {
-      "key": "age",
-      "value": "年龄",
-      "type": "Number"
-    },
-    {
-      "key": "sex",
-      "value": "性别",
-      "type": "String"
-    },
-    {
-      "key": "criminalRecord",
-      "value": "犯罪记录",
-      "type": "Number"
+      "1131": [
+        {
+          "key": "czzrk_c",
+          "value": "常住人口",
+          "type": "String"
+        },
+        {
+          "key": "czzrk_z",
+          "value": "暂住人口",
+          "type": "String"
+        }
+      ],
+      "1132": [
+        {
+          "key": "csds_ah",
+          "value": "出生地_省_安徽",
+          "type": "String"
+        },
+        {
+          "key": "csds_js",
+          "value": "出生地_省_江苏",
+          "type": "String"
+        }
+      ],
+      "1133": [
+        {
+          "key": "csds_hf",
+          "value": "出生地_市_安徽省合肥市",
+          "type": "String"
+        },
+        {
+          "key": "csds_nj",
+          "value": "出生地_省_江苏省南京市",
+          "type": "String"
+        }
+      ]
     }
-  ]
 }

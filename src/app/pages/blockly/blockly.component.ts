@@ -65,8 +65,6 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     this.blockly.changeToolboxStyle();
     this.blockly.loadBlockInMutator();
     this.ngxToolboxBuilder.nodes = [
-    new Category([new CreateVariableButton('加载变量', 'loadVariables' ),
-    new CreateVariableButton('创建变量', 'createAge' ), ...this.blockly.variables], '%{BKY_VARIABLES_HUE}', '变量', null), new Separator(),
       LOGIC_CATEGORY, new Separator(),
       LOOP_CATEGORY,  new Separator(),
       MATH_CATEGORY, new Separator(),
@@ -81,44 +79,28 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
       debounceTime(300),
       distinctUntilChanged(),
       switchMap((rsp: string) => {
-        return this.blockly.searchBlockByName(rsp, this.workspace, this.ngxToolboxBuilder)
+        return this.blockly.searchBlockByName(rsp, this.workspace);
       })
     ).subscribe();
     this.subscription$.add(search$);
   }
 
   ngAfterViewInit() {
+    this.blockly.workspace = this.workspace;
     this.blockly.insertSearchInputIntoToolbox(this.render2, this.el, this.workspace);
     this.workspace.workspace.registerButtonCallback('createAge', () => {this.createVariableDialog(); });
     this.workspace.workspace.registerButtonCallback('loadVariables', () => {this.loadVariables(); });
+    this.blockly.loadCategories(this.config, this.workspace).subscribe(rsp => {
+    });
   }
 
   loadVariables() {
-    const treeControl = this.workspace.workspace.getToolbox().tree_; // 每次调用renderTree都会生成新的TreeControl
-    const preSelectedItem = treeControl.getSelectedItem();
-    const getVariables$ = this.blockly.getVariables().subscribe(rsp => {
-      // 更新toolbox
-      // tslint:disable-next-line: no-string-literal
-      const index = this.ngxToolboxBuilder.nodes.findIndex(item => item['name'] === '变量');
-      this.blockly.variables.push(...rsp[0]);
-      this.ngxToolboxBuilder.nodes[index] = new Category(
-        [
-          new CreateVariableButton('加载变量', 'loadVariables' ),
-          new CreateVariableButton('创建变量', 'createAge' ),
-          ...this.blockly.variables,
-        ], '#FF00FF', '变量', null);
-      const xml = Blockly.Xml.textToDom(`<xml>
-      ${rsp[1]}
-      </xml>`);
-      preSelectedItem.blocks.push(...xml.children);
-      this.workspace.workspace.getToolbox().refreshSelection();
-    });
-    this.subscription$.add(getVariables$);
   }
 
   ngOnDestroy() {
     this.subscription$.unsubscribe();
     this.nzModalRef$.close();
+    this.blockly.clear();
   }
 
 

@@ -1,18 +1,28 @@
 import { Injectable, Renderer2, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Category, CustomBlock } from 'ngx-blockly';
-import { NzModalService } from 'ng-zorro-antd';
+import { Category, CustomBlock, NgxBlocklyConfig, NgxBlocklyComponent } from 'ngx-blockly';
 import { map } from 'rxjs/operators';
 import { VariableGetBlock, CustomLabel } from 'projects/my-lib/src/public-api';
-import { of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 declare var Blockly: any;
-
 @Injectable()
 
 export class BlocklyService {
+  loadedVariables = new Set(); // 存储已加载的变量block的type
+  categorySearch = '<category colour="#ff00ff" name="查询结果">';
+  workspace: NgxBlocklyComponent;
+  categoriesInString = ''; // 远程加载的目录结构string表示
+  categoriesInArray = [];
   variables: CustomBlock[] = []; // 当前toolbox中包含的变量
-  constructor(private http: HttpClient,
-              private modalService: NzModalService) {
+  subscription$ = new Subscription();
+  constructor(private http: HttpClient) {
+  }
+
+  clear() {
+    this.subscription$.unsubscribe();
+    this.workspace = null;
+    this.categoriesInString = '';
+    this.categoriesInArray = [];
   }
 
   /**
@@ -28,13 +38,14 @@ export class BlocklyService {
   /**
    *  获取标签（变量）,并生成block及其javascript方法
    */
-  getVariables(path?: string) {
-    return this.http.get(path || 'assets/blockly/variables/variables.json', {}).pipe(
+  getVariables(id: string) {
+    return this.http.get('assets/blockly/variables/variables.json', {}).pipe(
       map((rsp: any) => {
         const tempBlocks = [];
-        const variables = rsp.variables || [];
+        const variables = rsp.variables[id] || [];
         let xmls = '';
         for (let i = 0, len = variables.length; i < len; i++) {
+          this.loadedVariables.add(`variables_get_${variables[i].key}#${variables[i].value}`);
           const tempVariable =  new VariableGetBlock(`variables_get_${variables[i].key}`, null, null, variables[i].value, [variables[i].type], variables[i].type, variables[i].key);
           xmls += tempVariable.toXML();
           tempBlocks.push(
@@ -52,10 +63,6 @@ export class BlocklyService {
         return [tempBlocks, xmls];
       })
     );
-  }
-
-  jsToContent(code: string) {
-
   }
 
   /**
@@ -201,6 +208,7 @@ export class BlocklyService {
         }
       }
       if (node) {
+        this.loadVariable(node);
         let categoryConfig: any;
         if (node && node.content_) {
           categoryConfig = this.tree_.getCategoryConfig(node.content_);
@@ -216,6 +224,27 @@ export class BlocklyService {
         this.addColour_(node);
       }
       return true;
+    };
+
+    Blockly.Toolbox.prototype.loadVariable = (node) => {
+      const categoryName = node.content_;
+      const selectedCategoryes = this.categoriesInArray.filter(item => item.name === categoryName);
+      const categoryId = ((selectedCategoryes || [])[0] || {}).id;
+      if (categoryId && node.blocks.length === 0 && categoryName !== '查询结果') {
+        // 异步加载blocks
+        const getVariables$ = this.getVariables(categoryId).subscribe(rsp => {
+          const treeControl = this.workspace.workspace.getToolbox().tree_; // 每次调用renderTree都会生成新的TreeControl
+          const preSelectedItem = treeControl.getSelectedItem();
+          if (rsp[1]) {
+            const xml = Blockly.Xml.textToDom(`<xml>
+            ${rsp[1]}
+            </xml>`);
+            preSelectedItem.blocks.push(...xml.children);
+            this.workspace.workspace.getToolbox().refreshSelection();
+          }
+          this.subscription$.add(getVariables$);
+        });
+      }
     };
 
     // 给目录加上图片
@@ -300,43 +329,73 @@ export class BlocklyService {
   /**
    * 根据名称搜索block，并且创建一个目录，将搜索结果放入其中
    */
-  searchBlockByName(keyWords: string, workspace: any, ngxToolboxBuilder: any) {
-    const nodes = ngxToolboxBuilder._nodes;
-    const result = [];
-    for (let i = 0, len = nodes.length; i < len; i ++) {
-      if (nodes[i] instanceof Category) {
-        const blocks = nodes[i].blocks || [];
-        for (let j = 0, len2 = blocks.length; j < len2; j ++) {
-          const variablesName = ((blocks[j].args || [])[0] || '') + ((blocks[j].args || [])[3] || ''); // 变量的中文+英文名
-          if (variablesName.includes(keyWords)) {
-            result.push(blocks[j]);
-          }
-        }
+  searchBlockByName(keyWords: string, workspace: NgxBlocklyComponent) {
+    let result = '' ;
+    this.loadedVariables.forEach((item: string) => {
+      const temp =  item.split('#');
+      const type = temp[0];
+      const value = temp[1];
+      if (value.indexOf(keyWords) > -1) {
+        result += `<block type='${type}'></block>`;
       }
-    }
-    const toolbox = ngxToolboxBuilder.build();
+    });
+
+    const toolbox = workspace.config.toolbox;
     const ifExistSearchResultCategory = toolbox.includes('查询结果');
     if (keyWords) {
       if (!ifExistSearchResultCategory) {
-        if (result && result.length > 0) {
-          ngxToolboxBuilder.nodes.unshift(new Category([
-            ...result
-          ], '#ff00ff', '查询结果', null));
+        if (result) {
+          workspace.config.toolbox = toolbox.replace('<xml id="toolbox" style="display: none">',
+      '<xml id="toolbox" style="display: none">' + `${this.categorySearch}${result}</category>`);
         } else {
-          ngxToolboxBuilder.nodes.unshift(new Category([
-            new CustomLabel('暂无搜索结果')
-          ], '#ff00ff', '查询结果', null));
+          workspace.config.toolbox = toolbox.replace('<xml id="toolbox" style="display: none">',
+          '<xml id="toolbox" style="display: none">' + `${this.categorySearch}<label text="暂无查询结果"></label></category>`);
         }
       }
-      workspace.workspace.updateToolbox(ngxToolboxBuilder.build());
+      workspace.workspace.updateToolbox(workspace.config.toolbox);
       workspace.workspace.getToolbox().selectFirstCategory();
     } else {
       if (ifExistSearchResultCategory) {
-        ngxToolboxBuilder.nodes.shift();
-        workspace.workspace.updateToolbox(ngxToolboxBuilder.build());
+        const categorySearchStartIndex = toolbox.indexOf(this.categorySearch);
+        const categorySearchEndIndex = toolbox.indexOf('</category>', categorySearchStartIndex) + 11;
+        workspace.config.toolbox = toolbox.slice(0, categorySearchStartIndex) + toolbox.slice(categorySearchEndIndex);
+        workspace.workspace.updateToolbox(workspace.config.toolbox);
         workspace.workspace.getToolbox().flyout_.hide();
       }
     }
     return of();
   }
+
+  /**
+   *  加载目录
+   */
+  loadCategories(config: NgxBlocklyConfig, workspace: NgxBlocklyComponent) {
+    return this.http.get('assets/blockly/categorys/categorys.json', {}).pipe(map((rsp: any) => {
+      const categories = rsp.categories;
+      this.jsonToXml(categories);
+      config.toolbox = config.toolbox.replace('<xml id="toolbox" style="display: none">',
+      '<xml id="toolbox" style="display: none">' + this.categoriesInString);
+      workspace.workspace.updateToolbox(config.toolbox);
+    }));
+  }
+
+  /**
+   *  toolbox json格式转xml字符串 及数组
+   */
+  jsonToXml(categoryes: any[] = []) {
+    for (let i = 0, len = categoryes.length ; i < len; i++) {
+      this.categoriesInArray.push({
+        id: categoryes[i].id,
+        name: categoryes[i].name,
+        parentId: categoryes[i].parentId
+      });
+      this.categoriesInString += `<category class="form-ajax" name="${categoryes[i].name}">`;
+      const children = categoryes[i].children || [];
+      if (children.length > 0) {
+        this.jsonToXml(children);
+      }
+      this.categoriesInString += '</category>';
+    }
+  }
+
 }
