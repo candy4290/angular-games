@@ -33,26 +33,32 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 
 // blockly style更新
-.blocklyTreeLabel {
-  display: inline-block;
-  width: 100%;
-  text-align: center;
-}
+// .blocklyTreeLabel {
+//   display: inline-block;
+//   width: 100%;
+//   text-align: center;
+// }
 
 .blocklyToolboxDiv {
   background-color: #eee;
 }
 
-.blocklyTreeIcon {
-  position: absolute;
+.blocklyTreeIconClosedLtr {
+  background-image: url(/assets/svgs/right.svg);
+  background-size: 100%;
 }
 
-.blocklyTreeLabel {
-  line-height: 16px;
-}
+// .blocklyTreeIcon {
+//   position: absolute;
+// }
+
+// .blocklyTreeLabel {
+//   line-height: 16px;
+// }
 
 .blocklyTreeRow {
-  padding: 8px 12px !important;
+  padding-top: 4px;
+  padding-bottom: 4px;
   height: auto;
   line-height: unset;
   margin-bottom: 0;

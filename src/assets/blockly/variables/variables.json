@@ -36,6 +36,13 @@
           "value": "出生地_省_江苏省南京市",
           "type": "String"
         }
+      ],
+      "114": [
+        {
+          "key": "zdry_sdry",
+          "value": "重点人员_涉毒人员",
+          "type": "String"
+        }
       ]
     }
 }

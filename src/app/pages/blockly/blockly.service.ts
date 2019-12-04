@@ -192,7 +192,7 @@ export class BlocklyService {
    */
   changeToolboxStyle() {
     // 目录左侧的颜色条
-    Blockly.Toolbox.prototype.addColour_ = () => {};
+    // Blockly.Toolbox.prototype.addColour_ = () => {};
     // 给选中的条目加上背景色
     Blockly.Toolbox.prototype.handleBeforeTreeSelected_ = function(node) {
       if (node === this.tree_) {
@@ -247,7 +247,7 @@ export class BlocklyService {
       }
     };
 
-    // 给目录加上图片
+    // // 给目录加上图片
     Blockly.tree.BaseNode.prototype.getRowDom = function() {
       const row = document.createElement('div');
       row.className = this.getRowClassName();
@@ -259,15 +259,15 @@ export class BlocklyService {
       if (label.textContent) {
         const img = document.createElement('img');
         img.src = this.getCategoryConfig(label.textContent).itemImg.commonUrl;
-        img.style.height = '32px';
-        img.style.display = 'block';
-        img.style.margin = '0 auto 4px';
+        img.style.height = '24px';
+        // img.style.display = 'block';
+        // img.style.margin = '0 auto 4px';
         label.parentNode.insertBefore(img, label);
       }
       return row;
     };
 
-    Blockly.tree.BaseNode.prototype.getCategoryConfig = function(labelContext: string) {
+    Blockly.tree.BaseNode.prototype.getCategoryConfig = (labelContext: string) => {
       let commonUrl: string;
       let activeUrl: string;
       switch (labelContext) {

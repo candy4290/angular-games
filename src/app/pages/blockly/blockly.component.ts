@@ -65,11 +65,11 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     this.blockly.changeToolboxStyle();
     this.blockly.loadBlockInMutator();
     this.ngxToolboxBuilder.nodes = [
-      LOGIC_CATEGORY, new Separator(),
-      LOOP_CATEGORY,  new Separator(),
-      MATH_CATEGORY, new Separator(),
-      TEXT_CATEGORY, new Separator(),
-      LISTS_CATEGORY, new Separator(),
+      LOGIC_CATEGORY,
+      LOOP_CATEGORY,
+      MATH_CATEGORY,
+      TEXT_CATEGORY,
+      LISTS_CATEGORY,
     ];
     this.config.toolbox = this.ngxToolboxBuilder.build();
   }
