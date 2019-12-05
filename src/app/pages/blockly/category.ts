@@ -1,5 +1,5 @@
 import { Category, XmlBlock } from 'ngx-blockly';
-import { AndOrBlock } from 'projects/my-lib/src/public-api';
+import { AndOrBlock } from 'my-lib';
 
 export const LOGIC_CATEGORY: Category = new Category([
   new AndOrBlock('logic_block_self_add', null, null),

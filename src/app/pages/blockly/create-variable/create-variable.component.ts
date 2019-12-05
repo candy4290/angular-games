@@ -3,7 +3,7 @@ import { NzModalRef, NzModalService, NzMessageService } from 'ng-zorro-antd';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { BlocklyService } from '../blockly.service';
 import { NgxToolboxBuilderService, NgxBlocklyComponent, Category } from 'ngx-blockly';
-import { CreateVariableButton, VariableGetBlock } from 'projects/my-lib/src/public-api';
+import { CreateVariableButton, VariableGetBlock } from 'my-lib';
 declare var Blockly: any;
 @Component({
   selector: 'app-create-variable',

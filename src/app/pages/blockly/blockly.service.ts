@@ -2,7 +2,7 @@ import { Injectable, Renderer2, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Category, CustomBlock, NgxBlocklyConfig, NgxBlocklyComponent } from 'ngx-blockly';
 import { map } from 'rxjs/operators';
-import { VariableGetBlock, CustomLabel } from 'projects/my-lib/src/public-api';
+import { VariableGetBlock, CustomLabel } from 'my-lib';
 import { of, Subscription } from 'rxjs';
 declare var Blockly: any;
 @Injectable()

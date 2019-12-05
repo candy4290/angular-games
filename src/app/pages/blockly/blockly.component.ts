@@ -4,7 +4,7 @@ import { NgxBlocklyConfig, NgxBlocklyGeneratorConfig,
 import { BlocklyService } from './blockly.service';
 import { LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY } from './category';
 import { Subscription, Subject } from 'rxjs';
-import { AndOrBlock, CreateVariableButton } from 'projects/my-lib/src/public-api';
+import { AndOrBlock, CreateVariableButton } from 'my-lib';
 import { DOCUMENT } from '@angular/common';
 import { NzMessageService, NzModalService, NzModalRef } from 'ng-zorro-antd';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';

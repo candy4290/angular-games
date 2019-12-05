@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
-import { BlocklyConfig, CustomeBlocks, Toolboxs, CxxTheme } from 'projects/my-lib/src/public-api';
+import { BlocklyConfig, CustomeBlocks, Toolboxs, CxxTheme } from 'my-lib';
 declare let Blockly: any;
 @Component({
   selector: 'app-blockly-origin',
