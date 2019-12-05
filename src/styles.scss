@@ -43,24 +43,32 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   background-color: #eee;
 }
 
-.blocklyTreeIconClosedLtr {
-  background-image: url(/assets/svgs/right.svg);
-  background-size: 100%;
-}
+// .blocklyTreeIconClosedLtr {
+//   background-image: url(/assets/svgs/right.svg);
+//   background-size: 100%;
+// }
 
 // .blocklyTreeIcon {
 //   position: absolute;
 // }
 
-// .blocklyTreeLabel {
-//   line-height: 16px;
+// .blocklyTreeRow {
+//   padding-top: 4px;
+//   padding-bottom: 4px;
+//   height: auto;
+//   line-height: unset;
+//   margin-bottom: 0;
+//   padding-right: 0;
 // }
-
+// .blocklyTreeLabel {
+//   font-size: 16px;
+// }
+.blocklyHidden {
+  display: none !important;
+}
 .blocklyTreeRow {
-  padding-top: 4px;
-  padding-bottom: 4px;
-  height: auto;
-  line-height: unset;
+  height: 40px;
+  display: flex;
+  align-items: center;
   margin-bottom: 0;
-  padding-right: 0;
 }

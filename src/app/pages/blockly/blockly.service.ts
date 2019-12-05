@@ -261,7 +261,7 @@ export class BlocklyService {
         img.src = this.getCategoryConfig(label.textContent).itemImg.commonUrl;
         img.style.height = '24px';
         // img.style.display = 'block';
-        // img.style.margin = '0 auto 4px';
+        img.style.margin = '0 10px 0 0';
         label.parentNode.insertBefore(img, label);
       }
       return row;
@@ -299,6 +299,35 @@ export class BlocklyService {
 
         }
       };
+    };
+
+    // 控制目录图标显示与否
+    Blockly.tree.TreeNode.prototype.getCalculatedIconClass = function() {
+      var expanded = this.getExpanded();
+      var expandedIconClass = this.getExpandedIconClass();
+      if (expanded && expandedIconClass) {
+        return expandedIconClass;
+      }
+      var iconClass = this.getIconClass();
+      if (!expanded && iconClass) {
+        return iconClass;
+      }
+
+      // fall back on default icons
+      var config = this.getConfig();
+      if (this.hasChildren()) {
+        // if (expanded && config.cssExpandedFolderIcon) {
+        //   return config.cssTreeIcon + ' ' + config.cssExpandedFolderIcon;
+        // } else if (!expanded && config.cssCollapsedFolderIcon) {
+        //   return config.cssTreeIcon + ' ' + config.cssCollapsedFolderIcon;
+        // }
+        return config.cssTreeIcon + ' ' + config.cssFileIcon;
+      } else {
+        if (config.cssFileIcon) {
+          return config.cssTreeIcon + ' ' + config.cssFileIcon;
+        }
+      }
+      return '';
     };
 
     // 更新input,和output的卡槽形状
