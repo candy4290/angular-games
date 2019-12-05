@@ -20,11 +20,8 @@
     ],
     "paths": {
       "my-lib": [
-        "dist/my-lib/src"
+        "projects/my-lib/src"
       ],
-      "my-lib/*": [
-        "dist/my-lib/*"
-      ]
     }
   },
   "angularCompilerOptions": {
