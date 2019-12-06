@@ -63,7 +63,21 @@
                   "id": "111",
                   "name": "交管类",
                   "expanded": false,
-                  "parentId": "12"
+                  "parentId": "12",
+                  "children": [
+                    {
+                      "id": "1111",
+                      "name": "交通违法",
+                      "expanded": false,
+                      "parentId": "111"
+                    },
+                    {
+                      "id": "1112",
+                      "name": "驾龄",
+                      "expanded": false,
+                      "parentId": "111"
+                    }
+                  ]
                 },
                 {
                   "id": "112",

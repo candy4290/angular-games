@@ -240,6 +240,7 @@ export class BlocklyService {
           const preSelectedItem = treeControl.getSelectedItem();
           if (rsp[1]) {
             const xml = Blockly.Xml.textToDom(`<xml>
+            <label text="${categoryName}"></label>
             ${rsp[1]}
             </xml>`);
             preSelectedItem.blocks.push(...xml.children);

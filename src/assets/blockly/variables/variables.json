@@ -4,36 +4,21 @@
       "1131": [
         {
           "key": "variables_get_czzrk_c",
-          "value": "常住人口",
-          "type": "String"
-        },
-        {
-          "key": "variables_get_czzrk_z",
-          "value": "暂住人口",
+          "value": "常暂住人口",
           "type": "String"
         }
       ],
       "1132": [
         {
           "key": "variables_get_csds_ah",
-          "value": "出生地_省_安徽",
-          "type": "String"
-        },
-        {
-          "key": "variables_get_csds_js",
-          "value": "出生地_省_江苏",
+          "value": "出生地_省",
           "type": "String"
         }
       ],
       "1133": [
         {
           "key": "variables_get_csds_hf",
-          "value": "出生地_市_安徽省合肥市",
-          "type": "String"
-        },
-        {
-          "key": "variables_get_csds_nj",
-          "value": "出生地_省_江苏省南京市",
+          "value": "出生地_市",
           "type": "String"
         }
       ],
@@ -54,13 +39,15 @@
       "114": [
         {
           "key": "variables_get_zdry_sdry",
-          "value": "重点人员_涉毒人员",
+          "value": "重点人员类",
           "type": "String"
-        },
+        }
+      ],
+      "1111": [
         {
-          "key": "variables_get_criminalRecord",
-          "value": "犯罪记录",
-          "type": "Number"
+          "key":"variables_get_jtwf",
+          "value": "交通违法",
+          "type": "String"
         }
       ]
     }
