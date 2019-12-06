@@ -3,45 +3,64 @@
     {
       "1131": [
         {
-          "key": "czzrk_c",
+          "key": "variables_get_czzrk_c",
           "value": "常住人口",
           "type": "String"
         },
         {
-          "key": "czzrk_z",
+          "key": "variables_get_czzrk_z",
           "value": "暂住人口",
           "type": "String"
         }
       ],
       "1132": [
         {
-          "key": "csds_ah",
+          "key": "variables_get_csds_ah",
           "value": "出生地_省_安徽",
           "type": "String"
         },
         {
-          "key": "csds_js",
+          "key": "variables_get_csds_js",
           "value": "出生地_省_江苏",
           "type": "String"
         }
       ],
       "1133": [
         {
-          "key": "csds_hf",
+          "key": "variables_get_csds_hf",
           "value": "出生地_市_安徽省合肥市",
           "type": "String"
         },
         {
-          "key": "csds_nj",
+          "key": "variables_get_csds_nj",
           "value": "出生地_省_江苏省南京市",
+          "type": "String"
+        }
+      ],
+      "1134": [
+        {
+          "key": "variables_get_age",
+          "value": "年龄",
+          "type": "Number"
+        }
+      ],
+      "1135": [
+        {
+          "key": "variables_get_sex",
+          "value": "性别",
           "type": "String"
         }
       ],
       "114": [
         {
-          "key": "zdry_sdry",
+          "key": "variables_get_zdry_sdry",
           "value": "重点人员_涉毒人员",
           "type": "String"
+        },
+        {
+          "key": "variables_get_criminalRecord",
+          "value": "犯罪记录",
+          "type": "Number"
         }
       ]
     }

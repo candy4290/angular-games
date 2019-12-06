@@ -1,8 +1,8 @@
 import { Injectable, Renderer2, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Category, CustomBlock, NgxBlocklyConfig, NgxBlocklyComponent } from 'ngx-blockly';
+import { CustomBlock, NgxBlocklyConfig, NgxBlocklyComponent } from 'ngx-blockly';
 import { map } from 'rxjs/operators';
-import { VariableGetBlock, CustomLabel } from 'my-lib';
+import { VariableGetBlock } from 'my-lib';
 import { of, Subscription } from 'rxjs';
 declare var Blockly: any;
 @Injectable()
@@ -45,20 +45,22 @@ export class BlocklyService {
         const variables = rsp.variables[id] || [];
         let xmls = '';
         for (let i = 0, len = variables.length; i < len; i++) {
-          this.loadedVariables.add(`variables_get_${variables[i].key}#${variables[i].value}`);
-          const tempVariable =  new VariableGetBlock(`variables_get_${variables[i].key}`, null, null, variables[i].value, [variables[i].type], variables[i].type, variables[i].key);
+          this.loadedVariables.add(`${variables[i].key}#${variables[i].value}`);
+          const tempVariable =  new VariableGetBlock(`${variables[i].key}`, null, null, variables[i].value, [variables[i].type], variables[i].type, variables[i].key);
           xmls += tempVariable.toXML();
           tempBlocks.push(
             tempVariable
           );
-          Blockly.Blocks[tempVariable.type] = {
-            init() {
-              this.jsonInit(tempVariable.jsonBlock);
-            }
-          };
-          Blockly.JavaScript[tempVariable.type] = (e: any) => {
-            return tempVariable.toJavaScriptCode(e);
-          };
+          if (!Blockly.Blocks[tempVariable.type]) {
+            Blockly.Blocks[tempVariable.type] = {
+              init() {
+                this.jsonInit(tempVariable.jsonBlock);
+              }
+            };
+            Blockly.JavaScript[tempVariable.type] = (e: any) => {
+              return tempVariable.toJavaScriptCode(e);
+            };
+          }
         }
         return [tempBlocks, xmls];
       })
@@ -247,7 +249,7 @@ export class BlocklyService {
       }
     };
 
-    // // 给目录加上图片
+    // 给目录加上图片
     Blockly.tree.BaseNode.prototype.getRowDom = function() {
       const row = document.createElement('div');
       row.className = this.getRowClassName();
@@ -258,9 +260,9 @@ export class BlocklyService {
       row.appendChild(label);
       if (label.textContent) {
         const img = document.createElement('img');
+        // <i nz-icon nzType="down" nzTheme="outline"></i>
         img.src = this.getCategoryConfig(label.textContent).itemImg.commonUrl;
         img.style.height = '24px';
-        // img.style.display = 'block';
         img.style.margin = '0 10px 0 0';
         label.parentNode.insertBefore(img, label);
       }
@@ -341,6 +343,11 @@ export class BlocklyService {
     //     pathUp:  'a 4 4 90 1 1 0,-15'
     //   };
     // };
+
+    Blockly.WorkspaceSvg.prototype.newBlock = function(prototypeName, opt_id) {
+      console.log(prototypeName);
+      return new Blockly.BlockSvg(this, prototypeName, opt_id);
+    };
 
   }
 
@@ -425,6 +432,45 @@ export class BlocklyService {
       }
       this.categoriesInString += '</category>';
     }
+  }
+
+  /**
+   *  解析xml并加载其中的block
+   */
+  parseXmlAndInitBlock(result: string) {
+    const tags = [];
+    let variableStart = 0;
+    let variableEnd = 0;
+    while (variableStart !== -1) {
+      variableStart = result.indexOf('<block type="variables_get', variableEnd);
+      if (variableStart !== -1) {
+        variableEnd = result.indexOf('</block>', variableStart) + 7;
+        tags.push(result.slice(variableStart, variableEnd).replace(/\s*/g, ''));
+      }
+    }
+    const variables = [];
+    tags.forEach(tag => {
+      const temp = tag.indexOf('type="');
+      const typeIndx = tag.indexOf('variabletype="') ;
+      variables.push({
+        key: tag.slice(temp + 6, tag.indexOf('"', temp + 6)),
+        type: tag.slice(typeIndx + 13, tag.indexOf('"', typeIndx + 13)),
+        value: tag.slice(tag.indexOf('>', typeIndx + 13) + 1, tag.indexOf('<', typeIndx + 13))
+      });
+    });
+    variables.forEach(variable => {
+      if (!Blockly.Blocks[variable.key]) {
+        const temp = new VariableGetBlock(variable.key, null, null, variable.value, [variable.type], variable.type, variable.key);
+        Blockly.Blocks[temp.type] = {
+          init() {
+            this.jsonInit(temp.jsonBlock);
+          }
+        };
+        Blockly.JavaScript[temp.type] = (e: any) => {
+          return temp.toJavaScriptCode(e);
+        };
+      }
+    });
   }
 
 }

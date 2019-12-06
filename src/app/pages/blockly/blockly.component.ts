@@ -4,7 +4,7 @@ import { NgxBlocklyConfig, NgxBlocklyGeneratorConfig,
 import { BlocklyService } from './blockly.service';
 import { LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY } from './category';
 import { Subscription, Subject } from 'rxjs';
-import { AndOrBlock, CreateVariableButton } from 'my-lib';
+import { AndOrBlock, CreateVariableButton, VariableGetBlock } from 'my-lib';
 import { DOCUMENT } from '@angular/common';
 import { NzMessageService, NzModalService, NzModalRef } from 'ng-zorro-antd';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -158,8 +158,10 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       fileReader.readAsText(file);
       fileReader.onload = () => {
+        const result = `${fileReader.result}`;
+        this.blockly.parseXmlAndInitBlock(result);
         this.messageService.success('文件导入成功！');
-        this.workspace.fromXml(`${fileReader.result}`);
+        this.workspace.fromXml(result);
       };
     }
     return false;
