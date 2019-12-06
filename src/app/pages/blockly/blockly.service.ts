@@ -4,12 +4,13 @@ import { CustomBlock, NgxBlocklyConfig, NgxBlocklyComponent } from 'ngx-blockly'
 import { map } from 'rxjs/operators';
 import { VariableGetBlock } from 'my-lib';
 import { of, Subscription } from 'rxjs';
+import { generateColor } from 'my-lib';
 declare var Blockly: any;
 @Injectable()
 
 export class BlocklyService {
   loadedVariables = new Set(); // 存储已加载的变量block的type
-  categorySearch = '<category colour="#ff00ff" name="查询结果">';
+  categorySearch = '<category colour="#000" name="查询结果">';
   workspace: NgxBlocklyComponent;
   categoriesInString = ''; // 远程加载的目录结构string表示
   categoriesInArray = [];
@@ -259,11 +260,26 @@ export class BlocklyService {
       row.appendChild(this.getIconDom());
       row.appendChild(label);
       if (label.textContent) {
+        if (this.hasChildren()) {
+          // 加上目录展开闭合的照片
+          const icon = document.createElement('span');
+          icon.innerHTML = `
+          <i _ngcontent-vvd-c1="" nz-icon="" nztheme="outline" nztype="down" class="anticon anticon-down" ng-reflect-nz-type="down" ng-reflect-nz-theme="outline">
+          <svg viewBox="64 64 896 896" fill="currentColor" width="1em" height="1em" data-icon="down" aria-hidden="true">
+          <path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3
+           7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path>
+          </svg>
+          </i>`;
+          icon.style.flexGrow = '1';
+          icon.style.display = 'flex';
+          icon.style.justifyContent = 'flex-end';
+          label.parentNode.appendChild(icon);
+        }
         const img = document.createElement('img');
         // <i nz-icon nzType="down" nzTheme="outline"></i>
         img.src = this.getCategoryConfig(label.textContent).itemImg.commonUrl;
         img.style.height = '24px';
-        img.style.margin = '0 10px 0 0';
+        img.style.margin = '0 10px 0 8px';
         label.parentNode.insertBefore(img, label);
       }
       return row;
@@ -274,9 +290,6 @@ export class BlocklyService {
       let activeUrl: string;
       switch (labelContext) {
         case '查询结果':
-          commonUrl = 'https://ng.ant.design/assets/img/logo.svg';
-          activeUrl = 'https://ng.ant.design/assets/img/logo.svg';
-          break;
         case '变量':
         case '逻辑':
         case '循环':
@@ -288,7 +301,7 @@ export class BlocklyService {
           break;
         default:
           commonUrl = 'https://ng.ant.design/assets/img/logo.svg';
-          activeUrl = 'https://ng.ant.design/assets/img/logo.svg';
+          activeUrl = 'https://www.primefaces.org/primeng/assets/showcase/images/mask.svg';
       }
       return {
         itemImg: {
@@ -303,33 +316,33 @@ export class BlocklyService {
       };
     };
 
-    // 控制目录图标显示与否
-    Blockly.tree.TreeNode.prototype.getCalculatedIconClass = function() {
-      var expanded = this.getExpanded();
-      var expandedIconClass = this.getExpandedIconClass();
-      if (expanded && expandedIconClass) {
-        return expandedIconClass;
-      }
-      var iconClass = this.getIconClass();
-      if (!expanded && iconClass) {
-        return iconClass;
-      }
+    Blockly.tree.BaseNode.prototype.getIconElement = function() {
+      const el = this.getRowElement();
+      return el ? (el.lastChild) : null;
+    };
 
-      // fall back on default icons
-      var config = this.getConfig();
-      if (this.hasChildren()) {
-        // if (expanded && config.cssExpandedFolderIcon) {
-        //   return config.cssTreeIcon + ' ' + config.cssExpandedFolderIcon;
-        // } else if (!expanded && config.cssCollapsedFolderIcon) {
-        //   return config.cssTreeIcon + ' ' + config.cssCollapsedFolderIcon;
-        // }
-        return config.cssTreeIcon + ' ' + config.cssFileIcon;
-      } else {
-        if (config.cssFileIcon) {
-          return config.cssTreeIcon + ' ' + config.cssFileIcon;
-        }
+    // 选中元素增加class类
+    Blockly.tree.BaseNode.prototype.getRowClassName = function() {
+      let selectedClass = '';
+      if (this.isSelected()) {
+        selectedClass = ' ' + (this.config_.cssSelectedRow || '') + ' ' + 'app-blockly-selected ';
       }
-      return '';
+      return this.config_.cssTreeRow + selectedClass;
+    };
+
+    // 控制目录展开闭合的图标
+    Blockly.tree.TreeNode.prototype.getCalculatedIconClass = function() {
+      const expanded = this.getExpanded();
+      // fall back on default icons
+      if (this.hasChildren()) {
+        if (expanded) {
+          return  'app-blockly-expanded';
+        } else if (!expanded) {
+          return'app-blockly-collapsed';
+        }
+      } else {
+        return '';
+      }
     };
 
     // 更新input,和output的卡槽形状
@@ -420,7 +433,7 @@ export class BlocklyService {
         name: categoryes[i].name,
         parentId: categoryes[i].parentId
       });
-      this.categoriesInString += `<category class="form-ajax" name="${categoryes[i].name}">`;
+      this.categoriesInString += `<category class="form-ajax" name="${categoryes[i].name}" colour="${categoryes[i].color || generateColor()}">`;
       const children = categoryes[i].children || [];
       if (children.length > 0) {
         this.jsonToXml(children);

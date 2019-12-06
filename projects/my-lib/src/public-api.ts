@@ -18,3 +18,5 @@ export * from './lib/ngx-blockly/models/label';
 
 export * from './lib/custom-buttons/create-variable-button';
 export * from './lib/custom-labels/custom-label';
+
+export * from './lib/functions/random-color';

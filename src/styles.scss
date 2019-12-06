@@ -71,4 +71,24 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   display: flex;
   align-items: center;
   margin-bottom: 0;
+  padding-right: 16px;
+}
+// 目录展开
+.app-blockly-expanded {
+  i {
+    transform: rotateX(180deg);
+    transition: all .3s;
+  }
+}
+// 目录闭合
+.app-blockly-collapsed {
+  i {
+    transform: rotateX(0deg);
+    transition: all .3s;
+  }
+}
+.app-blockly-selected {
+  i {
+    color: #fff;
+  }
 }
