@@ -344,11 +344,6 @@ export class BlocklyService {
     //   };
     // };
 
-    Blockly.WorkspaceSvg.prototype.newBlock = function(prototypeName, opt_id) {
-      console.log(prototypeName);
-      return new Blockly.BlockSvg(this, prototypeName, opt_id);
-    };
-
   }
 
   /**
@@ -452,10 +447,11 @@ export class BlocklyService {
     tags.forEach(tag => {
       const temp = tag.indexOf('type="');
       const typeIndx = tag.indexOf('variabletype="') ;
+
       variables.push({
         key: tag.slice(temp + 6, tag.indexOf('"', temp + 6)),
-        type: tag.slice(typeIndx + 13, tag.indexOf('"', typeIndx + 13)),
-        value: tag.slice(tag.indexOf('>', typeIndx + 13) + 1, tag.indexOf('<', typeIndx + 13))
+        type: tag.slice(typeIndx + 14, tag.indexOf('"', typeIndx + 14)),
+        value: tag.slice(tag.indexOf('>', typeIndx + 14) + 1, tag.indexOf('<', typeIndx + 14))
       });
     });
     variables.forEach(variable => {
