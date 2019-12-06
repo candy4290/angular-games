@@ -48,10 +48,6 @@ export class BlocklyService {
         for (let i = 0, len = variables.length; i < len; i++) {
           this.loadedVariables.add(`${variables[i].key}#${variables[i].value}`);
           const tempVariable =  new VariableGetBlock(`${variables[i].key}`, null, null, variables[i].value, [variables[i].type], variables[i].type, variables[i].key);
-          xmls += tempVariable.toXML();
-          tempBlocks.push(
-            tempVariable
-          );
           if (!Blockly.Blocks[tempVariable.type]) {
             Blockly.Blocks[tempVariable.type] = {
               init() {
@@ -62,6 +58,10 @@ export class BlocklyService {
               return tempVariable.toJavaScriptCode(e);
             };
           }
+          xmls += tempVariable.toXML();
+          tempBlocks.push(
+            tempVariable
+          );
         }
         return [tempBlocks, xmls];
       })

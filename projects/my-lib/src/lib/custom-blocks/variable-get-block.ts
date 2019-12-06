@@ -37,8 +37,4 @@ export class VariableGetBlock extends CustomBlock {
     toJavaScriptCode(e: any) {
       return [this.args[0], Blockly.JavaScript.ORDER_NONE];
     }
-
-    onChange(changeEvent: any) {
-        console.log(changeEvent);
-    }
 }
