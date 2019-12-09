@@ -10,20 +10,20 @@ export class BlocklySelfAddMutator extends BlockMutator {
   /**
    * 生成xml时调用此方法
    */
-  mutationToDom(e: any) {
-    this.block = e;
-    const container = document.createElement('mutation');
-    container.setAttribute('items', `${this.inputListLength}`);
-    return container;
+  mutationToDom() {
+    // this.block = e;
+    // const container = document.createElement('mutation');
+    // container.setAttribute('items', `${this.inputListLength}`);
+    // return container;
   }
 
   /**
    * 从xml复原时调用此方法
    */
-  domToMutation(xml: any, e: any) {
-    this.block = e;
-    this.inputListLength = parseInt(xml.getAttribute('items'), 10);
-    this.updateShape();
+  domToMutation(xml: any) {
+    // this.block = e;
+    // this.inputListLength = parseInt(xml.getAttribute('items'), 10);
+    // this.updateShape();
   }
 
   /**
