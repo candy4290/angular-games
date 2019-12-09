@@ -5,18 +5,24 @@
         "name": "系统级",
         "expanded": false,
         "colour": "#bb9246",
+        "commonUrl": "https://ng.ant.design/assets/img/logo.svg",
+        "activeUrl": "https://www.primefaces.org/primeng/assets/showcase/images/mask.svg",
         "children": [
           {
             "id": "11",
             "name": "人",
             "expanded": false,
             "parentId": "1",
+           "commonUrl": "https://ng.ant.design/assets/img/logo.svg",
+            "activeUrl": "https://www.primefaces.org/primeng/assets/showcase/images/mask.svg",
             "children": [
               {
                 "id": "113",
                 "name": "基础标签",
                 "expanded": false,
                 "parentId": "11",
+               "commonUrl": "https://ng.ant.design/assets/img/logo.svg",
+                "activeUrl": "https://www.primefaces.org/primeng/assets/showcase/images/mask.svg",
                 "children": [
                   {
                     "id": "1131",
@@ -58,12 +64,16 @@
             "name": "事",
             "expanded": false,
             "parentId": "1",
+           "commonUrl": "https://ng.ant.design/assets/img/logo.svg",
+             "activeUrl": "https://www.primefaces.org/primeng/assets/showcase/images/mask.svg",
               "children": [
                 {
                   "id": "111",
                   "name": "交管类",
                   "expanded": false,
                   "parentId": "12",
+                 "commonUrl": "https://ng.ant.design/assets/img/logo.svg",
+                  "activeUrl": "https://www.primefaces.org/primeng/assets/showcase/images/mask.svg",
                   "children": [
                     {
                       "id": "1111",
@@ -91,7 +101,9 @@
       },
       {
         "id": "2",
-        "name": "自定义"
+        "name": "自定义",
+       "commonUrl": "https://ng.ant.design/assets/img/logo.svg",
+        "activeUrl": "https://www.primefaces.org/primeng/assets/showcase/images/mask.svg"
       }
   ]
 }

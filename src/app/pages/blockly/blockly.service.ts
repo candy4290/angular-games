@@ -14,6 +14,7 @@ export class BlocklyService {
   workspace: NgxBlocklyComponent;
   categoriesInString = ''; // 远程加载的目录结构string表示
   categoriesInArray = [];
+  categoriesInObject = {};
   variables: CustomBlock[] = []; // 当前toolbox中包含的变量
   subscription$ = new Subscription();
   constructor(private http: HttpClient) {
@@ -301,8 +302,8 @@ export class BlocklyService {
           activeUrl = 'https://www.primefaces.org/primeng/assets/showcase/images/mask.svg';
           break;
         default:
-          commonUrl = 'https://ng.ant.design/assets/img/logo.svg';
-          activeUrl = 'https://www.primefaces.org/primeng/assets/showcase/images/mask.svg';
+          commonUrl = (this.categoriesInObject[labelContext] || {}).commonUrl ||' https://ng.ant.design/assets/img/logo.svg';
+          activeUrl =  (this.categoriesInObject[labelContext] || {}).activeUrl || 'https://www.primefaces.org/primeng/assets/showcase/images/mask.svg';
       }
       return {
         itemImg: {
@@ -432,8 +433,14 @@ export class BlocklyService {
       this.categoriesInArray.push({
         id: categoryes[i].id,
         name: categoryes[i].name,
-        parentId: categoryes[i].parentId
+        parentId: categoryes[i].parentId,
       });
+      if (categoryes[i].name) {
+        this.categoriesInObject[categoryes[i].name] = {
+          commonUrl: categoryes[i].commonUrl,
+          activeUrl: categoryes[i].activeUrl
+        }
+      }
       this.categoriesInString += `<category class="form-ajax" name="${categoryes[i].name}" colour="${categoryes[i].color || generateColor()}">`;
       const children = categoryes[i].children || [];
       if (children.length > 0) {

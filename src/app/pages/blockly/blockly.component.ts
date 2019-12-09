@@ -203,6 +203,9 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
+  /**
+   *  弹出创建变量弹窗
+   */
   createVariableDialog() {
     this.nzModalRef$ = this.modalService.create({
       nzTitle: '创建变量',
