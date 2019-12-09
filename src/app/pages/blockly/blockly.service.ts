@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { CustomBlock, NgxBlocklyConfig, NgxBlocklyComponent } from 'ngx-blockly';
 import { map } from 'rxjs/operators';
 import { VariableGetBlock } from 'my-lib';
-import { of, Subscription } from 'rxjs';
+import { of, Subscription, Observable } from 'rxjs';
 import { generateColor } from 'my-lib';
 declare var Blockly: any;
 @Injectable()
@@ -40,7 +40,7 @@ export class BlocklyService {
   /**
    *  获取标签（变量）,并生成block及其javascript方法
    */
-  getVariables(id: string) {
+  getVariables(id: string): Observable<any[]> {
     return this.http.get('assets/blockly/variables/variables.json', {}).pipe(
       map((rsp: any) => {
         const tempBlocks = [];
@@ -49,16 +49,7 @@ export class BlocklyService {
         for (let i = 0, len = variables.length; i < len; i++) {
           this.loadedVariables.add(`${variables[i].key}#${variables[i].value}`);
           const tempVariable =  new VariableGetBlock(`${variables[i].key}`, null, null, variables[i].value, [variables[i].type], variables[i].type, variables[i].key);
-          if (!Blockly.Blocks[tempVariable.type]) {
-            Blockly.Blocks[tempVariable.type] = {
-              init() {
-                this.jsonInit(tempVariable.jsonBlock);
-              }
-            };
-            Blockly.JavaScript[tempVariable.type] = (e: any) => {
-              return tempVariable.toJavaScriptCode(e);
-            };
-          }
+          this.initVariableBlock(tempVariable);
           xmls += tempVariable.toXML();
           tempBlocks.push(
             tempVariable
@@ -302,7 +293,7 @@ export class BlocklyService {
           activeUrl = 'https://www.primefaces.org/primeng/assets/showcase/images/mask.svg';
           break;
         default:
-          commonUrl = (this.categoriesInObject[labelContext] || {}).commonUrl ||' https://ng.ant.design/assets/img/logo.svg';
+          commonUrl = (this.categoriesInObject[labelContext] || {}).commonUrl || ' https://ng.ant.design/assets/img/logo.svg';
           activeUrl =  (this.categoriesInObject[labelContext] || {}).activeUrl || 'https://www.primefaces.org/primeng/assets/showcase/images/mask.svg';
       }
       return {
@@ -439,7 +430,7 @@ export class BlocklyService {
         this.categoriesInObject[categoryes[i].name] = {
           commonUrl: categoryes[i].commonUrl,
           activeUrl: categoryes[i].activeUrl
-        }
+        };
       }
       this.categoriesInString += `<category class="form-ajax" name="${categoryes[i].name}" colour="${categoryes[i].color || generateColor()}">`;
       const children = categoryes[i].children || [];
@@ -478,16 +469,28 @@ export class BlocklyService {
     variables.forEach(variable => {
       if (!Blockly.Blocks[variable.key]) {
         const temp = new VariableGetBlock(variable.key, null, null, variable.value, [variable.type], variable.type, variable.key);
-        Blockly.Blocks[temp.type] = {
-          init() {
-            this.jsonInit(temp.jsonBlock);
-          }
-        };
-        Blockly.JavaScript[temp.type] = (e: any) => {
-          return temp.toJavaScriptCode(e);
-        };
+        this.initVariableBlock(temp);
       }
     });
+  }
+
+  /**
+   * 初始化变量的block并实现其js方法
+   */
+  initVariableBlock(block: CustomBlock) {
+    // tslint:disable-next-line: no-string-literal
+    const jsonBLock = block['jsonBlock'];
+    if (!block.type || !jsonBLock ) {
+      return;
+    }
+    Blockly.Blocks[block.type] = {
+      init() {
+        this.jsonInit(jsonBLock);
+      }
+    };
+    Blockly.JavaScript[block.type] = (e: any) => {
+      return block.toJavaScriptCode(e);
+    };
   }
 
 }
