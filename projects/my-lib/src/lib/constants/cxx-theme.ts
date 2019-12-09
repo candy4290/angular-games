@@ -7,7 +7,7 @@ export class CxxTheme {
     },
     logic_blocks: {
        colourPrimary: '#01579b',
-       colourSecondary:'#64C7FF',
+       colourSecondary: '#64C7FF',
        colourTertiary: '#C5EAFF'
     }
   };
