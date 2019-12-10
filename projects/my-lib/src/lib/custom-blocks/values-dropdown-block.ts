@@ -9,29 +9,15 @@ export class ValuesDropDownBlock extends CustomBlock {
       message0: '%1',
       args0: [
         {
-          type: 'field_dropdown',
-          name: 'NAME',
-          options: [
-            [
-              '请选择',
-              'null'
-            ],
-            [
-              '常住人口',
-              '常住人口1'
-            ],
-            [
-              '暂住人口',
-              '暂住人口1'
-            ]
-          ]
-        }
-      ],
+          type: 'input_dummy',
+          name: 'INPUT'
+        }],
       inputsInline: false,
       output: null,
       colour: 230,
       tooltip: '',
-      helpUrl: ''
+      helpUrl: '',
+      extensions: ['dynamic_menu_extension']
     };
     this.class = ValuesDropDownBlock;
   }

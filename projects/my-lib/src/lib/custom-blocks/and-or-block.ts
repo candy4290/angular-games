@@ -1,5 +1,4 @@
 import { CustomBlock, BlockMutator } from 'ngx-blockly';
-
 declare var Blockly: any;
 
 export class AndOrBlock extends CustomBlock {
@@ -41,8 +40,8 @@ export class AndOrBlock extends CustomBlock {
     };
 
     constructor(type: string, block: any, blockMutator: BlockMutator, ...args: any[]) {
-        super(type, block, blockMutator, ...args);
-        this.class = AndOrBlock;
+      super(type, block, blockMutator, ...args);
+      this.class = AndOrBlock;
     }
 
     defineBlock() {

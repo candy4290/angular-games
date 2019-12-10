@@ -4,7 +4,7 @@ import { NgxBlocklyConfig, NgxBlocklyGeneratorConfig,
 import { BlocklyService } from './blockly.service';
 import { LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY } from './category';
 import { Subscription, Subject } from 'rxjs';
-import { AndOrBlock, CreateVariableButton, VariableGetBlock, ValuesDropDownBlock } from 'my-lib';
+import { AndOrBlock, CreateVariableButton, VariableGetBlock, ValuesDropDownBlock, SelfSelectorField } from 'my-lib';
 import { DOCUMENT } from '@angular/common';
 import { NzMessageService, NzModalService, NzModalRef } from 'ng-zorro-antd';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -73,6 +73,12 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
       LISTS_CATEGORY,
     ];
     this.config.toolbox = this.ngxToolboxBuilder.build();
+    const selfSelectorField = new SelfSelectorField();
+    Blockly.Extensions.register('dynamic_menu_extension',
+    function() {
+      this.getInput('INPUT')
+        .appendField(new Blockly.SelfSelectorField([['江苏', '江苏'], ['安徽', '安徽'], ['浙江', '浙江']]));
+    });
   }
 
   ngOnInit() {
