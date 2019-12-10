@@ -12,6 +12,18 @@ export class ValuesDropDownBlock extends CustomBlock {
           type: 'field_dropdown',
           name: 'NAME',
           options: [
+            [
+              '请选择',
+              'null'
+            ],
+            [
+              '常住人口',
+              '常住人口1'
+            ],
+            [
+              '暂住人口',
+              '暂住人口1'
+            ]
           ]
         }
       ],
@@ -33,7 +45,7 @@ export class ValuesDropDownBlock extends CustomBlock {
   }
 
   toJavaScriptCode(e: any) {
-    return [this.args[0], Blockly.JavaScript.ORDER_NONE];
+    return [e.getFieldValue('NAME'), Blockly.JavaScript.ORDER_NONE];
   }
 
 }

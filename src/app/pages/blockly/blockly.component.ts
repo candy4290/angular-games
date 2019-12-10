@@ -4,7 +4,7 @@ import { NgxBlocklyConfig, NgxBlocklyGeneratorConfig,
 import { BlocklyService } from './blockly.service';
 import { LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY } from './category';
 import { Subscription, Subject } from 'rxjs';
-import { AndOrBlock, CreateVariableButton, VariableGetBlock } from 'my-lib';
+import { AndOrBlock, CreateVariableButton, VariableGetBlock, ValuesDropDownBlock } from 'my-lib';
 import { DOCUMENT } from '@angular/common';
 import { NzMessageService, NzModalService, NzModalRef } from 'ng-zorro-antd';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -24,6 +24,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public customBlocks: CustomBlock[] = [
     new AndOrBlock('logic_block_self_add', null, null),
+    new ValuesDropDownBlock('values_drop_down', null, null)
   ]; // 自定义blocks
   @ViewChild(NgxBlocklyComponent, {static: true}) workspace: NgxBlocklyComponent;
   public config: NgxBlocklyConfig = {
