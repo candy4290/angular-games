@@ -2,7 +2,7 @@ import { Category, XmlBlock } from 'ngx-blockly';
 import { AndOrBlock, ValuesDropDownBlock } from 'my-lib';
 
 export const LOGIC_CATEGORY: Category = new Category([
-  new ValuesDropDownBlock('values_drop_down', null, null),
+  // new ValuesDropDownBlock('values_drop_down', null, null),
   new AndOrBlock('logic_block_self_add', null, null),
   new XmlBlock('controls_if'),
   new XmlBlock('logic_compare'),

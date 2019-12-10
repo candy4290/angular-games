@@ -2,8 +2,8 @@ import { Injectable, Renderer2, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CustomBlock, NgxBlocklyConfig, NgxBlocklyComponent } from 'ngx-blockly';
 import { map } from 'rxjs/operators';
-import { VariableGetBlock } from 'my-lib';
-import { of, Subscription, Observable } from 'rxjs';
+import { VariableGetBlock, ValuesDropDownBlock } from 'my-lib';
+import { of, Subscription, Observable, zip } from 'rxjs';
 import { generateColor } from 'my-lib';
 declare var Blockly: any;
 @Injectable()
@@ -48,7 +48,31 @@ export class BlocklyService {
         let xmls = '';
         for (let i = 0, len = variables.length; i < len; i++) {
           this.loadedVariables.add(`${variables[i].key}#${variables[i].value}`);
-          const tempVariable =  new VariableGetBlock(`${variables[i].key}`, null, null, variables[i].value, [variables[i].type], variables[i].type, variables[i].key);
+          const tempVariable =  new VariableGetBlock(`${variables[i].key}`, null, null, variables[i].value, [variables[i].type], variables[i].type);
+          this.initVariableBlock(tempVariable);
+          xmls += tempVariable.toXML();
+          tempBlocks.push(
+            tempVariable
+          );
+        }
+        return [tempBlocks, xmls];
+      })
+    );
+  }
+
+  getDropDown(id: string): Observable<any[]> {
+    return this.http.get('assets/blockly/labels/labels.json', {}).pipe(
+      map((rsp: any) => {
+        const tempBlocks = [];
+        const labels = rsp.labels[id] || [];
+        let xmls = '';
+        if (labels.length > 0) {
+          const tempVariable =  new ValuesDropDownBlock(`dropdown_${id}`, null, null, `extension_${id}`);
+          Blockly.Extensions.register(`extension_${id}`,
+            function() {
+              this.getInput('INPUT')
+                .appendField(new Blockly.SelfSelectorField(labels));
+            });
           this.initVariableBlock(tempVariable);
           xmls += tempVariable.toXML();
           tempBlocks.push(
@@ -227,19 +251,21 @@ export class BlocklyService {
       const categoryId = ((selectedCategoryes || [])[0] || {}).id;
       if (categoryId && node.blocks.length === 0 && categoryName !== '查询结果') {
         // 异步加载blocks
-        const getVariables$ = this.getVariables(categoryId).subscribe(rsp => {
+        const zip$ = zip(this.getVariables(categoryId), this.getDropDown(categoryId)).subscribe(rsp => {
           const treeControl = this.workspace.workspace.getToolbox().tree_; // 每次调用renderTree都会生成新的TreeControl
           const preSelectedItem = treeControl.getSelectedItem();
-          if (rsp[1]) {
+          if (rsp[0][1]) {
             const xml = Blockly.Xml.textToDom(`<xml>
-            <label text="${categoryName}"></label>
-            ${rsp[1]}
+            <label text="${categoryName}-变量"></label>
+            ${rsp[0][1]}
+            <label text="${categoryName}-值"></label>
+            ${rsp[1][1]}
             </xml>`);
             preSelectedItem.blocks.push(...xml.children);
             this.workspace.workspace.getToolbox().refreshSelection();
           }
-          this.subscription$.add(getVariables$);
         });
+        this.subscription$.add(zip$);
       }
     };
 
@@ -446,8 +472,11 @@ export class BlocklyService {
    */
   parseXmlAndInitBlock(result: string) {
     const tags = [];
+    const labels = [];
     let variableStart = 0;
     let variableEnd = 0;
+    let labelStart = 0;
+    let labelEnd = 0;
     while (variableStart !== -1) {
       variableStart = result.indexOf('<block type="variables_get', variableEnd);
       if (variableStart !== -1) {
@@ -468,7 +497,7 @@ export class BlocklyService {
     });
     variables.forEach(variable => {
       if (!Blockly.Blocks[variable.key]) {
-        const temp = new VariableGetBlock(variable.key, null, null, variable.value, [variable.type], variable.type, variable.key);
+        const temp = new VariableGetBlock(variable.key, null, null, variable.value, [variable.type], variable.type);
         this.initVariableBlock(temp);
       }
     });

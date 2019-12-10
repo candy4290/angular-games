@@ -17,7 +17,7 @@ export class ValuesDropDownBlock extends CustomBlock {
       colour: 230,
       tooltip: '',
       helpUrl: '',
-      extensions: ['dynamic_menu_extension']
+      extensions: [args[0]]
     };
     this.class = ValuesDropDownBlock;
   }
@@ -27,7 +27,7 @@ export class ValuesDropDownBlock extends CustomBlock {
   }
 
   toXML() {
-      return `<block type='${this.type}'></block>`;
+    return `<block type='${this.type}'></block>`;
   }
 
   toJavaScriptCode(e: any) {

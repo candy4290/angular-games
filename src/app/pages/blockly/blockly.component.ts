@@ -74,11 +74,6 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     ];
     this.config.toolbox = this.ngxToolboxBuilder.build();
     const selfSelectorField = new SelfSelectorField();
-    Blockly.Extensions.register('dynamic_menu_extension',
-    function() {
-      this.getInput('INPUT')
-        .appendField(new Blockly.SelfSelectorField([['江苏', '江苏'], ['安徽', '安徽'], ['浙江', '浙江']]));
-    });
   }
 
   ngOnInit() {
