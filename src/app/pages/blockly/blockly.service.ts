@@ -69,11 +69,14 @@ export class BlocklyService {
         let xmls = '';
         if (labels.length > 0) {
           const tempVariable =  new ValuesDropDownBlock(`dropdown_${id}`, null, null, `extension_${id}`, key);
-          Blockly.Extensions.register(`extension_${id}`,
-            function() {
-              this.getInput('INPUT')
-                .appendField(new Blockly.SelfSelectorField(labels));
-            });
+          try {
+            Blockly.Extensions.register(`extension_${id}`,
+              function() {
+                this.getInput('INPUT')
+                  .appendField(new Blockly.SelfSelectorField(labels));
+              });
+          } catch (error) {
+          }
           this.initVariableBlock(tempVariable);
           xmls += tempVariable.toXML();
           tempBlocks.push(
