@@ -26,16 +26,20 @@ export class SelfSelectorField {
                 lists.push(item);
               }
             });
+            console.log(lists);
             if (lists.length > 0) {
               for (let i = 0, len =  this.imageElement_.children.length; i < len; i++) {
                 const item = this.imageElement_.children.item(i);
                 if (item && !item.innerText.includes(opt_newValue)) {
                   // this.imageElement_.removeChild(item);
                   item.style.display = 'none';
+                } else {
+                  item.style.display = 'block';
                 }
               }
             } else {
-              this.dropdownCreate_();
+              // 没有搜索结果
+              console.log('无搜索结果')
             }
             return null;
           }
@@ -79,9 +83,11 @@ export class SelfSelectorField {
         // 更新选中项(展示值更新,选中项目的样式更新)
         this.updateSelected = (e: any) => {
           console.log(e);
+          const text = e.target.innerText;
           this.hide_();
-          this.setEditorValue_(e.target.innerText);
+          this.setEditorValue_(text);
           this.selectedValue = this.variables[e.target.innerText].key;
+          this.selectedIndex = menuGenerator.findIndex(item => item[0] === text);
         };
         this.showEditor_ = function() {
           Blockly.SelfSelectorField.superClass_.showEditor_.call(this);
