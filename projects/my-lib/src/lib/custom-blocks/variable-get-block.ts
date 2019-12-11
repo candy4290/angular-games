@@ -15,8 +15,8 @@ export class VariableGetBlock extends CustomBlock {
             type: 'field_variable',
             name: 'VAR',
             variable: args[0] || 'item',
-            variableTypes: args[1],    // Specifies what types to put in the dropdown
-            defaultType: 'String'
+            variableTypes: [args[2]],    // Specifies what types to put in the dropdown
+            defaultType: args[2]
           }
         ],
         colour: '%{BKY_VARIABLES_HUE}',

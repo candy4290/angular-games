@@ -1,4 +1,4 @@
-import { Svgs } from '../../public-api';
+import { Svgs } from '../constants/src';
 
 declare var Blockly: any;
 
