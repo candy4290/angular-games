@@ -13,6 +13,7 @@ export * from './lib/types/blockly-config';
 export * from './lib/constants/custome-block';
 export * from './lib/constants/toolbox';
 export * from './lib/constants/cxx-theme';
+export * from './lib/constants/src';
 
 export * from './lib/ngx-blockly/models/button';
 export * from './lib/ngx-blockly/models/label';

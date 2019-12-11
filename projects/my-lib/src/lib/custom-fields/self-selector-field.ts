@@ -1,3 +1,5 @@
+import { Svgs } from '../../public-api';
+
 declare var Blockly: any;
 
 export class SelfSelectorField {
@@ -26,12 +28,14 @@ export class SelfSelectorField {
                 lists.push(item);
               }
             });
-            console.log(lists);
             if (lists.length > 0) {
               for (let i = 0, len =  this.imageElement_.children.length; i < len; i++) {
                 const item = this.imageElement_.children.item(i);
+                if (i === 0) {
+                  item.style.display = 'none';
+                  continue;
+                }
                 if (item && !item.innerText.includes(opt_newValue)) {
-                  // this.imageElement_.removeChild(item);
                   item.style.display = 'none';
                 } else {
                   item.style.display = 'block';
@@ -39,21 +43,59 @@ export class SelfSelectorField {
               }
             } else {
               // 没有搜索结果
-              console.log('无搜索结果')
+              console.log('无搜索结果');
+              for (let i = 0, len =  this.imageElement_.children.length; i < len; i++) {
+                const item = this.imageElement_.children.item(i);
+                if (i === 0) {
+                  item.style.display = 'block';
+                } else {
+                  item.style.display = 'none';
+                }
+              }
             }
             return null;
+          } else {
+            if (this.imageElement_) {
+              for (let i = 0, len =  this.imageElement_.children.length; i < len; i++) {
+                const item = this.imageElement_.children.item(i);
+                if (i === 0) {
+                  item.style.display = 'none';
+                  continue;
+                }
+                if (item && !item.innerText.includes(opt_newValue)) {
+                  item.style.display = 'none';
+                } else {
+                  item.style.display = 'block';
+                }
+              }
+            }
+            return opt_newValue;
           }
-          return opt_newValue;
         };
         if (opt_value === null) {
           opt_value = Blockly.SelfSelectorField.DEFAULT_VALUE || menuGenerator[0][0];
-          this.selectedIndex = 0;
           this.selectedValue = opt_value;
         }  // Else the original value is fine.
         this.dropdownCreate_ = function() {
           console.log('------');
           this.imageElement_ = document.createElement('div');
           this.imageElement_.className = 'goog-menu goog-menu-vertical blocklyNonSelectable blocklyDropdownMenu';
+          const noSeacher = document.createElement('div');
+          noSeacher.style.width = '100px';
+          const img = document.createElement('img');
+          img.src =  Svgs.emptyImg;
+          img.style.height = '35px';
+          img.style.display = 'block';
+          img.style.margin = '0 auto';
+          noSeacher.appendChild(img);
+          const text = document.createElement('div');
+          text.innerText = '暂无数据';
+          text.style.textAlign = 'center';
+          text.style.fontSize = '14px';
+          text.style.color = 'rgba(0,0,0,.25)';
+          noSeacher.appendChild(text);
+          noSeacher.style.display = 'none';
+          this.imageElement_.appendChild(noSeacher);
           menuGenerator.forEach(item => {
             const div = document.createElement('div');
             div.className = 'goog-menuitem goog-option';
@@ -84,10 +126,12 @@ export class SelfSelectorField {
         this.updateSelected = (e: any) => {
           console.log(e);
           const text = e.target.innerText;
+          if (text === '暂无数据') {
+            return;
+          }
           this.hide_();
           this.setEditorValue_(text);
           this.selectedValue = this.variables[e.target.innerText].key;
-          this.selectedIndex = menuGenerator.findIndex(item => item[0] === text);
         };
         this.showEditor_ = function() {
           Blockly.SelfSelectorField.superClass_.showEditor_.call(this);
