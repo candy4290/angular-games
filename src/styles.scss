@@ -92,7 +92,18 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     color: #fff;
   }
 }
-
+// flyout背景色
+.blocklyFlyoutBackground {
+  fill: #4b4949!important;
+}
+// flyout中label的颜色
+.blocklyFlyoutLabelText {
+  fill: #fff;
+}
+// mutator图标的背景色
+.blocklyIconShape {
+  fill: #aaa;
+}
 .goog-menuitem {
   &:hover {
     background: #eee;

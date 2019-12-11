@@ -371,16 +371,16 @@ export class BlocklyService {
     };
 
     // 更新input,和output的卡槽形状
-    // Blockly.blockRendering.ConstantProvider.prototype.makePuzzleTab = function() {
-    //   const width = this.TAB_WIDTH;
-    //   const height = this.TAB_HEIGHT;
-    //   return {
-    //     width,
-    //     height,
-    //     pathDown: 'a 4 4 90 1 0 0,15',
-    //     pathUp:  'a 4 4 90 1 1 0,-15'
-    //   };
-    // };
+    Blockly.blockRendering.ConstantProvider.prototype.makePuzzleTab = function() {
+      const width = this.TAB_WIDTH;
+      const height = this.TAB_HEIGHT;
+      return {
+        width,
+        height,
+        pathDown: 'a 4 4 90 1 0 0,15',
+        pathUp:  'a 4 4 90 1 1 0,-15'
+      };
+    };
 
   }
 
