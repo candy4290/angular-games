@@ -13,7 +13,7 @@ export class ValuesDropDownBlock extends CustomBlock {
           name: 'INPUT'
         }],
       inputsInline: false,
-      output: null,
+      output: args[1],
       colour: 230,
       tooltip: '',
       helpUrl: '',

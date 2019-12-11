@@ -48,7 +48,7 @@ export class BlocklyService {
         let xmls = '';
         for (let i = 0, len = variables.length; i < len; i++) {
           this.loadedVariables.add(`${variables[i].key}#${variables[i].value}`);
-          const tempVariable =  new VariableGetBlock(`${variables[i].key}`, null, null, variables[i].value, [variables[i].type], variables[i].type);
+          const tempVariable =  new VariableGetBlock(`${variables[i].key}`, null, null, variables[i].value, [variables[i].type], variables[i].key);
           this.initVariableBlock(tempVariable);
           xmls += tempVariable.toXML();
           tempBlocks.push(
@@ -64,10 +64,11 @@ export class BlocklyService {
     return this.http.get('assets/blockly/labels/labels.json', {}).pipe(
       map((rsp: any) => {
         const tempBlocks = [];
-        const labels = rsp.labels[id] || [];
+        const labels = (rsp.labels[id] || {}).values || [];
+        const key =  (rsp.labels[id] || {}).key;
         let xmls = '';
         if (labels.length > 0) {
-          const tempVariable =  new ValuesDropDownBlock(`dropdown_${id}`, null, null, `extension_${id}`);
+          const tempVariable =  new ValuesDropDownBlock(`dropdown_${id}`, null, null, `extension_${id}`, key);
           Blockly.Extensions.register(`extension_${id}`,
             function() {
               this.getInput('INPUT')
@@ -497,7 +498,7 @@ export class BlocklyService {
     });
     variables.forEach(variable => {
       if (!Blockly.Blocks[variable.key]) {
-        const temp = new VariableGetBlock(variable.key, null, null, variable.value, [variable.type], variable.type);
+        const temp = new VariableGetBlock(variable.key, null, null, variable.value, [variable.type], variable.key);
         this.initVariableBlock(temp);
       }
     });
