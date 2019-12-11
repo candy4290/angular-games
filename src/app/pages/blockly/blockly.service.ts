@@ -40,7 +40,7 @@ export class BlocklyService {
   /**
    *  获取标签（变量）,并生成block及其javascript方法
    */
-  getVariables(id: string): Observable<any[]> {
+  getVariables(id: string, categoryColor: string): Observable<any[]> {
     return this.http.get('assets/blockly/variables/variables.json', {}).pipe(
       map((rsp: any) => {
         const tempBlocks = [];
@@ -48,7 +48,7 @@ export class BlocklyService {
         let xmls = '';
         for (let i = 0, len = variables.length; i < len; i++) {
           this.loadedVariables.add(`${variables[i].key}#${variables[i].value}`);
-          const tempVariable =  new VariableGetBlock(`${variables[i].key}`, null, null, variables[i].value, [variables[i].type], variables[i].key);
+          const tempVariable =  new VariableGetBlock(`${variables[i].key}`, null, null, variables[i].value, [variables[i].type], variables[i].key, categoryColor);
           this.initVariableBlock(tempVariable);
           xmls += tempVariable.toXML();
           tempBlocks.push(
@@ -60,7 +60,7 @@ export class BlocklyService {
     );
   }
 
-  getDropDown(id: string): Observable<any[]> {
+  getDropDown(id: string, categoryColor: string): Observable<any[]> {
     return this.http.get('assets/blockly/labels/labels.json', {}).pipe(
       map((rsp: any) => {
         const tempBlocks = [];
@@ -68,7 +68,7 @@ export class BlocklyService {
         const key =  (rsp.labels[id] || {}).key;
         let xmls = '';
         if (labels.length > 0) {
-          const tempVariable =  new ValuesDropDownBlock(`dropdown_${id}`, null, null, `extension_${id}`, key);
+          const tempVariable =  new ValuesDropDownBlock(`dropdown_${id}`, null, null, `extension_${id}`, key, categoryColor);
           try {
             Blockly.Extensions.register(`extension_${id}`,
               function() {
@@ -251,12 +251,13 @@ export class BlocklyService {
 
     Blockly.Toolbox.prototype.loadVariable = (node) => {
       // console.log(node.hexColour);
+      const categoryColor = node.hexColour;
       const categoryName = node.content_;
       const selectedCategoryes = this.categoriesInArray.filter(item => item.name === categoryName);
       const categoryId = ((selectedCategoryes || [])[0] || {}).id;
       if (categoryId && node.blocks.length === 0 && categoryName !== '查询结果') {
         // 异步加载blocks
-        const zip$ = zip(this.getVariables(categoryId), this.getDropDown(categoryId)).subscribe(rsp => {
+        const zip$ = zip(this.getVariables(categoryId, categoryColor), this.getDropDown(categoryId, categoryColor)).subscribe(rsp => {
           const treeControl = this.workspace.workspace.getToolbox().tree_; // 每次调用renderTree都会生成新的TreeControl
           const preSelectedItem = treeControl.getSelectedItem();
           if (rsp[0][1]) {
@@ -477,11 +478,8 @@ export class BlocklyService {
    */
   parseXmlAndInitBlock(result: string) {
     const tags = [];
-    const labels = [];
     let variableStart = 0;
     let variableEnd = 0;
-    let labelStart = 0;
-    let labelEnd = 0;
     while (variableStart !== -1) {
       variableStart = result.indexOf('<block type="variables_get', variableEnd);
       if (variableStart !== -1) {
