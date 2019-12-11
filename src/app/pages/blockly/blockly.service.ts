@@ -73,7 +73,7 @@ export class BlocklyService {
             Blockly.Extensions.register(`extension_${id}`,
               function() {
                 this.getInput('INPUT')
-                  .appendField(new Blockly.SelfSelectorField(labels));
+                  .appendField(new Blockly.SelfSelectorField(labels), 'NAME');
               });
           } catch (error) {
           }

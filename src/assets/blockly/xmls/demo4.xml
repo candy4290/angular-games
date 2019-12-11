@@ -1,10 +1,10 @@
 <xml xmlns="https://developers.google.com/blockly/xml">
   <variables>
-    <variable type="String" id="C?@]G#As6~wzDisS.agD">交通违法</variable>
     <variable type="String" id="9$/FR)!6tUacfI5o-DPT">性别</variable>
-    <variable type="String" id="rZX,qyg6Wm`cvc,?nnPQ">常暂住人口</variable>
+    <variable type="String" id="q4ij4BFu/ZzR/!dUGRTF">年龄</variable>
     <variable type="String" id="b)jaEe*F9d3%q#44M-a!">出生地_市</variable>
-    <variable type="Number" id="V.te7xe;E=x9*X_C%}9B">年龄</variable>
+    <variable type="String" id="rZX,qyg6Wm`cvc,?nnPQ">常暂住人口</variable>
+    <variable type="String" id="C?@]G#As6~wzDisS.agD">交通违法</variable>
   </variables>
   <block type="logic_block_self_add" id="?gq=%q9iBl51l,T35xsa" x="230" y="-290">
     <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
@@ -22,7 +22,9 @@
               </block>
             </value>
             <value name="B">
-              <block type="dropdown_1135" id="yLVHWdyjO1y4$I^dd/Ej"/>
+              <block type="dropdown_1135" id="yLVHWdyjO1y4$I^dd/Ej">
+                <field name="NAME">男</field>
+              </block>
             </value>
           </block>
         </value>
@@ -31,11 +33,13 @@
             <field name="OP">GTE</field>
             <value name="A">
               <block type="variables_get_age" id="]F6NUKUFw.7H6H9NcZxe">
-                <field name="VAR" id="V.te7xe;E=x9*X_C%}9B" variabletype="Number">年龄</field>
+                <field name="VAR" id="q4ij4BFu/ZzR/!dUGRTF" variabletype="String">年龄</field>
               </block>
             </value>
             <value name="B">
-              <block type="dropdown_1134" id="0E*Qv#7G;{.Q~Ml9PxJ:"/>
+              <block type="dropdown_1134" id="0E*Qv#7G;{.Q~Ml9PxJ:">
+                <field name="NAME">18</field>
+              </block>
             </value>
           </block>
         </value>
@@ -48,7 +52,9 @@
               </block>
             </value>
             <value name="B">
-              <block type="dropdown_1133" id="?,E?rA+{+{Orh]]Wv_#2"/>
+              <block type="dropdown_1133" id="?,E?rA+{+{Orh]]Wv_#2">
+                <field name="NAME">南京</field>
+              </block>
             </value>
           </block>
         </value>
@@ -61,7 +67,9 @@
               </block>
             </value>
             <value name="B">
-              <block type="dropdown_1131" id="No+COn`qy:)=~sIwCA[1"/>
+              <block type="dropdown_1131" id="No+COn`qy:)=~sIwCA[1">
+                <field name="NAME">暂住人口</field>
+              </block>
             </value>
           </block>
         </value>
@@ -74,7 +82,9 @@
               </block>
             </value>
             <value name="B">
-              <block type="dropdown_1111" id="_*A?9EKC+/#wZGn(;s4K"/>
+              <block type="dropdown_1111" id="_*A?9EKC+/#wZGn(;s4K">
+                <field name="NAME">酒驾</field>
+              </block>
             </value>
           </block>
         </value>
@@ -93,7 +103,9 @@
               </block>
             </value>
             <value name="B">
-              <block type="dropdown_1135" id="LP6]]+DC5Zs|+:7Fu_iY"/>
+              <block type="dropdown_1135" id="LP6]]+DC5Zs|+:7Fu_iY">
+                <field name="NAME">女</field>
+              </block>
             </value>
           </block>
         </value>
@@ -102,11 +114,13 @@
             <field name="OP">GTE</field>
             <value name="A">
               <block type="variables_get_age" id="|(iVDBBM:usn|RzqujxW">
-                <field name="VAR" id="V.te7xe;E=x9*X_C%}9B" variabletype="Number">年龄</field>
+                <field name="VAR" id="q4ij4BFu/ZzR/!dUGRTF" variabletype="String">年龄</field>
               </block>
             </value>
             <value name="B">
-              <block type="dropdown_1134" id="o+aYX(bB=i8#}tht3d7("/>
+              <block type="dropdown_1134" id="o+aYX(bB=i8#}tht3d7(">
+                <field name="NAME">25</field>
+              </block>
             </value>
           </block>
         </value>
@@ -119,7 +133,9 @@
               </block>
             </value>
             <value name="B">
-              <block type="dropdown_1133" id="X9o^m_9,]4KR1sk5Fz3g"/>
+              <block type="dropdown_1133" id="X9o^m_9,]4KR1sk5Fz3g">
+                <field name="NAME">杭州</field>
+              </block>
             </value>
           </block>
         </value>
@@ -132,7 +148,9 @@
               </block>
             </value>
             <value name="B">
-              <block type="dropdown_1131" id="3e%ky7)];=AW.!KAdg5L"/>
+              <block type="dropdown_1131" id="3e%ky7)];=AW.!KAdg5L">
+                <field name="NAME">常住人口</field>
+              </block>
             </value>
           </block>
         </value>
@@ -145,7 +163,9 @@
               </block>
             </value>
             <value name="B">
-              <block type="dropdown_1111" id="8gzrtE`GN|)mL%K/k8JK"/>
+              <block type="dropdown_1111" id="8gzrtE`GN|)mL%K/k8JK">
+                <field name="NAME">逃逸</field>
+              </block>
             </value>
           </block>
         </value>
