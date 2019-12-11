@@ -247,6 +247,7 @@ export class BlocklyService {
     };
 
     Blockly.Toolbox.prototype.loadVariable = (node) => {
+      // console.log(node.hexColour);
       const categoryName = node.content_;
       const selectedCategoryes = this.categoriesInArray.filter(item => item.name === categoryName);
       const categoryId = ((selectedCategoryes || [])[0] || {}).id;

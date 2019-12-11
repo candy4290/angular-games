@@ -43,7 +43,7 @@
           <block type="logic_compare" id="K/*Fg,!7aY!Q?fUM[[%4">
             <field name="OP">EQ</field>
             <value name="A">
-              <block type="variables_get_csds" id="-rg(9H|_{ORd33I/MXO%">
+              <block type="variables_get_csdsi" id="-rg(9H|_{ORd33I/MXO%">
                 <field name="VAR" id="b)jaEe*F9d3%q#44M-a!" variabletype="String">出生地_市</field>
               </block>
             </value>
@@ -114,7 +114,7 @@
           <block type="logic_compare" id="AC0[jYRJs+I1st`6.7%1">
             <field name="OP">EQ</field>
             <value name="A">
-              <block type="variables_get_csds" id="ogSHa57V6cJZaXy*o{tN">
+              <block type="variables_get_csdsi" id="ogSHa57V6cJZaXy*o{tN">
                 <field name="VAR" id="b)jaEe*F9d3%q#44M-a!" variabletype="String">出生地_市</field>
               </block>
             </value>

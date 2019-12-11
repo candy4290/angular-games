@@ -27,7 +27,7 @@
         {
           "key": "variables_get_age",
           "value": "年龄",
-          "type": "Number"
+          "type": "String"
         }
       ],
       "1135": [
