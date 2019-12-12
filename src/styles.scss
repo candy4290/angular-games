@@ -104,9 +104,16 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .blocklyIconShape {
   fill: #aaa;
 }
-.goog-menuitem {
-  &:hover {
-    background: #eee;
+.blocklyDropDownDiv {
+  .goog-menuitem {
+    color: #fff;
+    &:hover {
+      background: #4b4949;
+      opacity: .4;
+    }
+  }
+  .goog-menuitem-content {
+    color: unset;
   }
 }
 // block块有三层blocklyPathDark,blocklyPath,blocklyPathLight

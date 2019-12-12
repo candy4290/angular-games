@@ -77,8 +77,8 @@ export class SelfSelectorField {
           this.selectedValue = opt_value;
         }  // Else the original value is fine.
         this.dropdownCreate_ = function() {
-          console.log('------');
           this.imageElement_ = document.createElement('div');
+          this.imageElement_.style.backgroundColor = this.sourceBlock_.colour_;
           this.imageElement_.className = 'goog-menu goog-menu-vertical blocklyNonSelectable blocklyDropdownMenu';
           const noSeacher = document.createElement('div');
           noSeacher.style.width = '100px';

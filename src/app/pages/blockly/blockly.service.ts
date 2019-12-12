@@ -440,12 +440,12 @@ export class BlocklyService {
           Blockly.utils.svgPaths.lineTo(width * 0.5, (height - width) / 2);
 
       return {
-        width: width,
-        height: height,
-        pathUp: function(rtl) {
+        width,
+        height,
+        pathUp: (rtl) => {
           return rtl ? highlightRtlUp : highlightLtrUp;
         },
-        pathDown: function(rtl) {
+        pathDown: (rtl) => {
           return rtl ? highlightRtlDown : highlightLtrDown;
         }
       };
@@ -510,7 +510,6 @@ export class BlocklyService {
               Blockly.utils.svgPaths.point(dir * outerWidth, -height)
             ]);
       }
-      // TODO: Find a relationship between width and path
       const pathLeft = makeMainPath(1);
       const pathRight = makeMainPath(-1);
       return {
@@ -519,6 +518,20 @@ export class BlocklyService {
         pathLeft,
         pathRight
       };
+    };
+
+    // 展示下拉弹窗 --- 让其背景色与sourceblock颜色一致
+    Blockly.FieldDropdown.prototype.showEditor_ = function() {
+      this.menu_ = this.dropdownCreate_();
+      Blockly.DropDownDiv.getContentDiv().parentNode.style.backgroundColor = this.sourceBlock_.colour_;
+      this.menu_.render(Blockly.DropDownDiv.getContentDiv());
+      Blockly.utils.dom.addClass((this.menu_.getElement()), 'blocklyDropdownMenu');
+      Blockly.DropDownDiv.showPositionedByField(
+          this, this.dropdownDispose_.bind(this));
+      this.menu_.focus();
+      if (this.selectedMenuItem_) {
+        Blockly.utils.style.scrollIntoContainerView((this.selectedMenuItem_.getElement()), (this.menu_.getElement()));
+      }
     };
 
   }
