@@ -455,41 +455,19 @@ export class BlocklyService {
       // this.SMALL_PADDING = 8;
       // this.MEDIUM_PADDING = 8;
       // this.TALL_INPUT_FIELD_OFFSET_Y = this.MEDIUM_PADDING;
-
-
       // statement上下连接点的宽度和高度
       this.NOTCH_WIDTH = 15;
       this.NOTCH_HEIGHT = 4;
-
       // 圆角大小
       this.CORNER_RADIUS = 4;
-
-      /**
-       * An object containing sizing and path information about collapsed block
-       * indicators.
-       */
       this.JAGGED_TEETH = this.makeJaggedTeeth();
-
-      /**
-       *  previout statement和next statement形状
-       */
       this.NOTCH = this.makeNotch();
-
-      /**
-       * An object containing sizing and path information about start hats
-       */
       this.START_HAT = this.makeStartHat();
-
-      /**
-       * input和output卡口形状;默认是贝塞尔曲线和一段光滑曲线组成
-       */
       this.PUZZLE_TAB = this.makePuzzleTab();
-
       /**
        * 内部圆角
        */
       this.INSIDE_CORNERS = this.makeInsideCorners();
-
       /**
        * 外部圆角
        */
