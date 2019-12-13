@@ -2,7 +2,7 @@ import { Injectable, Renderer2, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CustomBlock, NgxBlocklyConfig, NgxBlocklyComponent, Block } from 'ngx-blockly';
 import { map } from 'rxjs/operators';
-import { VariableGetBlock, ValuesDropDownBlock } from 'my-lib';
+import { VariableGetBlock, ValuesDropDownBlock, Svgs } from 'my-lib';
 import { of, Subscription, Observable, zip } from 'rxjs';
 import { generateColor } from 'my-lib';
 declare var Blockly: any;
@@ -242,15 +242,13 @@ export class BlocklyService {
         if (children && children.length > 1) {
           children[1].src = categoryConfig.itemImg.activeUrl;
         }
-        // Add colours to child nodes which may have been collapsed and thus
-        // not rendered.
         this.addColour_(node);
       }
       return true;
     };
 
+    // 异步加载目录下的block,使用refreshSelection动态更新flyout中的block
     Blockly.Toolbox.prototype.loadVariable = (node) => {
-      // console.log(node.hexColour);
       const categoryColor = node.hexColour;
       const categoryName = node.content_;
       const selectedCategoryes = this.categoriesInArray.filter(item => item.name === categoryName);
@@ -288,20 +286,13 @@ export class BlocklyService {
         if (this.hasChildren()) {
           // 加上目录展开闭合的照片
           const icon = document.createElement('span');
-          icon.innerHTML = `
-          <i _ngcontent-vvd-c1="" nz-icon="" nztheme="outline" nztype="down" class="anticon anticon-down" ng-reflect-nz-type="down" ng-reflect-nz-theme="outline">
-          <svg viewBox="64 64 896 896" fill="currentColor" width="1em" height="1em" data-icon="down" aria-hidden="true">
-          <path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3
-           7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path>
-          </svg>
-          </i>`;
+          icon.innerHTML = Svgs.categoryIcon;
           icon.style.flexGrow = '1';
           icon.style.display = 'flex';
           icon.style.justifyContent = 'flex-end';
           label.parentNode.appendChild(icon);
         }
         const img = document.createElement('img');
-        // <i nz-icon nzType="down" nzTheme="outline"></i>
         img.src = this.getCategoryConfig(label.textContent).itemImg.commonUrl;
         img.style.height = '24px';
         img.style.margin = '0 10px 0 8px';
@@ -314,13 +305,8 @@ export class BlocklyService {
       let commonUrl: string;
       let activeUrl: string;
       switch (labelContext) {
-        case '查询结果':
-        case '变量':
-        case '逻辑':
-        case '循环':
-        case '数学':
-        case '文本':
-        case '列表':
+        case '查询结果':  case '变量': case '逻辑':
+        case '循环': case '数学': case '文本': case '列表':
           commonUrl = 'https://ng.ant.design/assets/img/logo.svg';
           activeUrl = 'https://www.primefaces.org/primeng/assets/showcase/images/mask.svg';
           break;
@@ -331,186 +317,8 @@ export class BlocklyService {
       return {
         itemImg: {
           commonUrl, activeUrl
-        },
-        itemColor: {
-
-        },
-        itemBackgroundColor: {
-
         }
       };
-    };
-
-    Blockly.tree.BaseNode.prototype.getIconElement = function() {
-      const el = this.getRowElement();
-      return el ? (el.lastChild) : null;
-    };
-
-    // 选中元素增加class类
-    Blockly.tree.BaseNode.prototype.getRowClassName = function() {
-      let selectedClass = '';
-      if (this.isSelected()) {
-        selectedClass = ' ' + (this.config_.cssSelectedRow || '') + ' ' + 'app-blockly-selected ';
-      }
-      return this.config_.cssTreeRow + selectedClass;
-    };
-
-    // 控制目录展开闭合的图标
-    Blockly.tree.TreeNode.prototype.getCalculatedIconClass = function() {
-      const expanded = this.getExpanded();
-      // fall back on default icons
-      if (this.hasChildren()) {
-        if (expanded) {
-          return  'app-blockly-expanded';
-        } else if (!expanded) {
-          return'app-blockly-collapsed';
-        }
-      } else {
-        return '';
-      }
-    };
-
-    // 更新input,和output的卡槽形状
-    Blockly.blockRendering.ConstantProvider.prototype.makePuzzleTab = function() {
-      const width = this.TAB_WIDTH;
-      const height = this.TAB_HEIGHT;
-
-      // 圆形
-      // function makeMainPath(up) {
-      //   const forward = up ? -1 : 1;
-      //   return Blockly.utils.svgPaths.arc('a', `90 1 ${up ? 1 : 0}`, width / 2, ` 0,${height * forward}`)
-      // }
-
-      // 菱形 l -4,-3.5 0,-8 4,-3.5   l -4,3.5 0,8 4,3.5
-      function makeMainPath(up) {
-        const forward = up ? -1 : 1;
-        return Blockly.utils.svgPaths.line([
-          Blockly.utils.svgPaths.point(-width / 2, forward * (height - width) / 2),
-          Blockly.utils.svgPaths.point(0, forward * width),
-          Blockly.utils.svgPaths.point(width / 2, forward * (height - width) / 2),
-        ]);
-      }
-
-
-      const pathUp = makeMainPath(true);
-      const pathDown = makeMainPath(false);
-      return {
-        width,
-        height,
-        pathDown,
-        pathUp
-      };
-    };
-
-    Blockly.geras.HighlightConstantProvider.prototype.makePuzzleTab = function() {
-      const width = this.constantProvider.TAB_WIDTH;
-      const height = this.constantProvider.TAB_HEIGHT;
-
-      // This is how much of the vertical block edge is actually drawn by the puzzle
-      // tab.
-      const verticalOverlap = 2.5;
-
-      const highlightRtlUp =
-          Blockly.utils.svgPaths.moveBy(-2, -height + verticalOverlap + 0.9) +
-          Blockly.utils.svgPaths.lineTo(width * -0.45, -2.1);
-
-      const highlightRtlDown =
-          Blockly.utils.svgPaths.lineOnAxis('v', verticalOverlap) +
-          Blockly.utils.svgPaths.moveBy(-width * 0.97, 2.5 + height) +
-          // Blockly.utils.svgPaths.curve('q',
-          //     [
-          //       Blockly.utils.svgPaths.point(-width * 0.05, 10),
-          //       Blockly.utils.svgPaths.point(width * 0.3, 9.5)
-          //     ]) +
-          Blockly.utils.svgPaths.moveBy(width * 0.67, -1.9) +
-          Blockly.utils.svgPaths.lineOnAxis('v', verticalOverlap);
-
-      const highlightLtrUp =
-          Blockly.utils.svgPaths.lineOnAxis('v', -0.5) +
-          Blockly.utils.svgPaths.moveBy(width * -0.92, -0.5 - height) +
-          // Blockly.utils.svgPaths.curve('q',
-          //     [
-          //       Blockly.utils.svgPaths.point(width * -0.19, -5.5),
-          //       Blockly.utils.svgPaths.point(0,-11)
-          //     ]) +
-          Blockly.utils.svgPaths.moveBy(width * 0.92, 1);
-
-      const highlightLtrDown =
-          Blockly.utils.svgPaths.moveBy(-3.5, height - 3.5) +
-          Blockly.utils.svgPaths.lineTo(width * 0.5, (height - width) / 2);
-
-      return {
-        width,
-        height,
-        pathUp: (rtl) => {
-          return rtl ? highlightRtlUp : highlightLtrUp;
-        },
-        pathDown: (rtl) => {
-          return rtl ? highlightRtlDown : highlightLtrDown;
-        }
-      };
-    };
-
-    Blockly.blockRendering.ConstantProvider.prototype.init = function() {
-      // this.SMALL_PADDING = 8;
-      // this.MEDIUM_PADDING = 8;
-      // this.TALL_INPUT_FIELD_OFFSET_Y = this.MEDIUM_PADDING;
-      // statement上下连接点的宽度和高度
-      this.NOTCH_WIDTH = 15;
-      this.NOTCH_HEIGHT = 4;
-      // 圆角大小
-      this.CORNER_RADIUS = 4;
-      this.JAGGED_TEETH = this.makeJaggedTeeth();
-      this.NOTCH = this.makeNotch();
-      this.START_HAT = this.makeStartHat();
-      this.PUZZLE_TAB = this.makePuzzleTab();
-      /**
-       * 内部圆角
-       */
-      this.INSIDE_CORNERS = this.makeInsideCorners();
-      /**
-       * 外部圆角
-       */
-      this.OUTSIDE_CORNERS = this.makeOutsideCorners();
-    };
-
-    // 绘制statement上下连接的路径
-    Blockly.blockRendering.ConstantProvider.prototype.makeNotch = function() {
-      const width = this.NOTCH_WIDTH;
-      const height = this.NOTCH_HEIGHT;
-      const innerWidth = 8;
-      const outerWidth = (width - innerWidth) / 2;
-      function makeMainPath(dir) {
-        return Blockly.utils.svgPaths.line(
-            [
-              Blockly.utils.svgPaths.point(dir * outerWidth, height),
-              Blockly.utils.svgPaths.point(dir * innerWidth, 0),
-              Blockly.utils.svgPaths.point(dir * outerWidth, -height)
-            ]);
-      }
-      const pathLeft = makeMainPath(1);
-      const pathRight = makeMainPath(-1);
-      return {
-        width,
-        height,
-        pathLeft,
-        pathRight
-      };
-    };
-
-    // 展示下拉弹窗 --- 让其背景色与sourceblock颜色一致
-    Blockly.FieldDropdown.prototype.showEditor_ = function() {
-      this.menu_ = this.dropdownCreate_();
-      const parentDiv =   Blockly.DropDownDiv.getContentDiv().parentNode;
-      parentDiv.style.backgroundColor = parentDiv.style.borderColor = this.sourceBlock_.colour_;
-      this.menu_.render(Blockly.DropDownDiv.getContentDiv());
-      Blockly.utils.dom.addClass((this.menu_.getElement()), 'blocklyDropdownMenu');
-      Blockly.DropDownDiv.showPositionedByField(
-          this, this.dropdownDispose_.bind(this));
-      this.menu_.focus();
-      if (this.selectedMenuItem_) {
-        Blockly.utils.style.scrollIntoContainerView((this.selectedMenuItem_.getElement()), (this.menu_.getElement()));
-      }
     };
 
   }

@@ -5,7 +5,7 @@ declare var Blockly: any;
 export class SelfSelectorField {
     options = [['a', 'a'], ['b', 'b']];
     constructor() {
-      Blockly.SelfSelectorField = function (menuGenerator, opt_value, opt_validator) {
+      Blockly.SelfSelectorField = function(menuGenerator, optValue, optValidator) {
         menuGenerator = menuGenerator || [];
         this.variables = {};
         menuGenerator.forEach(item => {
@@ -14,17 +14,17 @@ export class SelfSelectorField {
             value: item[1]
           };
         });
-        opt_value = this.doClassValidation_(opt_value);
+        optValue = this.doClassValidation_(optValue);
         // 检查输入是否有效
-        this.doClassValidation_ = function(opt_newValue) {
-          if (opt_newValue === null || opt_newValue === undefined) {
+        this.doClassValidation_ = function(optNewValue) {
+          if (optNewValue === null || optNewValue === undefined) {
             return null;
           }
-          if (!this.variables[opt_newValue]) {
+          if (!this.variables[optNewValue]) {
             // 筛选下拉列表
             const lists = [];
             menuGenerator.forEach(item => {
-              if (item[0].includes(opt_newValue)) {
+              if (item[0].includes(optNewValue)) {
                 lists.push(item);
               }
             });
@@ -35,7 +35,7 @@ export class SelfSelectorField {
                   item.style.display = 'none';
                   continue;
                 }
-                if (item && !item.innerText.includes(opt_newValue)) {
+                if (item && !item.innerText.includes(optNewValue)) {
                   item.style.display = 'none';
                 } else {
                   item.style.display = 'block';
@@ -62,19 +62,19 @@ export class SelfSelectorField {
                   item.style.display = 'none';
                   continue;
                 }
-                if (item && !item.innerText.includes(opt_newValue)) {
+                if (item && !item.innerText.includes(optNewValue)) {
                   item.style.display = 'none';
                 } else {
                   item.style.display = 'block';
                 }
               }
             }
-            return opt_newValue;
+            return optNewValue;
           }
         };
-        if (opt_value === null) {
-          opt_value = Blockly.SelfSelectorField.DEFAULT_VALUE || menuGenerator[0][0];
-          this.selectedValue = opt_value;
+        if (optValue === null) {
+          optValue = Blockly.SelfSelectorField.DEFAULT_VALUE || menuGenerator[0][0];
+          this.selectedValue = optValue;
         }  // Else the original value is fine.
         this.dropdownCreate_ = function() {
           this.imageElement_ = document.createElement('div');
@@ -151,12 +151,12 @@ export class SelfSelectorField {
               Blockly.bindEvent_(this.imageElement_, 'click', this,
                   this.updateSelected);
         };
-        Blockly.SelfSelectorField.superClass_.constructor.call(this, opt_value, opt_validator);
+        Blockly.SelfSelectorField.superClass_.constructor.call(this, optValue, optValidator);
       };
       Blockly.utils.object.inherits(Blockly.SelfSelectorField, Blockly.FieldTextInput);
 
       Blockly.SelfSelectorField.fromJson = (options) => {
-        const value = Blockly.utils.replaceMessageReferences(options['value']);
+        const value = Blockly.utils.replaceMessageReferences(options.value);
         return new Blockly.SelfSelectorField(value);
       };
 

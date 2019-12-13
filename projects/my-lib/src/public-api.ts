@@ -24,3 +24,6 @@ export * from './lib/custom-labels/custom-label';
 export * from './lib/custom-fields/self-selector-field';
 
 export * from './lib/functions/random-color';
+
+export * from './lib/custom-blockly-styles/toolbox';
+export * from './lib/custom-blockly-styles/block';
