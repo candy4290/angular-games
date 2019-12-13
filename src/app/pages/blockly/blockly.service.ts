@@ -335,18 +335,6 @@ export class BlocklyService {
           callback(newName);
         }
       });
-      // CustomDialog.show('Prompt', message, {
-      //   showInput: true,
-      //   showOkay: true,
-      //   onOkay: function() {
-      //     callback(CustomDialog.inputField.value);
-      //   },
-      //   showCancel: true,
-      //   onCancel: function() {
-      //     callback(null);
-      //   }
-      // });
-      // CustomDialog.inputField.value = defaultValue;
     };
 
   }

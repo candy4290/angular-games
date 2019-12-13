@@ -34,7 +34,7 @@ export class AndOrBlock extends CustomBlock {
       mutator: 'blockly_self_add_mutator',
       inputsInline: false,
       output: 'Boolean',
-      colour: '%{BKY_LOGIC_HUE}',
+      colour: '#1890ff',
       tooltip: '',
       helpUrl: ''
     };
