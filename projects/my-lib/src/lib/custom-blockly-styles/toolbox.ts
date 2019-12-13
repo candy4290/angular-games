@@ -1,5 +1,7 @@
 
 declare var Blockly: any;
+// 取出目录左边的颜色条
+// Blockly.Toolbox.prototype.addColour_ = () => {};
 
 // 选中元素增加class类 --- 选中后,展开图标变为白色
 Blockly.tree.BaseNode.prototype.getRowClassName = function() {

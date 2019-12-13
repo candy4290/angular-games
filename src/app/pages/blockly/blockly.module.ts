@@ -4,6 +4,7 @@ import { BlocklyComponent } from './blockly.component';
 import { SharedModule } from 'src/app/share/shared.module';
 import { BlocklyService } from './blockly.service';
 import { CreateVariableComponent } from './create-variable/create-variable.component';
+import { RenameVariableComponent } from './rename-variable/rename-variable.component';
 
 
 
@@ -11,12 +12,14 @@ import { CreateVariableComponent } from './create-variable/create-variable.compo
   declarations: [
     BlocklyComponent,
     CreateVariableComponent,
+    RenameVariableComponent,
+    RenameVariableComponent,
   ],
   imports: [
     SharedModule,
     BlocklyRoutingModule,
   ],
   providers: [BlocklyService],
-  entryComponents: [CreateVariableComponent]
+  entryComponents: [CreateVariableComponent, RenameVariableComponent]
 })
 export class BlocklyModule { }

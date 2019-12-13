@@ -116,6 +116,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     color: unset;
   }
 }
+
+// .blocklyNonEditableText>text, .blocklyEditableText>text {
+//   fill: #fff;
+// }
 // block块有三层blocklyPathDark,blocklyPath,blocklyPathLight
 // .blocklyPathDark, .blocklyPathLight {
 //   display: none;

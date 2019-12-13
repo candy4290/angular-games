@@ -5,6 +5,8 @@ import { map } from 'rxjs/operators';
 import { VariableGetBlock, ValuesDropDownBlock, Svgs } from 'my-lib';
 import { of, Subscription, Observable, zip } from 'rxjs';
 import { generateColor } from 'my-lib';
+import { NzModalService } from 'ng-zorro-antd';
+import { RenameVariableComponent } from './rename-variable/rename-variable.component';
 declare var Blockly: any;
 @Injectable()
 
@@ -17,7 +19,8 @@ export class BlocklyService {
   categoriesInObject = {};
   variables: CustomBlock[] = []; // 当前toolbox中包含的变量
   subscription$ = new Subscription();
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+              private modalService: NzModalService) {
   }
 
   clear() {
@@ -214,8 +217,6 @@ export class BlocklyService {
    * 更改toolbox样式
    */
   changeToolboxStyle() {
-    // 目录左侧的颜色条
-    // Blockly.Toolbox.prototype.addColour_ = () => {};
     // 给选中的条目加上背景色
     Blockly.Toolbox.prototype.handleBeforeTreeSelected_ = function(node) {
       if (node === this.tree_) {
@@ -319,6 +320,33 @@ export class BlocklyService {
           commonUrl, activeUrl
         }
       };
+    };
+
+    // 覆盖默认的prompt弹窗
+    Blockly.prompt = (message, defaultValue, callback) => {
+      this.modalService.create({
+        nzTitle: message,
+        nzContent: RenameVariableComponent,
+        nzComponentParams: {
+          defaultValue
+        },
+        nzOnOk: (e) => {
+          const newName = e.renameVariableForm.get('variableName').value;
+          callback(newName);
+        }
+      });
+      // CustomDialog.show('Prompt', message, {
+      //   showInput: true,
+      //   showOkay: true,
+      //   onOkay: function() {
+      //     callback(CustomDialog.inputField.value);
+      //   },
+      //   showCancel: true,
+      //   onCancel: function() {
+      //     callback(null);
+      //   }
+      // });
+      // CustomDialog.inputField.value = defaultValue;
     };
 
   }

@@ -104,7 +104,7 @@ Blockly.blockRendering.ConstantProvider.prototype.init = function() {
 };
 
 // 绘制statement上下连接的路径
-Blockly.blockRendering.ConstantProvider.prototype.makeNotch = function() {
+export default Blockly.blockRendering.ConstantProvider.prototype.makeNotch = function() {
   const width = this.NOTCH_WIDTH;
   const height = this.NOTCH_HEIGHT;
   const innerWidth = 8;
@@ -128,7 +128,7 @@ Blockly.blockRendering.ConstantProvider.prototype.makeNotch = function() {
 };
 
 // 展示下拉弹窗 --- 让其背景色与sourceblock颜色一致
-export default Blockly.FieldDropdown.prototype.showEditor_ = function() {
+Blockly.FieldDropdown.prototype.showEditor_ = function() {
   this.menu_ = this.dropdownCreate_();
   const parentDiv =   Blockly.DropDownDiv.getContentDiv().parentNode;
   parentDiv.style.backgroundColor = parentDiv.style.borderColor = this.sourceBlock_.colour_;
@@ -141,3 +141,34 @@ export default Blockly.FieldDropdown.prototype.showEditor_ = function() {
     Blockly.utils.style.scrollIntoContainerView((this.selectedMenuItem_.getElement()), (this.menu_.getElement()));
   }
 };
+
+// INPUT中的field区域
+// Blockly.Field.prototype.createBorderRect_ = function() {
+//   this.size_.height =
+//       Math.max(this.size_.height, Blockly.Field.BORDER_RECT_DEFAULT_HEIGHT);
+//   this.size_.width =
+//       Math.max(this.size_.width, Blockly.Field.X_PADDING);
+//   this.borderRect_ = Blockly.utils.dom.createSvgElement('rect',
+//       {
+//         rx: 4,
+//         ry: 4,
+//         x: 0,
+//         y: 0,
+//         height: this.size_.height,
+//         width: this.size_.width
+//       }, this.fieldGroup_);
+//   this.borderRect_.style.fill = this.sourceBlock_.colour_;
+//   this.borderRect_.setAttribute('stroke', '#fff');
+// };
+
+// dropdown的向下图标的颜色
+// Blockly.FieldDropdown.prototype.updateColour = function() {
+//   // Update arrow's colour.
+//   if (this.sourceBlock_ && this.arrow_) {
+//     if (this.sourceBlock_.isShadow()) {
+//       this.arrow_.style.fill = this.sourceBlock_.getColourShadow();
+//     } else {
+//       this.arrow_.style.fill = '#FFF';
+//     }
+//   }
+// };
