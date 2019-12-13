@@ -501,7 +501,8 @@ export class BlocklyService {
     // 展示下拉弹窗 --- 让其背景色与sourceblock颜色一致
     Blockly.FieldDropdown.prototype.showEditor_ = function() {
       this.menu_ = this.dropdownCreate_();
-      Blockly.DropDownDiv.getContentDiv().parentNode.style.backgroundColor = this.sourceBlock_.colour_;
+      const parentDiv =   Blockly.DropDownDiv.getContentDiv().parentNode;
+      parentDiv.style.backgroundColor = parentDiv.style.borderColor = this.sourceBlock_.colour_;
       this.menu_.render(Blockly.DropDownDiv.getContentDiv());
       Blockly.utils.dom.addClass((this.menu_.getElement()), 'blocklyDropdownMenu');
       Blockly.DropDownDiv.showPositionedByField(

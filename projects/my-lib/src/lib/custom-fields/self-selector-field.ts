@@ -142,10 +142,7 @@ export class SelfSelectorField {
           // Build the DOM.
           const editor = this.dropdownCreate_();
           Blockly.DropDownDiv.getContentDiv().appendChild(editor);
-
-          let border = this.sourceBlock_.getColourBorder();
-          border = 'rgb(218, 220, 224)';
-          Blockly.DropDownDiv.setColour(this.sourceBlock_.colour_, border);
+          Blockly.DropDownDiv.setColour(this.sourceBlock_.colour_, this.sourceBlock_.colour_);
 
           Blockly.DropDownDiv.showPositionedByField(
               this, this.dropdownDispose_.bind(this));
