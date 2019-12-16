@@ -161,9 +161,10 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
       fileReader.readAsText(file);
       fileReader.onload = () => {
         const result = `${fileReader.result}`;
-        this.blockly.parseXmlAndInitBlock(result);
-        this.messageService.success('文件导入成功！');
-        this.workspace.fromXml(result);
+        this.blockly.parseXmlAndInitBlock(result).subscribe(rsp => {
+          this.messageService.success('文件导入成功！');
+          this.workspace.fromXml(result);
+        });
       };
     }
     return false;

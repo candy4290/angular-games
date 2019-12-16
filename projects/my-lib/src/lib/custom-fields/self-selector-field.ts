@@ -43,7 +43,6 @@ export class SelfSelectorField {
               }
             } else {
               // 没有搜索结果
-              console.log('无搜索结果');
               for (let i = 0, len =  this.imageElement_.children.length; i < len; i++) {
                 const item = this.imageElement_.children.item(i);
                 if (i === 0) {
@@ -123,7 +122,6 @@ export class SelfSelectorField {
 
         // 更新选中项(展示值更新,选中项目的样式更新)
         this.updateSelected = (e: any) => {
-          console.log(e);
           const text = e.target.innerText;
           if (text === '暂无数据') {
             return;

@@ -1,89 +1,73 @@
 <xml xmlns="https://developers.google.com/blockly/xml">
   <variables>
-    <variable type="String" id="9$/FR)!6tUacfI5o-DPT">性别</variable>
-    <variable type="String" id="q4ij4BFu/ZzR/!dUGRTF">年龄</variable>
-    <variable type="String" id="b)jaEe*F9d3%q#44M-a!">出生地_市</variable>
-    <variable type="String" id="rZX,qyg6Wm`cvc,?nnPQ">常暂住人口</variable>
-    <variable type="String" id="C?@]G#As6~wzDisS.agD">交通违法</variable>
+    <variable type="variables_get_czzrk" id="{J,!eB${Cm?.LY3d0z8i">常暂住人口</variable>
+    <variable type="variables_get_age" id="`ge=%R1Iy9eS:!cHIp@=">年龄</variable>
+    <variable type="variables_get_jtwf" id="!Mp2scV7x@D.Dr4F6M^8">交通违法</variable>
+    <variable type="variables_get_sex" id="}q0kFq`*+`s@VzsXSwR?">性别</variable>
   </variables>
-  <block type="logic_block_self_add" id="?gq=%q9iBl51l,T35xsa" x="230" y="-290">
+  <block type="logic_block_self_add" id="}_/u4~x_5Zc$LkiMg,{l" x="130" y="330">
     <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
-    <field name="NAME">||</field>
+    <field name="NAME">&amp;&amp;</field>
     <value name="NAME1">
-      <block type="logic_block_self_add" id="3!MI-l|,3k?+njEqh^^A">
-        <mutation xmlns="http://www.w3.org/1999/xhtml" items="5"></mutation>
+      <block type="logic_block_self_add" id="]cTX9MumN?6sF01j+}eg">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" items="4"></mutation>
         <field name="NAME">&amp;&amp;</field>
         <value name="NAME1">
-          <block type="logic_compare" id="`AQKd@It,8^=QN249f`+">
+          <block type="logic_compare" id="sj1buG#gK_~R8!qk_G3^">
             <field name="OP">EQ</field>
             <value name="A">
-              <block type="variables_get_sex" id="|-{Rr3Rm[Sy@r1YkV{q^">
-                <field name="VAR" id="9$/FR)!6tUacfI5o-DPT" variabletype="String">性别</field>
+              <block type="variables_get_sex" id=")y_3Br:Z:n$8UP*,O39Z">
+                <field name="VAR" id="}q0kFq`*+`s@VzsXSwR?" variabletype="variables_get_sex">性别</field>
               </block>
             </value>
             <value name="B">
-              <block type="dropdown_1135" id="yLVHWdyjO1y4$I^dd/Ej">
+              <block type="dropdown__1135__variables_get_sex__#a9293e" id="8u*nLQ57`,3H?l$|T@jO">
                 <field name="NAME">男</field>
               </block>
             </value>
           </block>
         </value>
         <value name="NAME2">
-          <block type="logic_compare" id="oX2#`WKC,_zo43vL7@Tk">
-            <field name="OP">GTE</field>
+          <block type="logic_compare" id="b?d!Do5c-qwnr0G2%a~=">
+            <field name="OP">EQ</field>
             <value name="A">
-              <block type="variables_get_age" id="]F6NUKUFw.7H6H9NcZxe">
-                <field name="VAR" id="q4ij4BFu/ZzR/!dUGRTF" variabletype="String">年龄</field>
+              <block type="variables_get_czzrk" id="XegRvk#q3(xR4ZhQj6}/">
+                <field name="VAR" id="{J,!eB${Cm?.LY3d0z8i" variabletype="variables_get_czzrk">常暂住人口</field>
               </block>
             </value>
             <value name="B">
-              <block type="dropdown_1134" id="0E*Qv#7G;{.Q~Ml9PxJ:">
-                <field name="NAME">18</field>
+              <block type="dropdown__1131__variables_get_czzrk__#29d9e9" id="?aB(-@:ar2y+GI5j`s+O">
+                <field name="NAME">常住人口</field>
               </block>
             </value>
           </block>
         </value>
         <value name="NAME3">
-          <block type="logic_compare" id="K/*Fg,!7aY!Q?fUM[[%4">
-            <field name="OP">EQ</field>
+          <block type="logic_compare" id="Gx5@uw)y]t]8N`/]4CV]">
+            <field name="OP">GT</field>
             <value name="A">
-              <block type="variables_get_csdsi" id="-rg(9H|_{ORd33I/MXO%">
-                <field name="VAR" id="b)jaEe*F9d3%q#44M-a!" variabletype="String">出生地_市</field>
+              <block type="variables_get_age" id="~YnN5bt66ySwF@hb.HfL">
+                <field name="VAR" id="`ge=%R1Iy9eS:!cHIp@=" variabletype="variables_get_age">年龄</field>
               </block>
             </value>
             <value name="B">
-              <block type="dropdown_1133" id="?,E?rA+{+{Orh]]Wv_#2">
-                <field name="NAME">南京</field>
+              <block type="dropdown__1134__variables_get_age__#4e7715" id="jiZ2L-k{VKqjPGs0}^,/">
+                <field name="NAME">18</field>
               </block>
             </value>
           </block>
         </value>
         <value name="NAME4">
-          <block type="logic_compare" id="N+;^ZkOZkBO)xq7*f/7`">
+          <block type="logic_compare" id="+Q2dqhHU4w#]~5Zy:mhL">
             <field name="OP">EQ</field>
             <value name="A">
-              <block type="variables_get_czzrk" id="U[EWCI.d1^Qw4mH5{9W~">
-                <field name="VAR" id="rZX,qyg6Wm`cvc,?nnPQ" variabletype="String">常暂住人口</field>
+              <block type="variables_get_jtwf" id="W]t)UeAeu6dkkK7Ky8F(">
+                <field name="VAR" id="!Mp2scV7x@D.Dr4F6M^8" variabletype="variables_get_jtwf">交通违法</field>
               </block>
             </value>
             <value name="B">
-              <block type="dropdown_1131" id="No+COn`qy:)=~sIwCA[1">
-                <field name="NAME">暂住人口</field>
-              </block>
-            </value>
-          </block>
-        </value>
-        <value name="NAME5">
-          <block type="logic_compare" id="?EpUiaqoMyleo(?_de:J">
-            <field name="OP">EQ</field>
-            <value name="A">
-              <block type="variables_get_jtwf" id="5A,p`*A@CaI!Wv(,d`m*">
-                <field name="VAR" id="C?@]G#As6~wzDisS.agD" variabletype="String">交通违法</field>
-              </block>
-            </value>
-            <value name="B">
-              <block type="dropdown_1111" id="_*A?9EKC+/#wZGn(;s4K">
-                <field name="NAME">酒驾</field>
+              <block type="dropdown__1111__variables_get_jtwf__#8002fa" id="qukm$~R:(s~xko(jlty%">
+                <field name="NAME">逃逸</field>
               </block>
             </value>
           </block>
@@ -91,80 +75,65 @@
       </block>
     </value>
     <value name="NAME2">
-      <block type="logic_block_self_add" id="Jj)/Hw9g%?rMJv^IXSWE">
-        <mutation xmlns="http://www.w3.org/1999/xhtml" items="5"></mutation>
+      <block type="logic_block_self_add" id="W1jsPF}M@q)C#P9)U#Tw">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" items="4"></mutation>
         <field name="NAME">&amp;&amp;</field>
         <value name="NAME1">
-          <block type="logic_compare" id="}q^/Dcqd$a}GIb5fhbU;">
+          <block type="logic_compare" id="$fSZ|PbpFQsBOYV6aK!d">
             <field name="OP">EQ</field>
             <value name="A">
-              <block type="variables_get_sex" id="0HbLcmW[Jop++q498iXP">
-                <field name="VAR" id="9$/FR)!6tUacfI5o-DPT" variabletype="String">性别</field>
+              <block type="variables_get_sex" id="Vw.bJz0/*+i/#QwZQ}X.">
+                <field name="VAR" id="}q0kFq`*+`s@VzsXSwR?" variabletype="variables_get_sex">性别</field>
               </block>
             </value>
             <value name="B">
-              <block type="dropdown_1135" id="LP6]]+DC5Zs|+:7Fu_iY">
+              <block type="dropdown__1135__variables_get_sex__#a9293e" id="T8u8c*$1:@BDOnC/[i!@">
                 <field name="NAME">女</field>
               </block>
             </value>
           </block>
         </value>
         <value name="NAME2">
-          <block type="logic_compare" id="PQSd$o+XxjUy[Mr`hE,G">
-            <field name="OP">GTE</field>
+          <block type="logic_compare" id="nV=7_:8EO^`S`(La^c`j">
+            <field name="OP">EQ</field>
             <value name="A">
-              <block type="variables_get_age" id="|(iVDBBM:usn|RzqujxW">
-                <field name="VAR" id="q4ij4BFu/ZzR/!dUGRTF" variabletype="String">年龄</field>
+              <block type="variables_get_czzrk" id="j4j~|YDQqGX,S6-nnf68">
+                <field name="VAR" id="{J,!eB${Cm?.LY3d0z8i" variabletype="variables_get_czzrk">常暂住人口</field>
               </block>
             </value>
             <value name="B">
-              <block type="dropdown_1134" id="o+aYX(bB=i8#}tht3d7(">
-                <field name="NAME">25</field>
+              <block type="dropdown__1131__variables_get_czzrk__#29d9e9" id="cuj}61N5q]W31t+)hL1r">
+                <field name="NAME">暂住人口</field>
               </block>
             </value>
           </block>
         </value>
         <value name="NAME3">
-          <block type="logic_compare" id="AC0[jYRJs+I1st`6.7%1">
-            <field name="OP">EQ</field>
+          <block type="logic_compare" id="{5_q5X$/uNYjT{AIR,!I">
+            <field name="OP">GT</field>
             <value name="A">
-              <block type="variables_get_csdsi" id="ogSHa57V6cJZaXy*o{tN">
-                <field name="VAR" id="b)jaEe*F9d3%q#44M-a!" variabletype="String">出生地_市</field>
+              <block type="variables_get_age" id="%G.L{Qr3c7{74vqrhyq/">
+                <field name="VAR" id="`ge=%R1Iy9eS:!cHIp@=" variabletype="variables_get_age">年龄</field>
               </block>
             </value>
             <value name="B">
-              <block type="dropdown_1133" id="X9o^m_9,]4KR1sk5Fz3g">
-                <field name="NAME">杭州</field>
+              <block type="dropdown__1134__variables_get_age__#4e7715" id="vQ~T`f[v-xzbHo2bTEjp">
+                <field name="NAME">25</field>
               </block>
             </value>
           </block>
         </value>
         <value name="NAME4">
-          <block type="logic_compare" id="#$nVeHb))1AIG9rN2U.s">
+          <block type="logic_compare" id="Qmcj`]t|%FQgF[dodgj.">
             <field name="OP">EQ</field>
             <value name="A">
-              <block type="variables_get_czzrk" id="n(G@wnebe/^JEu5BqC7D">
-                <field name="VAR" id="rZX,qyg6Wm`cvc,?nnPQ" variabletype="String">常暂住人口</field>
+              <block type="variables_get_jtwf" id="#7zv-7ofh%|f`R!6LFJt">
+                <field name="VAR" id="!Mp2scV7x@D.Dr4F6M^8" variabletype="variables_get_jtwf">交通违法</field>
               </block>
             </value>
             <value name="B">
-              <block type="dropdown_1131" id="3e%ky7)];=AW.!KAdg5L">
-                <field name="NAME">常住人口</field>
-              </block>
-            </value>
-          </block>
-        </value>
-        <value name="NAME5">
-          <block type="logic_compare" id="1Bxrg%rJOv5hk6eF[}t.">
-            <field name="OP">EQ</field>
-            <value name="A">
-              <block type="variables_get_jtwf" id="3HdwjF)Oi*BCC0Be5).X">
-                <field name="VAR" id="C?@]G#As6~wzDisS.agD" variabletype="String">交通违法</field>
-              </block>
-            </value>
-            <value name="B">
-              <block type="dropdown_1111" id="8gzrtE`GN|)mL%K/k8JK">
-                <field name="NAME">逃逸</field>
+              <block type="dropdown__1111__variables_get_jtwf__#8002fa" id="9kM8LtQw+laO*r0YiKo1">
+                <field name="NAME">酒驾</field>
               </block>
             </value>
           </block>

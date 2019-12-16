@@ -1,7 +1,7 @@
 import { Injectable, Renderer2, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CustomBlock, NgxBlocklyConfig, NgxBlocklyComponent, Block } from 'ngx-blockly';
-import { map } from 'rxjs/operators';
+import { CustomBlock, NgxBlocklyConfig, NgxBlocklyComponent } from 'ngx-blockly';
+import { map, tap } from 'rxjs/operators';
 import { VariableGetBlock, ValuesDropDownBlock, Svgs } from 'my-lib';
 import { of, Subscription, Observable, zip } from 'rxjs';
 import { generateColor } from 'my-lib';
@@ -51,7 +51,7 @@ export class BlocklyService {
         let xmls = '';
         for (let i = 0, len = variables.length; i < len; i++) {
           this.loadedVariables.add(`${variables[i].key}#${variables[i].value}`);
-          const tempVariable =  new VariableGetBlock(`${variables[i].key}`, null, null, variables[i].value, [variables[i].type], variables[i].key, categoryColor);
+          const tempVariable =  new VariableGetBlock(`${variables[i].key}__${categoryColor}`, null, null, variables[i].value, [variables[i].type], variables[i].key, categoryColor);
           this.initVariableBlock(tempVariable);
           xmls += tempVariable.toXML();
           tempBlocks.push(
@@ -71,7 +71,7 @@ export class BlocklyService {
         const key =  (rsp.labels[id] || {}).key;
         let xmls = '';
         if (labels.length > 0) {
-          const tempVariable =  new ValuesDropDownBlock(`dropdown_${id}`, null, null, `extension_${id}`, key, categoryColor);
+          const tempVariable =  new ValuesDropDownBlock(`dropdown__${id}__${key}__${categoryColor}`, null, null, `extension_${id}`, key, categoryColor);
           try {
             Blockly.Extensions.register(`extension_${id}`,
               function() {
@@ -441,13 +441,19 @@ export class BlocklyService {
    *  解析xml并加载其中的block
    */
   parseXmlAndInitBlock(result: string) {
+    const rxs = [];
     const tags = [];
     let variableStart = 0;
     let variableEnd = 0;
+
+    const labels = [];
+    let labelStart = 0;
+    let labelEnd = 0;
+
     while (variableStart !== -1) {
       variableStart = result.indexOf('<block type="variables_get', variableEnd);
       if (variableStart !== -1) {
-        variableEnd = result.indexOf('</block>', variableStart) + 7;
+        variableEnd = result.indexOf('</block>', variableStart) + 8;
         tags.push(result.slice(variableStart, variableEnd).replace(/\s*/g, ''));
       }
     }
@@ -455,19 +461,64 @@ export class BlocklyService {
     tags.forEach(tag => {
       const temp = tag.indexOf('type="');
       const typeIndx = tag.indexOf('variabletype="') ;
-
+      const types = tag.slice(temp + 6, tag.indexOf('"', temp + 6)).split('__');
       variables.push({
-        key: tag.slice(temp + 6, tag.indexOf('"', temp + 6)),
+        key: types[0],
         type: tag.slice(typeIndx + 14, tag.indexOf('"', typeIndx + 14)),
-        value: tag.slice(tag.indexOf('>', typeIndx + 14) + 1, tag.indexOf('<', typeIndx + 14))
+        value: tag.slice(tag.indexOf('>', typeIndx + 14) + 1, tag.indexOf('<', typeIndx + 14)),
+        categoryColour: types[1]
       });
     });
     variables.forEach(variable => {
       if (!Blockly.Blocks[variable.key]) {
-        const temp = new VariableGetBlock(variable.key, null, null, variable.value, [variable.type], variable.key);
+        const temp = new VariableGetBlock(variable.key, null, null, variable.value, [variable.type], variable.key, variable.categoryColour);
         this.initVariableBlock(temp);
       }
     });
+
+    while (labelStart !== -1) {
+      labelStart = result.indexOf('<block type="dropdown__', labelEnd);
+      if (labelStart !== -1) {
+        labelEnd = result.indexOf('</block>', labelStart) + 8;
+        labels.push(result.slice(labelStart, labelEnd).replace(/\s*/g, ''));
+      }
+    }
+    const dropdownValues = [];
+    labels.forEach(label => {
+      const blockTypeStart = label.indexOf('type="');
+      const blockTypeEnd =  label.indexOf('"', blockTypeStart + 6);
+      const temps = label.slice(blockTypeStart, blockTypeEnd).split('__');
+      dropdownValues.push({
+        id: temps[1],
+        key:  temps[2],
+        categoryColour: temps[3]
+      });
+    });
+
+    dropdownValues.forEach(item => {
+      if (!Blockly.Blocks[`dropdown__${item.id}__${item.key}__${item.categoryColour}`]) {
+        const tempVariable =  new ValuesDropDownBlock(`dropdown__${item.id}__${item.key}__${item.categoryColour}`,
+        null, null, `extension_${item.id}`, item.key, item.categoryColour);
+        // 获取labels注册extension
+        const temp$ = this.http.get('assets/blockly/labels/labels.json', {}).pipe(tap((rsp: any) => {
+          const labels = (rsp.labels[item.id] || {}).values || [];
+          try {
+            Blockly.Extensions.register(`extension_${item.id}`,
+                function() {
+                  this.getInput('INPUT')
+                    .appendField(new Blockly.SelfSelectorField(labels), 'NAME');
+                });
+          } catch {}
+          this.initVariableBlock(tempVariable);
+        }));
+        rxs.push(temp$);
+      }
+    });
+    if (rxs.length > 0) {
+      return zip(...rxs);
+    } else {
+      return of({});
+    }
   }
 
   /**
