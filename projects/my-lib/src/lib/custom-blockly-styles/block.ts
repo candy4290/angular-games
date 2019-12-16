@@ -73,54 +73,54 @@ Blockly.blockRendering.ConstantProvider.prototype.makePuzzleTab = function() {
 };
 
 // 三层blockPath之一:blocklyPathLight
-// Blockly.geras.HighlightConstantProvider.prototype.makePuzzleTab = function() {
-//   const width = this.constantProvider.TAB_WIDTH;
-//   const height = this.constantProvider.TAB_HEIGHT;
+Blockly.geras.HighlightConstantProvider.prototype.makePuzzleTab = function() {
+  const width = this.constantProvider.TAB_WIDTH;
+  const height = this.constantProvider.TAB_HEIGHT;
 
-//   // This is how much of the vertical block edge is actually drawn by the puzzle
-//   // tab.
-//   const verticalOverlap = 2.5;
+  // This is how much of the vertical block edge is actually drawn by the puzzle
+  // tab.
+  const verticalOverlap = 2.5;
 
-//   const highlightRtlUp =
-//       Blockly.utils.svgPaths.moveBy(-2, -height + verticalOverlap + 0.9) +
-//       Blockly.utils.svgPaths.lineTo(width * -0.45, -2.1);
+  const highlightRtlUp =
+      Blockly.utils.svgPaths.moveBy(-2, -height + verticalOverlap + 0.9) +
+      Blockly.utils.svgPaths.lineTo(width * -0.45, -2.1);
 
-//   const highlightRtlDown =
-//       Blockly.utils.svgPaths.lineOnAxis('v', verticalOverlap) +
-//       Blockly.utils.svgPaths.moveBy(-width * 0.97, 2.5 + height) +
-//       // Blockly.utils.svgPaths.curve('q',
-//       //     [
-//       //       Blockly.utils.svgPaths.point(-width * 0.05, 10),
-//       //       Blockly.utils.svgPaths.point(width * 0.3, 9.5)
-//       //     ]) +
-//       Blockly.utils.svgPaths.moveBy(width * 0.67, -1.9) +
-//       Blockly.utils.svgPaths.lineOnAxis('v', verticalOverlap);
+  const highlightRtlDown =
+      Blockly.utils.svgPaths.lineOnAxis('v', verticalOverlap) +
+      Blockly.utils.svgPaths.moveBy(-width * 0.97, 2.5 + height) +
+      // Blockly.utils.svgPaths.curve('q',
+      //     [
+      //       Blockly.utils.svgPaths.point(-width * 0.05, 10),
+      //       Blockly.utils.svgPaths.point(width * 0.3, 9.5)
+      //     ]) +
+      Blockly.utils.svgPaths.moveBy(width * 0.67, -1.9) +
+      Blockly.utils.svgPaths.lineOnAxis('v', verticalOverlap);
 
-//   const highlightLtrUp =
-//       Blockly.utils.svgPaths.lineOnAxis('v', -0.5) +
-//       Blockly.utils.svgPaths.moveBy(width * -0.92, -0.5 - height) +
-//       // Blockly.utils.svgPaths.curve('q',
-//       //     [
-//       //       Blockly.utils.svgPaths.point(width * -0.19, -5.5),
-//       //       Blockly.utils.svgPaths.point(0,-11)
-//       //     ]) +
-//       Blockly.utils.svgPaths.moveBy(width * 0.92, 1);
+  const highlightLtrUp =
+      Blockly.utils.svgPaths.lineOnAxis('v', -0.5) +
+      Blockly.utils.svgPaths.moveBy(width * -0.92, -0.5 - height) +
+      // Blockly.utils.svgPaths.curve('q',
+      //     [
+      //       Blockly.utils.svgPaths.point(width * -0.19, -5.5),
+      //       Blockly.utils.svgPaths.point(0,-11)
+      //     ]) +
+      Blockly.utils.svgPaths.moveBy(width * 0.92, 1);
 
-//   const highlightLtrDown =
-//       Blockly.utils.svgPaths.moveBy(-3.5, height - 3.5) +
-//       Blockly.utils.svgPaths.lineTo(width * 0.5, (height - width) / 2);
+  const highlightLtrDown =
+      Blockly.utils.svgPaths.moveBy(-3.5, height - 3.5) +
+      Blockly.utils.svgPaths.lineTo(width * 0.5, (height - width) / 2);
 
-//   return {
-//     width,
-//     height,
-//     pathUp: (rtl) => {
-//       return rtl ? highlightRtlUp : highlightLtrUp;
-//     },
-//     pathDown: (rtl) => {
-//       return rtl ? highlightRtlDown : highlightLtrDown;
-//     }
-//   };
-// };
+  return {
+    width,
+    height,
+    pathUp: (rtl) => {
+      return rtl ? highlightRtlUp : highlightLtrUp;
+    },
+    pathDown: (rtl) => {
+      return rtl ? highlightRtlDown : highlightLtrDown;
+    }
+  };
+};
 
 // 绘制statement上下连接的路径
 export default Blockly.blockRendering.ConstantProvider.prototype.makeNotch = function() {
@@ -231,8 +231,6 @@ Blockly.blockRendering.Drawer.prototype.drawOutline_ = function() {
       this.drawStatementInput_(row);
     } else if (row.hasExternalInput) {
       // block外部的input框
-      console.log(row);
-      console.log(row.getLastInput());
       this.drawValueInput_(row);
     } else {
       this.drawRightSideRow_(row);
