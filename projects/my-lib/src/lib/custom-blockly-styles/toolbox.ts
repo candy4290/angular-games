@@ -1,7 +1,6 @@
 
 declare var Blockly: any;
 
-Blockly.TOOLBOX_AT_LEFT = 10;
 // 取出目录左边的颜色条
 Blockly.Toolbox.prototype.addColour_ = () => {};
 
