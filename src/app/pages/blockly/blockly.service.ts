@@ -337,6 +337,15 @@ export class BlocklyService {
       });
     };
 
+    // 覆盖默认confirm弹窗
+    Blockly.confirm = (message, callback) => {
+      this.modalService.create({
+        nzTitle: '删除',
+        nzContent: message,
+        nzOnOk: () => { callback(true); }
+      });
+    };
+
   }
 
   /**
