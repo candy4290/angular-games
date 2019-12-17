@@ -1,8 +1,7 @@
 import { Category, XmlBlock } from 'ngx-blockly';
-import { AndOrBlock, ValuesDropDownBlock } from 'my-lib';
+import { AndOrBlock } from 'my-lib';
 
 export const LOGIC_CATEGORY: Category = new Category([
-  // new ValuesDropDownBlock('values_drop_down', null, null),
   new AndOrBlock('logic_block_self_add', null, null),
   new XmlBlock('controls_if'),
   new XmlBlock('logic_compare'),
@@ -11,7 +10,7 @@ export const LOGIC_CATEGORY: Category = new Category([
   new XmlBlock('logic_boolean'),
   new XmlBlock('logic_null'),
   new XmlBlock('logic_ternary'),
-], '%{BKY_LOGIC_HUE}', '逻辑', null );
+], '%{BKY_LOGIC_HUE}', '逻辑', null);
 
 export const LOOP_CATEGORY: Category = new Category([
   new XmlBlock('controls_repeat_ext'),

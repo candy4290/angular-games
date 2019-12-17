@@ -3,7 +3,6 @@ import { Svgs } from '../constants/src';
 declare var Blockly: any;
 
 export class SelfSelectorField {
-    options = [['a', 'a'], ['b', 'b']];
     constructor() {
       Blockly.SelfSelectorField = function(menuGenerator, optValue, optValidator) {
         menuGenerator = menuGenerator || [];

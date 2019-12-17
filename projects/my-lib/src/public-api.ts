@@ -10,8 +10,6 @@ export * from './lib/custom-blocks/values-dropdown-block';
 
 export * from './lib/types/blockly-config';
 
-export * from './lib/constants/custome-block';
-export * from './lib/constants/toolbox';
 export * from './lib/constants/cxx-theme';
 export * from './lib/constants/src';
 

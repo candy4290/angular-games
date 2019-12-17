@@ -1,10 +1,10 @@
 import { OnInit, OnDestroy, Component, ViewChild, Inject, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
 import { NgxBlocklyConfig, NgxBlocklyGeneratorConfig,
-  NgxBlocklyComponent, CustomBlock, NgxToolboxBuilderService, Category, Separator } from 'ngx-blockly';
+  NgxBlocklyComponent, CustomBlock, NgxToolboxBuilderService } from 'ngx-blockly';
 import { BlocklyService } from './blockly.service';
 import { LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY } from './category';
 import { Subscription, Subject } from 'rxjs';
-import { AndOrBlock, CreateVariableButton, VariableGetBlock, ValuesDropDownBlock, SelfSelectorField } from 'my-lib';
+import { AndOrBlock, ValuesDropDownBlock, SelfSelectorField, CxxTheme } from 'my-lib';
 import { DOCUMENT } from '@angular/common';
 import { NzMessageService, NzModalService, NzModalRef } from 'ng-zorro-antd';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -32,6 +32,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     trashcan: true, // 显示或隐藏垃圾桶
     sounds: true, // 拖动block拼接时的音效
     media: '/assets/blockly/media/', // blockly媒体路径---默认路径访问不到，需要翻墙
+    theme: new Blockly.Theme(CxxTheme.blockStyles, CxxTheme.categoryStyles),
     zoom: {
       controls: true,
       wheel: true,
@@ -112,7 +113,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   onCode(code: string) {
     this.jsCode = code;
-    this.xml = this.workspace.toXml()
+    this.xml = this.workspace.toXml();
   }
 
   /**

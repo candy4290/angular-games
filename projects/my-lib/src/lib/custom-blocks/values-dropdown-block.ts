@@ -14,7 +14,8 @@ export class ValuesDropDownBlock extends CustomBlock {
         }],
       inputsInline: false,
       output: args[1],
-      colour: args[2] || 230,
+      // colour: args[2] || 230,
+      style: 'text_blocks',
       tooltip: '',
       helpUrl: '',
       extensions: [args[0]]
