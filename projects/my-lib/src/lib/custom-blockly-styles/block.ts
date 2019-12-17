@@ -2,17 +2,79 @@ declare const Blockly: any;
 
 Blockly.blockRendering.ConstantProvider.prototype.init = function() {
   // topRow的高度
-  // this.SMALL_PADDING = 8;
-  // this.MEDIUM_PADDING = 8;
+  this.NO_PADDING = 0;
+  this.SMALL_PADDING = 3;
+  this.MEDIUM_PADDING = 5;
+  this.MEDIUM_LARGE_PADDING = 8;
+  this.LARGE_PADDING = 10;
 
+  // Offset from the top of the row for placing fields on inline input rows
+  // and statement input rows.
+  // Matches existing rendering (in 2019).
+  this.TALL_INPUT_FIELD_OFFSET_Y = this.MEDIUM_PADDING;
+
+  // tab的高度
+  this.TAB_HEIGHT = 15;
+  // tab的宽度
+  this.TAB_WIDTH = 8;
   // tab在y轴的偏移(输出tab距离顶部的偏移量)
-  // this.TAB_OFFSET_FROM_TOP = 8;
+  this.TAB_OFFSET_FROM_TOP = 5;
+
+  this.TAB_VERTICAL_OVERLAP = 2.5;
 
   // statement上下连接点的宽度和高度
   this.NOTCH_WIDTH = 15;
   this.NOTCH_HEIGHT = 4;
+
+  // This is the minimum width of a block measuring from the end of a rounded
+  // corner
+  this.MIN_BLOCK_WIDTH = 12;
+
+  this.EMPTY_BLOCK_SPACER_HEIGHT = 16;
+
+  /**
+   * dummy input的最小高度
+   */
+  this.DUMMY_INPUT_MIN_HEIGHT = this.TAB_HEIGHT;
+
   // 圆角大小
   this.CORNER_RADIUS = 4;
+
+  // Offset from the left side of a block or the inside of a statement input to
+  // the left side of the notch.
+  this.NOTCH_OFFSET_LEFT = 15;
+
+  this.STATEMENT_BOTTOM_SPACER = 0;
+  this.STATEMENT_INPUT_PADDING_LEFT = 20;
+  this.BETWEEN_STATEMENT_PADDING_Y = 4;
+
+  // This is the max width of a bottom row that follows a statement input and
+  // has inputs inline.
+  this.MAX_BOTTOM_WIDTH = 66.5;
+
+  this.START_HAT_HEIGHT = 15;
+  this.START_HAT_WIDTH = 100;
+
+  this.SPACER_DEFAULT_HEIGHT = 15;
+  //  block块的最小高度
+  this.MIN_BLOCK_HEIGHT = 24;
+
+  // inline input的padding
+  this.EMPTY_INLINE_INPUT_PADDING = 14.5;
+  // input input的高度
+  this.EMPTY_INLINE_INPUT_HEIGHT = this.TAB_HEIGHT + 11;
+
+  this.EXTERNAL_VALUE_INPUT_PADDING = 2;
+
+  // statement input的高度
+  // this.EMPTY_STATEMENT_INPUT_HEIGHT = this.MIN_BLOCK_HEIGHT;
+
+  // this.START_POINT = Blockly.utils.svgPaths.moveBy(0, 0);
+
+  // 块折叠后的高度+宽度
+  // this.JAGGED_TEETH_HEIGHT = 12;
+  // this.JAGGED_TEETH_WIDTH = 6;
+
   this.JAGGED_TEETH = this.makeJaggedTeeth();
   this.NOTCH = this.makeNotch();
   this.START_HAT = this.makeStartHat();
@@ -65,8 +127,8 @@ Blockly.blockRendering.ConstantProvider.prototype.makePuzzleTab = function() {
     width,
     height,
     pathDown,
-    pathUp: (height) => {
-      return makeMainPath(true, true, height)
+    pathUp: (h: number) => {
+      return makeMainPath(true, true, h);
     },
     pathRightUp
   };
