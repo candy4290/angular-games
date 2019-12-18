@@ -50,7 +50,7 @@ export class BlocklyService {
         const variables = rsp.variables[id] || [];
         let xmls = '';
         for (let i = 0, len = variables.length; i < len; i++) {
-          this.loadedVariables.add(`${variables[i].key}#${variables[i].value}`);
+          this.loadedVariables.add(`${variables[i].key}__${categoryColor}__${variables[i].value}`);
           const tempVariable =  new VariableGetBlock(`${variables[i].key}__${categoryColor}`, null, null, variables[i].value, [variables[i].type], variables[i].key, categoryColor);
           this.initVariableBlock(tempVariable);
           xmls += tempVariable.toXML();
@@ -365,9 +365,9 @@ export class BlocklyService {
   searchBlockByName(keyWords: string, workspace: NgxBlocklyComponent) {
     let result = '' ;
     this.loadedVariables.forEach((item: string) => {
-      const temp =  item.split('#');
-      const type = temp[0];
-      const value = temp[1];
+      const temp =  item.split('__');
+      const type = temp[0] + '__' + temp[1];
+      const value = temp[2];
       if (value.indexOf(keyWords) > -1) {
         result += `<block type='${type}'></block>`;
       }
