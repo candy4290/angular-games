@@ -27,7 +27,9 @@
   display: none;
   // width:136px;
 }
-
+pre {
+  margin-bottom: 0;
+}
 :host ::ng-deep {
   .ant-tabs {
     height: calc(100% - 32px);
