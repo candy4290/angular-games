@@ -1,6 +1,14 @@
 {
   "categories": [
       {
+        "id": "0",
+        "name": "查询结果",
+        "expanded":false,
+        "colour": "#bb9246",
+        "commonUrl": "https://ng.ant.design/assets/img/logo.svg",
+        "activeUrl": "https://www.primefaces.org/primeng/assets/showcase/images/mask.svg"
+      },
+      {
         "id": "1",
         "name": "系统级",
         "expanded": false,

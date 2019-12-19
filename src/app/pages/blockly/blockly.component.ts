@@ -64,7 +64,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
               private el: ElementRef,
               private render2: Renderer2,
               private modalService: NzModalService) {
-    this.blockly.changeToolboxStyle();
+    this.blockly.changeBlocklyDefaultStyle();
     this.blockly.loadBlockInMutator();
     this.ngxToolboxBuilder.nodes = [
       LOGIC_CATEGORY,
@@ -82,7 +82,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
       debounceTime(300),
       distinctUntilChanged(),
       switchMap((rsp: string) => {
-        return this.blockly.searchBlockByName(rsp, this.workspace);
+        return this.blockly.searchBlockByName(rsp);
       })
     ).subscribe();
     this.subscription$.add(search$);
@@ -90,10 +90,10 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.blockly.workspace = this.workspace;
-    this.blockly.insertSearchInputIntoToolbox(this.render2, this.el, this.workspace);
-    this.workspace.workspace.registerButtonCallback('createAge', () => {this.createVariableDialog(); });
-    this.workspace.workspace.registerButtonCallback('loadVariables', () => {this.loadVariables(); });
-    this.blockly.loadCategories(this.config, this.workspace).subscribe(rsp => {
+    this.blockly.insertSearchInputIntoToolbox(this.render2, this.el);
+    // this.workspace.workspace.registerButtonCallback('createAge', () => {this.createVariableDialog(); });
+    // this.workspace.workspace.registerButtonCallback('loadVariables', () => {this.loadVariables(); });
+    this.blockly.loadCategories(this.config).subscribe(rsp => {
     });
   }
 

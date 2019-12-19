@@ -214,40 +214,9 @@ export class BlocklyService {
   }
 
   /**
-   * 更改toolbox样式
+   * 更改Blockly默认样式
    */
-  changeToolboxStyle() {
-    // 给选中的条目加上背景色
-    Blockly.Toolbox.prototype.handleBeforeTreeSelected_ = function(node) {
-      if (node === this.tree_) {
-        return false;
-      }
-      if (this.lastCategory_) {
-        let categoryConfig: any;
-        categoryConfig = this.tree_.getCategoryConfig(this.lastCategory_.content_);
-        this.lastCategory_.getRowElement().style.backgroundColor = '';
-        const children =   this.lastCategory_.getRowElement().children;
-        if (categoryConfig && children && children.length > 1) {
-          children[1].src = categoryConfig.itemImg.commonUrl;
-        }
-      }
-      if (node) {
-        this.loadVariable(node);
-        let categoryConfig: any;
-        if (node && node.content_) {
-          categoryConfig = this.tree_.getCategoryConfig(node.content_);
-        }
-        const hexColour = node.hexColour || '#57e';
-        node.getRowElement().style.backgroundColor = hexColour;
-        const children = node.getRowElement().children;
-        if (children && children.length > 1) {
-          children[1].src = categoryConfig.itemImg.activeUrl;
-        }
-        this.addColour_(node);
-      }
-      return true;
-    };
-
+  changeBlocklyDefaultStyle() {
     // 异步加载目录下的block,使用refreshSelection动态更新flyout中的block
     Blockly.Toolbox.prototype.loadVariable = (node) => {
       const categoryColor = node.hexColour;
@@ -274,34 +243,7 @@ export class BlocklyService {
       }
     };
 
-    // 给目录加上图片
-    Blockly.tree.BaseNode.prototype.getRowDom = function() {
-      const row = document.createElement('div');
-      row.className = this.getRowClassName();
-      row.style['padding-' + (this.isRightToLeft() ? 'right' : 'left')] =
-          this.getPixelIndent_() + 'px';
-      const label = this.getLabelDom();
-      row.appendChild(this.getIconDom());
-      row.appendChild(label);
-      if (label.textContent) {
-        if (this.hasChildren()) {
-          // 加上目录展开闭合的照片
-          const icon = document.createElement('span');
-          icon.innerHTML = Svgs.categoryIcon;
-          icon.style.flexGrow = '1';
-          icon.style.display = 'flex';
-          icon.style.justifyContent = 'flex-end';
-          label.parentNode.appendChild(icon);
-        }
-        const img = document.createElement('img');
-        img.src = this.getCategoryConfig(label.textContent).itemImg.commonUrl;
-        img.style.height = '24px';
-        img.style.margin = '0 10px 0 8px';
-        label.parentNode.insertBefore(img, label);
-      }
-      return row;
-    };
-
+    // 获取目录的配置文件（选中的图标+未选中时的图标）
     Blockly.tree.BaseNode.prototype.getCategoryConfig = (labelContext: string) => {
       let commonUrl: string;
       let activeUrl: string;
@@ -351,19 +293,21 @@ export class BlocklyService {
   /**
    * 在toolbox目录上方插入搜索框，并resize()
    */
-  insertSearchInputIntoToolbox(render2: Renderer2, ele: ElementRef, workspace: any) {
+  insertSearchInputIntoToolbox(render2: Renderer2, ele: ElementRef) {
     const treeRoot =  ele.nativeElement.querySelector('.blocklyToolboxDiv');
     const searchInput =  ele.nativeElement.querySelector('.ant-input-affix-wrapper');
     render2.setStyle(searchInput, 'display', 'block');
     render2.insertBefore(treeRoot, searchInput, ele.nativeElement.querySelector('.blocklyTreeRoot'));
-    workspace.workspace.resize();
+    this.workspace.workspace.resize();
   }
 
   /**
    * 根据名称搜索block，并且创建一个目录，将搜索结果放入其中
    */
-  searchBlockByName(keyWords: string, workspace: NgxBlocklyComponent) {
+  searchBlockByName(keyWords: string) {
     let result = '' ;
+    const serarchItem = document.getElementById('blockly:7');
+    const toolbox = this.workspace.workspace.getToolbox();
     this.loadedVariables.forEach((item: string) => {
       const temp =  item.split('__');
       const type = temp[0] + '__' + temp[1];
@@ -373,27 +317,27 @@ export class BlocklyService {
       }
     });
 
-    const toolbox = workspace.config.toolbox;
-    const ifExistSearchResultCategory = toolbox.includes('查询结果');
+    const ifExistSearchResultCategory = (serarchItem.style.display !== 'none');
     if (keyWords) {
       if (!ifExistSearchResultCategory) {
-        if (result) {
-          workspace.config.toolbox = toolbox.replace('<xml id="toolbox" style="display: none">',
-      '<xml id="toolbox" style="display: none">' + `${this.categorySearch}${result}</category>`);
-        } else {
-          workspace.config.toolbox = toolbox.replace('<xml id="toolbox" style="display: none">',
-          '<xml id="toolbox" style="display: none">' + `${this.categorySearch}<label text="暂无查询结果"></label></category>`);
+        if (!result) {
+          result += '<label text="暂无查询结果"></label>';
         }
       }
-      workspace.workspace.updateToolbox(workspace.config.toolbox);
-      workspace.workspace.getToolbox().selectFirstCategory();
+      serarchItem.style.display = 'block';
+      toolbox.clearSelection(); // 清除选中状态
+      toolbox.selectFirstCategory(); // 选中’查询结果‘
+      const treeControl = toolbox.tree_; // 每次调用renderTree都会生成新的TreeControl
+      const preSelectedItem = treeControl.getSelectedItem();
+      const xml = Blockly.Xml.textToDom(`<xml>
+      ${result}
+      </xml>`);
+      preSelectedItem.blocks = xml.children;
+      toolbox.refreshSelection();
     } else {
       if (ifExistSearchResultCategory) {
-        const categorySearchStartIndex = toolbox.indexOf(this.categorySearch);
-        const categorySearchEndIndex = toolbox.indexOf('</category>', categorySearchStartIndex) + 11;
-        workspace.config.toolbox = toolbox.slice(0, categorySearchStartIndex) + toolbox.slice(categorySearchEndIndex);
-        workspace.workspace.updateToolbox(workspace.config.toolbox);
-        workspace.workspace.getToolbox().flyout_.hide();
+        serarchItem.style.display = 'none';
+        toolbox.flyout_.hide();
       }
     }
     return of();
@@ -402,13 +346,15 @@ export class BlocklyService {
   /**
    *  加载目录
    */
-  loadCategories(config: NgxBlocklyConfig, workspace: NgxBlocklyComponent) {
+  loadCategories(config: NgxBlocklyConfig) {
     return this.http.get('assets/blockly/categorys/categorys.json', {}).pipe(map((rsp: any) => {
       const categories = rsp.categories;
       this.jsonToXml(categories);
       config.toolbox = config.toolbox.replace('<xml id="toolbox" style="display: none">',
       '<xml id="toolbox" style="display: none">' + this.categoriesInString);
-      workspace.workspace.updateToolbox(config.toolbox);
+      this.workspace.workspace.updateToolbox(config.toolbox);
+      const temp = document.getElementById('blockly:7');
+      temp.style.display = 'none';
     }));
   }
 
@@ -428,7 +374,7 @@ export class BlocklyService {
           activeUrl: categoryes[i].activeUrl
         };
       }
-      this.categoriesInString += `<category class="form-ajax" name="${categoryes[i].name}" colour="${categoryes[i].color || generateColor()}">`;
+      this.categoriesInString += `<category name="${categoryes[i].name}" colour="${categoryes[i].color || generateColor()}">`;
       const children = categoryes[i].children || [];
       if (children.length > 0) {
         this.jsonToXml(children);
@@ -501,12 +447,11 @@ export class BlocklyService {
         null, null, `extension_${item.id}`, item.key, item.categoryColour);
         // 获取labels注册extension
         const temp$ = this.http.get('assets/blockly/labels/labels.json', {}).pipe(tap((rsp: any) => {
-          const labels = (rsp.labels[item.id] || {}).values || [];
           try {
             Blockly.Extensions.register(`extension_${item.id}`,
                 function() {
                   this.getInput('INPUT')
-                    .appendField(new Blockly.SelfSelectorField(labels), 'NAME');
+                    .appendField(new Blockly.SelfSelectorField((rsp.labels[item.id] || {}).values || []), 'NAME');
                 });
           } catch {}
           this.initVariableBlock(tempVariable);
