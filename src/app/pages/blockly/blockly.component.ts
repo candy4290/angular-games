@@ -4,13 +4,12 @@ import { NgxBlocklyConfig, NgxBlocklyGeneratorConfig,
 import { BlocklyService } from './blockly.service';
 import { LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY } from './category';
 import { Subscription, Subject } from 'rxjs';
-import { AndOrBlock, ValuesDropDownBlock, SelfSelectorField, CxxTheme } from 'my-lib';
+import { AndOrBlock, ValuesDropDownBlock, SelfSelectorField, DarkTheme } from 'my-lib';
 import { DOCUMENT } from '@angular/common';
 import { NzMessageService, NzModalService, NzModalRef } from 'ng-zorro-antd';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { CreateVariableComponent } from './create-variable/create-variable.component';
 // import * as parser from 'xml2json';
-declare var Blockly: any;
 @Component({
   selector: 'app-blockly',
   templateUrl: './blockly.component.html',
@@ -32,7 +31,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     trashcan: true, // 显示或隐藏垃圾桶
     sounds: true, // 拖动block拼接时的音效
     media: '/assets/blockly/media/', // blockly媒体路径---默认路径访问不到，需要翻墙
-    theme: new Blockly.Theme(CxxTheme.blockStyles, CxxTheme.categoryStyles),
+    theme: new DarkTheme().DarkTheme,
     zoom: {
       controls: true,
       wheel: true,

@@ -10,8 +10,9 @@ export * from './lib/custom-blocks/values-dropdown-block';
 
 export * from './lib/types/blockly-config';
 
-export * from './lib/constants/cxx-theme';
 export * from './lib/constants/src';
+export * from './lib/constants/themes/dark-theme';
+export * from './lib/constants/themes/light-theme';
 
 export * from './lib/ngx-blockly/models/button';
 export * from './lib/ngx-blockly/models/label';

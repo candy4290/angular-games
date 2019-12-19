@@ -33,36 +33,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 
 // blockly style更新
-// .blocklyTreeLabel {
-//   display: inline-block;
-//   width: 100%;
-//   text-align: center;
-// }
-
 .blocklyToolboxDiv {
   background-color: #eee;
 }
 
-// .blocklyTreeIconClosedLtr {
-//   background-image: url(/assets/svgs/right.svg);
-//   background-size: 100%;
-// }
-
-// .blocklyTreeIcon {
-//   position: absolute;
-// }
-
-// .blocklyTreeRow {
-//   padding-top: 4px;
-//   padding-bottom: 4px;
-//   height: auto;
-//   line-height: unset;
-//   margin-bottom: 0;
-//   padding-right: 0;
-// }
-// .blocklyTreeLabel {
-//   font-size: 16px;
-// }
 .blocklyHidden {
   display: none !important;
 }
@@ -116,14 +90,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     color: unset;
   }
 }
-
-// .blocklyNonEditableText>text, .blocklyEditableText>text {
-//   fill: #fff;
-// }
-// block块有三层blocklyPathDark,blocklyPath,blocklyPathLight
-// .blocklyPathDark, .blocklyPathLight {
-//   display: none;
-// }
 
 // 修改浏览器滚动条默认样式
 ::-webkit-scrollbar {

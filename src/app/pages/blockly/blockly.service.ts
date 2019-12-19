@@ -2,7 +2,7 @@ import { Injectable, Renderer2, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CustomBlock, NgxBlocklyConfig, NgxBlocklyComponent } from 'ngx-blockly';
 import { map, tap } from 'rxjs/operators';
-import { VariableGetBlock, ValuesDropDownBlock, Svgs } from 'my-lib';
+import { VariableGetBlock, ValuesDropDownBlock } from 'my-lib';
 import { of, Subscription, Observable, zip } from 'rxjs';
 import { generateColor } from 'my-lib';
 import { NzModalService } from 'ng-zorro-antd';
@@ -12,7 +12,6 @@ declare var Blockly: any;
 
 export class BlocklyService {
   loadedVariables = new Set(); // 存储已加载的变量block的type
-  categorySearch = '<category colour="#000" name="查询结果">';
   workspace: NgxBlocklyComponent;
   categoriesInString = ''; // 远程加载的目录结构string表示
   categoriesInArray = [];
