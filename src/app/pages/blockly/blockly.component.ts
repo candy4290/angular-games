@@ -101,7 +101,9 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription$.unsubscribe();
-    this.nzModalRef$.close();
+    if (this.nzModalRef$) {
+      this.nzModalRef$.close();
+    }
     this.blockly.clear();
   }
 
