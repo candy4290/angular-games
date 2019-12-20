@@ -1,0 +1,58 @@
+{
+  "result": {
+    "name": "江苏可疑人员",
+    "ruleTermName": "江苏可疑人员",
+    "description": "找出出生地为江苏的满足一定条件的可疑人员",
+    "ruleTermNode": {
+      "name": "江苏可疑人员",
+      "operator": "OR",
+      "type": "GROUP",
+      "content":"....xml",
+      "subs": [
+        {
+          "name": "条件1",
+          "operator":"AND",
+          "type": "GROUP",
+          "subs": [
+            {
+              "name": "男",
+              "operator": "SINGLE",
+              "type": "TAG",
+              "content": null,
+              "subs": []
+            },
+            {
+              "name": "常住人口",
+              "operator":"SINGLE",
+              "type": "TAG",
+              "content": null,
+              "subs": []
+            }
+          ]
+        },
+        {
+          "name": "条件2",
+          "operator": "AND",
+          "type": "GROUP",
+          "subs": [
+            {
+              "name": "女",
+              "operator": "SINGLE",
+              "type": "TAG",
+              "content": null,
+              "subs": []
+            },
+            {
+              "name": "暂住人口",
+              "operator":"SINGLE",
+              "type": "TAG",
+              "content": null,
+              "subs": []
+            }
+          ]
+        }
+      ]
+
+    }
+  }
+}

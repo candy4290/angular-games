@@ -9,7 +9,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "analyze": "ng build --prod --stats-json && webpack-bundle-analyzer ./dist/angular-games/stats-es2015.json",
-    "serve:dist": "http-server dist/angular-games -a 0.0.0.0 -p 8888 -o --proxy http://127.0.0.1:8888?"
+    "serve:dist": "http-server dist/angular-games -a 0.0.0.0 -p 8888 -o --proxy http://127.0.0.1:8888? -c10"
   },
   "private": true,
   "dependencies": {
