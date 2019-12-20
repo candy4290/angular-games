@@ -24,9 +24,13 @@ export class BlocklyService {
 
   clear() {
     this.subscription$.unsubscribe();
-    this.workspace = null;
     this.categoriesInString = '';
     this.categoriesInArray = [];
+    // 卸载已经注册的extensions和fieldRegistry,或者使用try catch
+    Blockly.Extensions.unregister('blockly_self_add_mutator');
+    Blockly.fieldRegistry.unregister('self-selector');
+    Blockly.utils.IdGenerator.nextId_ = 0;
+    this.workspace.workspace.dispose();
   }
 
   /**
@@ -94,29 +98,32 @@ export class BlocklyService {
    * 加载mutator中使用到的block,这些block不需要转化为代码，只是用来构造source block的结构（例如增删inputs数量）
    */
   loadBlockInMutator() {
-    Blockly.defineBlocksWithJsonArray([
-      {
-        type: 'block_self_boolean',
-        message0: '布尔值',
-        inputsInline: false,
-        previousStatement: null,
-        nextStatement: null,
-        colour: '%{BKY_LOGIC_HUE}',
-      },
-      {
-        type: 'block_self_mutator',
-        message0: '%1',
-        args0: [
-          {
-            type: 'input_statement',
-            name: 'NAME',
-            check: 'Boolean'
-          }
-        ],
-        colour: '%{BKY_LOGIC_HUE}',
-        tooltip: '',
-      }
-    ]);
+    // tslint:disable-next-line: no-string-literal
+    if (!Blockly.Blocks['block_self_boolean'] || !Blockly.Blocks['block_self_mutator']) {
+      Blockly.defineBlocksWithJsonArray([
+        {
+          type: 'block_self_boolean',
+          message0: '布尔值',
+          inputsInline: false,
+          previousStatement: null,
+          nextStatement: null,
+          colour: '%{BKY_LOGIC_HUE}',
+        },
+        {
+          type: 'block_self_mutator',
+          message0: '%1',
+          args0: [
+            {
+              type: 'input_statement',
+              name: 'NAME',
+              check: 'Boolean'
+            }
+          ],
+          colour: '%{BKY_LOGIC_HUE}',
+          tooltip: '',
+        }
+      ]);
+    }
     Blockly.Extensions.registerMutator('blockly_self_add_mutator', {
       /**
        * 生成xml时调用此方法
