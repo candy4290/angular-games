@@ -503,7 +503,7 @@ export class BlocklyService {
    */
   parseToBackend(xml: string) {
     xml2js.parseString(xml, (err: any, r: any) => {
-      console.dir(r);
+      console.log(r);
       const sourceBlocks = r.xml.block;
       if (!sourceBlocks) {
         return;
@@ -530,20 +530,24 @@ export class BlocklyService {
         operator: sourceBlocks[0].field[0]._ === 'OR' ? 'OR' : 'AND',
         type: 'GROUP',
         content: xml,
-        subs: this.parseJsonToBackend(sourceBlocks[0])
+        subs: []
       };
       console.log(result);
     });
     return {};
   }
 
-  parseJsonToBackend(block: any) {
-    switch (block.$.type) {
-      case 'logic_compare':
-
+  simplyJsCode(code: string) {
+    if (!code) {
+      return;
     }
-    return block;
+    const varStart = code.indexOf('var ');
+    if (varStart > -1) {
+      const varEnd = code.indexOf(';', varStart);
+      code = code.replace(code.slice(varStart, varEnd + 1), '');
+    }
+    code = code.replace(/\s*/g, '');
+    console.log(code);
   }
-
 
 }

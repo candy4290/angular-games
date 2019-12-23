@@ -115,6 +115,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     this.jsCode = code;
     this.xml = this.workspace.toXml();
     this.blockly.parseToBackend(this.xml);
+    this.blockly.simplyJsCode(code);
   }
 
   /**
