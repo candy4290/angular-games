@@ -32,7 +32,7 @@ export class ValuesDropDownBlock extends CustomBlock {
   }
 
   toJavaScriptCode(e: any) {
-    return [e.getFieldValue('NAME'), Blockly.JavaScript.ORDER_NONE];
+    return [e.getFieldValue('NAME'), Blockly.JavaScript.ORDER_ATOMIC];
   }
 
 }
