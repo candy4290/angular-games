@@ -7,6 +7,8 @@ import { of, Subscription, Observable, zip } from 'rxjs';
 import { generateColor } from 'my-lib';
 import { NzModalService } from 'ng-zorro-antd';
 import { RenameVariableComponent } from './rename-variable/rename-variable.component';
+import * as xml2js from 'xml2js';
+
 declare var Blockly: any;
 @Injectable()
 
@@ -490,5 +492,36 @@ export class BlocklyService {
       return block.toJavaScriptCode(e);
     };
   }
+
+  /**
+   * 将xml转为后端想要的数据
+   * @param {string} xml
+   * @returns
+   * @memberof BlocklyService
+   */
+  parseToBackend(xml: string) {
+    xml2js.parseString(xml, (err: any, r: any) => {
+      console.dir(r);
+      const result: any = {};
+      if (r.xml.block && r.xml.block.length === 1) {
+        result.name = '江苏可疑人员';
+        result.ruleTermName = '江苏可疑人员';
+        result.description = '找出出生地为江苏的满足一定条件的可疑人员';
+        result.ruleTermNode = {
+          name: '江苏可疑人员',
+          operator: r.xml.block[0].field[0]._ === '&&' ? 'AND' : 'OR',
+          type: 'GROUP',
+          content: xml,
+          subs: this.parseJsonToBackend(r.xml.block[0].value)
+        };
+      }
+      console.log(result);
+    });
+    return {};
+  }
+
+  parseJsonToBackend(block: any[]) {
+  }
+
 
 }

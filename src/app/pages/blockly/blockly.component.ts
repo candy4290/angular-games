@@ -9,7 +9,7 @@ import { DOCUMENT } from '@angular/common';
 import { NzMessageService, NzModalService, NzModalRef } from 'ng-zorro-antd';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { CreateVariableComponent } from './create-variable/create-variable.component';
-// import * as parser from 'xml2json';
+
 @Component({
   selector: 'app-blockly',
   templateUrl: './blockly.component.html',
@@ -85,6 +85,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
       })
     ).subscribe();
     this.subscription$.add(search$);
+
   }
 
   ngAfterViewInit() {
@@ -115,6 +116,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   onCode(code: string) {
     this.jsCode = code;
     this.xml = this.workspace.toXml();
+    this.blockly.parseToBackend(this.xml);
   }
 
   /**
