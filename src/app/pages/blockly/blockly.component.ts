@@ -67,10 +67,8 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     this.blockly.loadBlockInMutator();
     this.ngxToolboxBuilder.nodes = [
       LOGIC_CATEGORY,
-      LOOP_CATEGORY,
       MATH_CATEGORY,
       TEXT_CATEGORY,
-      LISTS_CATEGORY,
     ];
     this.config.toolbox = this.ngxToolboxBuilder.build();
     const selfSelectorField = new SelfSelectorField();

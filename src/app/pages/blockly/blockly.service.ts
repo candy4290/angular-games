@@ -13,6 +13,7 @@ declare var Blockly: any;
 @Injectable()
 
 export class BlocklyService {
+  searchResult: HTMLElement; // 搜索结果dom元素
   loadedVariables = new Set(); // 存储已加载的变量block的type
   workspace: NgxBlocklyComponent;
   categoriesInString = ''; // 远程加载的目录结构string表示
@@ -26,6 +27,7 @@ export class BlocklyService {
 
   clear() {
     this.subscription$.unsubscribe();
+    this.searchResult = null;
     this.categoriesInString = '';
     this.categoriesInArray = [];
     // 卸载已经注册的extensions和fieldRegistry,或者使用try catch
@@ -314,7 +316,6 @@ export class BlocklyService {
    */
   searchBlockByName(keyWords: string) {
     let result = '' ;
-    const serarchItem = document.getElementById('blockly:7');
     const toolbox = this.workspace.workspace.getToolbox();
     this.loadedVariables.forEach((item: string) => {
       const temp =  item.split('__');
@@ -325,14 +326,14 @@ export class BlocklyService {
       }
     });
 
-    const ifExistSearchResultCategory = (serarchItem.style.display !== 'none');
+    const ifExistSearchResultCategory = (this.searchResult.style.display !== 'none');
     if (keyWords) {
       if (!ifExistSearchResultCategory) {
         if (!result) {
           result += '<label text="暂无查询结果"></label>';
         }
       }
-      serarchItem.style.display = 'block';
+      this.searchResult.style.display = 'block';
       toolbox.clearSelection(); // 清除选中状态
       toolbox.selectFirstCategory(); // 选中’查询结果‘
       const treeControl = toolbox.tree_; // 每次调用renderTree都会生成新的TreeControl
@@ -344,7 +345,7 @@ export class BlocklyService {
       toolbox.refreshSelection();
     } else {
       if (ifExistSearchResultCategory) {
-        serarchItem.style.display = 'none';
+        this.searchResult.style.display = 'none';
         toolbox.flyout_.hide();
       }
     }
@@ -361,8 +362,8 @@ export class BlocklyService {
       config.toolbox = config.toolbox.replace('<xml id="toolbox" style="display: none">',
       '<xml id="toolbox" style="display: none">' + this.categoriesInString);
       this.workspace.workspace.updateToolbox(config.toolbox);
-      const temp = document.getElementById('blockly:7');
-      temp.style.display = 'none';
+      this.searchResult = <HTMLElement>document.getElementsByClassName('blocklyTreeRoot').item(0).lastChild.lastChild.firstChild;
+      this.searchResult.style.display = 'none';
     }));
   }
 
@@ -502,20 +503,18 @@ export class BlocklyService {
   parseToBackend(xml: string) {
     xml2js.parseString(xml, (err: any, r: any) => {
       console.dir(r);
-      const result: any = {};
-      if (r.xml.block && r.xml.block.length === 1) {
-        result.name = '江苏可疑人员';
-        result.ruleTermName = '江苏可疑人员';
-        result.description = '找出出生地为江苏的满足一定条件的可疑人员';
-        result.ruleTermNode = {
-          name: '江苏可疑人员',
-          operator: r.xml.block[0].field[0]._ === '&&' ? 'AND' : 'OR',
-          type: 'GROUP',
-          content: xml,
-          subs: this.parseJsonToBackend(r.xml.block[0].value)
-        };
-      }
-      console.log(result);
+      // const result: any = {};
+      // result.name = '江苏可疑人员';
+      // result.ruleTermName = '江苏可疑人员';
+      // result.description = '找出出生地为江苏的满足一定条件的可疑人员';
+      // result.ruleTermNode = {
+      //   name: '江苏可疑人员',
+      //   operator: r.xml.block[0].field[0]._ === '&&' ? 'AND' : 'OR',
+      //   type: 'GROUP',
+      //   content: xml,
+      //   subs: this.parseJsonToBackend(r.xml.block[0].value)
+      // };
+      // console.log(result);
     });
     return {};
   }
