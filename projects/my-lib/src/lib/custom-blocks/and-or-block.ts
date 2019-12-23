@@ -12,11 +12,11 @@ export class AndOrBlock extends CustomBlock {
           options: [
             [
               '且',
-              '&&'
+              'AND'
             ],
             [
               '或',
-              '||'
+              'OR'
             ]
           ]
         },
@@ -46,19 +46,18 @@ export class AndOrBlock extends CustomBlock {
 
     defineBlock() {
       this.block.jsonInit(this.jsonBlock);
-      // this.block.setMutator(new Blockly.Mutator(['block_self_boolean']));
     }
 
     toXML() {
         return `<block type='${this.type}'>
           <mutation items="2"></mutation>
-          <field name="NAME">&amp;&amp;</field>
+          <field name="NAME">AND</field>
         </block>`;
     }
 
     toJavaScriptCode(e: any) {
       const inputList = this.block.inputList;
-      const dropdownName = e.getFieldValue('NAME');
+      const dropdownName = e.getFieldValue('NAME') === 'AND' ? '&&' : '||';
       let code = '';
       for (let i = 1; i <= inputList.length; i++) {
         const temp = Blockly.JavaScript.valueToCode(e, `NAME${i}`, Blockly.JavaScript.ORDER_ATOMIC);

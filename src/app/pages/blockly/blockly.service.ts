@@ -5,7 +5,7 @@ import { map, tap } from 'rxjs/operators';
 import { VariableGetBlock, ValuesDropDownBlock } from 'my-lib';
 import { of, Subscription, Observable, zip } from 'rxjs';
 import { generateColor } from 'my-lib';
-import { NzModalService } from 'ng-zorro-antd';
+import { NzModalService, NzMessageService } from 'ng-zorro-antd';
 import { RenameVariableComponent } from './rename-variable/rename-variable.component';
 import * as xml2js from 'xml2js';
 
@@ -22,7 +22,8 @@ export class BlocklyService {
   variables: CustomBlock[] = []; // 当前toolbox中包含的变量
   subscription$ = new Subscription();
   constructor(private http: HttpClient,
-              private modalService: NzModalService) {
+              private modalService: NzModalService,
+              private nzMessageService: NzMessageService) {
   }
 
   clear() {
@@ -503,23 +504,45 @@ export class BlocklyService {
   parseToBackend(xml: string) {
     xml2js.parseString(xml, (err: any, r: any) => {
       console.dir(r);
-      // const result: any = {};
-      // result.name = '江苏可疑人员';
-      // result.ruleTermName = '江苏可疑人员';
-      // result.description = '找出出生地为江苏的满足一定条件的可疑人员';
-      // result.ruleTermNode = {
-      //   name: '江苏可疑人员',
-      //   operator: r.xml.block[0].field[0]._ === '&&' ? 'AND' : 'OR',
-      //   type: 'GROUP',
-      //   content: xml,
-      //   subs: this.parseJsonToBackend(r.xml.block[0].value)
-      // };
-      // console.log(result);
+      const sourceBlocks = r.xml.block;
+      if (!sourceBlocks) {
+        return;
+      }
+      if (sourceBlocks && sourceBlocks.length > 1) {
+       console.warn('请将多个表达式组合成一个表达式');
+       return;
+      }
+      const sourceBlockType = sourceBlocks[0].$.type;
+      if (sourceBlockType !== 'logic_block_self_add' && sourceBlockType !== 'logic_compare' && sourceBlockType !== 'logic_operation') {
+        console.warn('这不是一个表达式!');
+        return;
+      }
+      if (!sourceBlocks[0].value) {
+        console.warn('这是一个空表达式!');
+        return;
+      }
+      const result: any = {};
+      result.name = '江苏可疑人员';
+      result.ruleTermName = '江苏可疑人员';
+      result.description = '找出出生地为江苏的满足一定条件的可疑人员';
+      result.ruleTermNode = {
+        name: '江苏可疑人员',
+        operator: sourceBlocks[0].field[0]._ === 'OR' ? 'OR' : 'AND',
+        type: 'GROUP',
+        content: xml,
+        subs: this.parseJsonToBackend(sourceBlocks[0])
+      };
+      console.log(result);
     });
     return {};
   }
 
-  parseJsonToBackend(block: any[]) {
+  parseJsonToBackend(block: any) {
+    switch (block.$.type) {
+      case 'logic_compare':
+
+    }
+    return block;
   }
 
 

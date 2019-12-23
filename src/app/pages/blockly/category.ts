@@ -5,7 +5,7 @@ export const LOGIC_CATEGORY: Category = new Category([
   new AndOrBlock('logic_block_self_add', null, null),
   // new XmlBlock('controls_if'),
   new XmlBlock('logic_compare'),
-  new XmlBlock('logic_operation'),
+  // new XmlBlock('logic_operation'),
   // new XmlBlock('logic_negate'),
   // new XmlBlock('logic_boolean'),
   // new XmlBlock('logic_null'),

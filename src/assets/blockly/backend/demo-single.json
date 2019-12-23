@@ -1,0 +1,23 @@
+{
+  "result": {
+    "name": "男性",
+    "ruleTermName": "男性",
+    "description": "找出所有男性",
+    "ruleTermNode": {
+      "name": "男性",
+      "operator": "AND",
+      "type": "GROUP",
+      "content":"....xml",
+      "subs": [
+        {
+          "name": "男",
+          "operator":"SINGLE",
+          "type": "TAG",
+          "subs": [
+          ]
+        }
+      ]
+
+    }
+  }
+}

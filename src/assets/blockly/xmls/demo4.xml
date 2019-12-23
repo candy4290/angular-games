@@ -7,11 +7,11 @@
   </variables>
   <block type="logic_block_self_add" id="}_/u4~x_5Zc$LkiMg,{l" x="130" y="330">
     <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
-    <field name="NAME">&amp;&amp;</field>
+    <field name="NAME">OR</field>
     <value name="NAME1">
       <block type="logic_block_self_add" id="]cTX9MumN?6sF01j+}eg">
         <mutation xmlns="http://www.w3.org/1999/xhtml" items="4"></mutation>
-        <field name="NAME">&amp;&amp;</field>
+        <field name="NAME">AND</field>
         <value name="NAME1">
           <block type="logic_compare" id="sj1buG#gK_~R8!qk_G3^">
             <field name="OP">EQ</field>
@@ -77,7 +77,7 @@
     <value name="NAME2">
       <block type="logic_block_self_add" id="W1jsPF}M@q)C#P9)U#Tw">
         <mutation xmlns="http://www.w3.org/1999/xhtml" items="4"></mutation>
-        <field name="NAME">&amp;&amp;</field>
+        <field name="NAME">AND</field>
         <value name="NAME1">
           <block type="logic_compare" id="$fSZ|PbpFQsBOYV6aK!d">
             <field name="OP">EQ</field>
