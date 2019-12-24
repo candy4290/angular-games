@@ -548,7 +548,7 @@ export class BlocklyService {
       values.forEach(value => {
         if (value.block[0].$.type === 'logic_compare') {
           result.push({
-            name: (value.block[0]!.value || [])[1] ? value.block[0].value[1].block[0].field[0]._ : '',
+            name: (value.block[0].value || [])[1] ? value.block[0].value[1].block[0].field[0]._ : '',
             operator: 'SINGLE',
             type: 'TAG',
             subs: []
