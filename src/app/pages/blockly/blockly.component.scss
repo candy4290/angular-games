@@ -30,6 +30,9 @@
 pre {
   margin-bottom: 0;
 }
+pre {
+  outline: 1px solid #ccc;
+}
 :host ::ng-deep {
   .ant-tabs {
     height: calc(100% - 32px);

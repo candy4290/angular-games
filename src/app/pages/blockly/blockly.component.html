@@ -18,9 +18,6 @@
   <pre>
 {{jsCode}}
   </pre>
-  <button class="app-blockly-start" nz-button  nzType="primary" (click)="executeProgram()">
-    <i nz-icon nzType="play-circle" nzTheme="outline"></i>
-  </button>
   </nz-tab>
   <nz-tab nzTitle="xml">
     <pre>
@@ -28,7 +25,11 @@
     </pre>
   </nz-tab>
   <nz-tab nzTitle="预览">
-{{content}}
+<pre [innerHTML]="content">
+</pre>
+    <button class="app-blockly-start" nz-button  nzType="primary" (click)="executeProgram()">
+      <i nz-icon nzType="play-circle" nzTheme="outline"></i>
+    </button>
   </nz-tab>
 </nz-tabset>
   <nz-input-group class="app-blockly-search" [nzSuffix]="suffixIconSearch">

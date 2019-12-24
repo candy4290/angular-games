@@ -1,0 +1,484 @@
+{
+	"xml": {
+		"$": {
+			"xmlns": "https://developers.google.com/blockly/xml"
+		},
+		"block": [{
+			"$": {
+				"type": "logic_block_self_add",
+				"id": "}_/u4~x_5Zc$LkiMg,{l",
+				"x": "130",
+				"y": "330"
+			},
+			"mutation": [{
+				"$": {
+					"xmlns": "http://www.w3.org/1999/xhtml",
+					"items": "2"
+				}
+			}],
+			"field": [{
+				"_": "OR",
+				"$": {
+					"name": "NAME"
+				}
+			}],
+			"value": [
+        {
+				"$": {
+					"name": "NAME1"
+				},
+				"block": [
+          {
+					"$": {
+						"type": "logic_block_self_add",
+						"id": "]cTX9MumN?6sF01j+}eg"
+					},
+					"mutation": [{
+						"$": {
+							"xmlns": "http://www.w3.org/1999/xhtml",
+							"items": "4"
+						}
+					}],
+					"field": [{
+						"_": "AND",
+						"$": {
+							"name": "NAME"
+						}
+					}],
+					"value": [{
+						"$": {
+							"name": "NAME1"
+						},
+						"block": [{
+							"$": {
+								"type": "logic_compare",
+								"id": "sj1buG#gK_~R8!qk_G3^"
+							},
+							"field": [{
+								"_": "EQ",
+								"$": {
+									"name": "OP"
+								}
+							}],
+							"value": [{
+								"$": {
+									"name": "A"
+								},
+								"block": [{
+									"$": {
+										"type": "variables_get_sex",
+										"id": ")y_3Br:Z:n$8UP*,O39Z"
+									},
+									"field": [{
+										"_": "性别",
+										"$": {
+											"name": "VAR",
+											"id": "}q0kFq`*+`s@VzsXSwR?",
+											"variabletype": "variables_get_sex"
+										}
+									}]
+								}]
+							}, {
+								"$": {
+									"name": "B"
+								},
+								"block": [{
+									"$": {
+										"type": "dropdown__1135__variables_get_sex__#a9293e",
+										"id": "8u*nLQ57`,3H?l$|T@jO"
+									},
+									"field": [{
+										"_": "男",
+										"$": {
+											"name": "NAME"
+										}
+									}]
+								}]
+							}]
+						}]
+					}, {
+						"$": {
+							"name": "NAME2"
+						},
+						"block": [{
+							"$": {
+								"type": "logic_compare",
+								"id": "b?d!Do5c-qwnr0G2%a~="
+							},
+							"field": [{
+								"_": "EQ",
+								"$": {
+									"name": "OP"
+								}
+							}],
+							"value": [{
+								"$": {
+									"name": "A"
+								},
+								"block": [{
+									"$": {
+										"type": "variables_get_czzrk",
+										"id": "XegRvk#q3(xR4ZhQj6}/"
+									},
+									"field": [{
+										"_": "常暂住人口",
+										"$": {
+											"name": "VAR",
+											"id": "{J,!eB${Cm?.LY3d0z8i",
+											"variabletype": "variables_get_czzrk"
+										}
+									}]
+								}]
+							}, {
+								"$": {
+									"name": "B"
+								},
+								"block": [{
+									"$": {
+										"type": "dropdown__1131__variables_get_czzrk__#29d9e9",
+										"id": "?aB(-@:ar2y+GI5j`s+O"
+									},
+									"field": [{
+										"_": "常住人口",
+										"$": {
+											"name": "NAME"
+										}
+									}]
+								}]
+							}]
+						}]
+					}, {
+						"$": {
+							"name": "NAME3"
+						},
+						"block": [{
+							"$": {
+								"type": "logic_compare",
+								"id": "Gx5@uw)y]t]8N`/]4CV]"
+							},
+							"field": [{
+								"_": "GT",
+								"$": {
+									"name": "OP"
+								}
+							}],
+							"value": [{
+								"$": {
+									"name": "A"
+								},
+								"block": [{
+									"$": {
+										"type": "variables_get_age",
+										"id": "~YnN5bt66ySwF@hb.HfL"
+									},
+									"field": [{
+										"_": "年龄",
+										"$": {
+											"name": "VAR",
+											"id": "`ge=%R1Iy9eS:!cHIp@=",
+											"variabletype": "variables_get_age"
+										}
+									}]
+								}]
+							}, {
+								"$": {
+									"name": "B"
+								},
+								"block": [{
+									"$": {
+										"type": "dropdown__1134__variables_get_age__#4e7715",
+										"id": "jiZ2L-k{VKqjPGs0}^,/"
+									},
+									"field": [{
+										"_": "18",
+										"$": {
+											"name": "NAME"
+										}
+									}]
+								}]
+							}]
+						}]
+					}, {
+						"$": {
+							"name": "NAME4"
+						},
+						"block": [{
+							"$": {
+								"type": "logic_compare",
+								"id": "+Q2dqhHU4w#]~5Zy:mhL"
+							},
+							"field": [{
+								"_": "EQ",
+								"$": {
+									"name": "OP"
+								}
+							}],
+							"value": [{
+								"$": {
+									"name": "A"
+								},
+								"block": [{
+									"$": {
+										"type": "variables_get_jtwf",
+										"id": "W]t)UeAeu6dkkK7Ky8F("
+									},
+									"field": [{
+										"_": "交通违法",
+										"$": {
+											"name": "VAR",
+											"id": "!Mp2scV7x@D.Dr4F6M^8",
+											"variabletype": "variables_get_jtwf"
+										}
+									}]
+								}]
+							}, {
+								"$": {
+									"name": "B"
+								},
+								"block": [{
+									"$": {
+										"type": "dropdown__1111__variables_get_jtwf__#8002fa",
+										"id": "qukm$~R:(s~xko(jlty%"
+									},
+									"field": [{
+										"_": "逃逸",
+										"$": {
+											"name": "NAME"
+										}
+									}]
+								}]
+							}]
+						}]
+					}]
+				}]
+			}, {
+				"$": {
+					"name": "NAME2"
+				},
+				"block": [{
+					"$": {
+						"type": "logic_block_self_add",
+						"id": "W1jsPF}M@q)C#P9)U#Tw"
+					},
+					"mutation": [{
+						"$": {
+							"xmlns": "http://www.w3.org/1999/xhtml",
+							"items": "4"
+						}
+					}],
+					"field": [{
+						"_": "AND",
+						"$": {
+							"name": "NAME"
+						}
+					}],
+					"value": [{
+						"$": {
+							"name": "NAME1"
+						},
+						"block": [{
+							"$": {
+								"type": "logic_compare",
+								"id": "$fSZ|PbpFQsBOYV6aK!d"
+							},
+							"field": [{
+								"_": "EQ",
+								"$": {
+									"name": "OP"
+								}
+							}],
+							"value": [{
+								"$": {
+									"name": "A"
+								},
+								"block": [{
+									"$": {
+										"type": "variables_get_sex",
+										"id": "Vw.bJz0/*+i/#QwZQ}X."
+									},
+									"field": [{
+										"_": "性别",
+										"$": {
+											"name": "VAR",
+											"id": "}q0kFq`*+`s@VzsXSwR?",
+											"variabletype": "variables_get_sex"
+										}
+									}]
+								}]
+							}, {
+								"$": {
+									"name": "B"
+								},
+								"block": [{
+									"$": {
+										"type": "dropdown__1135__variables_get_sex__#a9293e",
+										"id": "T8u8c*$1:@BDOnC/[i!@"
+									},
+									"field": [{
+										"_": "女",
+										"$": {
+											"name": "NAME"
+										}
+									}]
+								}]
+							}]
+						}]
+					}, {
+						"$": {
+							"name": "NAME2"
+						},
+						"block": [{
+							"$": {
+								"type": "logic_compare",
+								"id": "nV=7_:8EO^`S`(La^c`j"
+							},
+							"field": [{
+								"_": "EQ",
+								"$": {
+									"name": "OP"
+								}
+							}],
+							"value": [{
+								"$": {
+									"name": "A"
+								},
+								"block": [{
+									"$": {
+										"type": "variables_get_czzrk",
+										"id": "j4j~|YDQqGX,S6-nnf68"
+									},
+									"field": [{
+										"_": "常暂住人口",
+										"$": {
+											"name": "VAR",
+											"id": "{J,!eB${Cm?.LY3d0z8i",
+											"variabletype": "variables_get_czzrk"
+										}
+									}]
+								}]
+							}, {
+								"$": {
+									"name": "B"
+								},
+								"block": [{
+									"$": {
+										"type": "dropdown__1131__variables_get_czzrk__#29d9e9",
+										"id": "cuj}61N5q]W31t+)hL1r"
+									},
+									"field": [{
+										"_": "暂住人口",
+										"$": {
+											"name": "NAME"
+										}
+									}]
+								}]
+							}]
+						}]
+					}, {
+						"$": {
+							"name": "NAME3"
+						},
+						"block": [{
+							"$": {
+								"type": "logic_compare",
+								"id": "{5_q5X$/uNYjT{AIR,!I"
+							},
+							"field": [{
+								"_": "GT",
+								"$": {
+									"name": "OP"
+								}
+							}],
+							"value": [{
+								"$": {
+									"name": "A"
+								},
+								"block": [{
+									"$": {
+										"type": "variables_get_age",
+										"id": "%G.L{Qr3c7{74vqrhyq/"
+									},
+									"field": [{
+										"_": "年龄",
+										"$": {
+											"name": "VAR",
+											"id": "`ge=%R1Iy9eS:!cHIp@=",
+											"variabletype": "variables_get_age"
+										}
+									}]
+								}]
+							}, {
+								"$": {
+									"name": "B"
+								},
+								"block": [{
+									"$": {
+										"type": "dropdown__1134__variables_get_age__#4e7715",
+										"id": "vQ~T`f[v-xzbHo2bTEjp"
+									},
+									"field": [{
+										"_": "25",
+										"$": {
+											"name": "NAME"
+										}
+									}]
+								}]
+							}]
+						}]
+					}, {
+						"$": {
+							"name": "NAME4"
+						},
+						"block": [{
+							"$": {
+								"type": "logic_compare",
+								"id": "Qmcj`]t|%FQgF[dodgj."
+							},
+							"field": [{
+								"_": "EQ",
+								"$": {
+									"name": "OP"
+								}
+							}],
+							"value": [{
+								"$": {
+									"name": "A"
+								},
+								"block": [{
+									"$": {
+										"type": "variables_get_jtwf",
+										"id": "#7zv-7ofh%|f`R!6LFJt"
+									},
+									"field": [{
+										"_": "交通违法",
+										"$": {
+											"name": "VAR",
+											"id": "!Mp2scV7x@D.Dr4F6M^8",
+											"variabletype": "variables_get_jtwf"
+										}
+									}]
+								}]
+							}, {
+								"$": {
+									"name": "B"
+								},
+								"block": [{
+									"$": {
+										"type": "dropdown__1111__variables_get_jtwf__#8002fa",
+										"id": "9kM8LtQw+laO*r0YiKo1"
+									},
+									"field": [{
+										"_": "酒驾",
+										"$": {
+											"name": "NAME"
+										}
+									}]
+								}]
+							}]
+						}]
+					}]
+				}]
+			}]
+		}]
+	}
+}

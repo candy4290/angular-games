@@ -4,7 +4,7 @@ import { NgxBlocklyConfig, NgxBlocklyGeneratorConfig,
 import { BlocklyService } from './blockly.service';
 import { LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY } from './category';
 import { Subscription, Subject } from 'rxjs';
-import { AndOrBlock, ValuesDropDownBlock, SelfSelectorField, DarkTheme } from 'my-lib';
+import { AndOrBlock, ValuesDropDownBlock, SelfSelectorField, DarkTheme, jsonShowFn } from 'my-lib';
 import { DOCUMENT } from '@angular/common';
 import { NzMessageService, NzModalService, NzModalRef } from 'ng-zorro-antd';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -114,8 +114,11 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   onCode(code: string) {
     this.jsCode = code;
     this.xml = this.workspace.toXml();
-    this.blockly.parseToBackend(this.xml);
-    this.blockly.simplyJsCode(code);
+    const temp = this.blockly.parseToBackend(this.xml);
+    if (temp && temp.ruleTermNode) {
+      delete temp.ruleTermNode.content;
+      this.content = jsonShowFn(temp);
+    }
   }
 
   /**
@@ -182,8 +185,6 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
    * 执行
    */
   executeProgram() {
-    // tslint:disable-next-line: no-eval
-    eval(this.jsCode);
   }
 
   /**
@@ -228,4 +229,5 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
       nzMaskClosable: false
     });
   }
+
 }

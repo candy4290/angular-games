@@ -502,6 +502,7 @@ export class BlocklyService {
    * @memberof BlocklyService
    */
   parseToBackend(xml: string) {
+    const result: any = {};
     xml2js.parseString(xml, (err: any, r: any) => {
       console.log(r);
       const sourceBlocks = r.xml.block;
@@ -521,7 +522,6 @@ export class BlocklyService {
         console.warn('这是一个空表达式!');
         return;
       }
-      const result: any = {};
       result.name = '江苏可疑人员';
       result.ruleTermName = '江苏可疑人员';
       result.description = '找出出生地为江苏的满足一定条件的可疑人员';
@@ -530,24 +530,44 @@ export class BlocklyService {
         operator: sourceBlocks[0].field[0]._ === 'OR' ? 'OR' : 'AND',
         type: 'GROUP',
         content: xml,
-        subs: []
+        subs: this.generateSubs(sourceBlocks[0].value, sourceBlocks[0].$.type)
       };
       console.log(result);
     });
-    return {};
+    return result;
   }
 
-  simplyJsCode(code: string) {
-    if (!code) {
-      return;
+  generateSubs(values: any[], type?: string) {
+    const result = [];
+    if (type === 'logic_compare') {
+      result.push({
+        // tslint:disable-next-line: no-non-null-assertion
+        name: values[1] ? values[1].block[0].field[0]._ : '',
+        operator: 'SINGLE',
+        type: 'TAG',
+        subs: []
+      });
+    } else {
+      values.forEach(value => {
+        if (value.block[0].$.type === 'logic_compare') {
+          result.push({
+            // tslint:disable-next-line: no-non-null-assertion
+            name: value.block[0]!.value[1].block[0].field[0]._,
+            operator: 'SINGLE',
+            type: 'TAG',
+            subs: []
+          });
+        } else {
+          result.push({
+            name: 'xxx',
+            operator: value.block[0].field[0]._ === 'OR' ? 'OR' : 'AND',
+            type: 'GROUP',
+            subs: value.block[0].value ? this.generateSubs(value.block[0].value) : []
+          });
+        }
+      });
     }
-    const varStart = code.indexOf('var ');
-    if (varStart > -1) {
-      const varEnd = code.indexOf(';', varStart);
-      code = code.replace(code.slice(varStart, varEnd + 1), '');
-    }
-    code = code.replace(/\s*/g, '');
-    console.log(code);
+    return result;
   }
 
 }
