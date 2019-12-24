@@ -539,8 +539,7 @@ export class BlocklyService {
     const result = [];
     if (type === 'logic_compare') {
       result.push({
-        // tslint:disable-next-line: no-non-null-assertion
-        name: values[1] ? values[1].block[0].field[0]._ : '',
+        name: (values || [])[1] ? values[1].block[0].field[0]._ : '',
         operator: 'SINGLE',
         type: 'TAG',
         subs: []
@@ -549,8 +548,7 @@ export class BlocklyService {
       values.forEach(value => {
         if (value.block[0].$.type === 'logic_compare') {
           result.push({
-            // tslint:disable-next-line: no-non-null-assertion
-            name: value.block[0]!.value[1].block[0].field[0]._,
+            name: (value.block[0]!.value || [])[1] ? value.block[0].value[1].block[0].field[0]._ : '',
             operator: 'SINGLE',
             type: 'TAG',
             subs: []
