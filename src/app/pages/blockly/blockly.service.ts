@@ -504,7 +504,6 @@ export class BlocklyService {
   parseToBackend(xml: string) {
     const result: any = {};
     xml2js.parseString(xml, (err: any, r: any) => {
-      console.log(r);
       const sourceBlocks = r.xml.block;
       if (!sourceBlocks) {
         return;
@@ -532,7 +531,6 @@ export class BlocklyService {
         content: xml,
         subs: this.generateSubs(sourceBlocks[0].value, sourceBlocks[0].$.type)
       };
-      console.log(result);
     });
     return result;
   }
