@@ -2,7 +2,7 @@ import { OnInit, OnDestroy, Component, ViewChild, Inject, AfterViewInit, Element
 import { NgxBlocklyConfig, NgxBlocklyGeneratorConfig,
   NgxBlocklyComponent, CustomBlock, NgxToolboxBuilderService } from 'ngx-blockly';
 import { BlocklyService } from './blockly.service';
-import { LOGIC_CATEGORY, LOOP_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY, LISTS_CATEGORY } from './category';
+import { LOGIC_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY } from './category';
 import { Subscription, Subject } from 'rxjs';
 import { AndOrBlock, ValuesDropDownBlock, SelfSelectorField, DarkTheme, jsonShowFn } from 'my-lib';
 import { DOCUMENT } from '@angular/common';
@@ -20,9 +20,9 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   jsCode: string;
   xml: string;
   selectedLanguage = 'zh-hans'; // 当前选择的语言
-
+  logicAndOrBlock = new AndOrBlock('logic_block_self_add', null, null);
   public customBlocks: CustomBlock[] = [
-    new AndOrBlock('logic_block_self_add', null, null),
+    this.logicAndOrBlock,
     new ValuesDropDownBlock('values_drop_down', null, null)
   ]; // 自定义blocks
   @ViewChild(NgxBlocklyComponent, {static: true}) workspace: NgxBlocklyComponent;
@@ -64,7 +64,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
               private render2: Renderer2,
               private modalService: NzModalService) {
     this.blockly.changeBlocklyDefaultStyle();
-    this.blockly.loadBlockInMutator();
+    this.logicAndOrBlock.loadBlockInMutator();
     this.ngxToolboxBuilder.nodes = [
       LOGIC_CATEGORY,
       MATH_CATEGORY,
@@ -89,8 +89,6 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.blockly.workspace = this.workspace;
     this.blockly.insertSearchInputIntoToolbox(this.render2, this.el);
-    // this.workspace.workspace.registerButtonCallback('createAge', () => {this.createVariableDialog(); });
-    // this.workspace.workspace.registerButtonCallback('loadVariables', () => {this.loadVariables(); });
     this.blockly.loadCategories(this.config).subscribe(rsp => {
     });
   }
