@@ -249,6 +249,7 @@ export class BlocklyService {
         code: categoryes[i].code,
         name: categoryes[i].name,
         parent: categoryes[i].parent,
+        color: categoryes[i].color
       });
       if (categoryes[i].name) {
         this.categoriesInObject[categoryes[i].name] = {
