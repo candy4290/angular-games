@@ -13,6 +13,7 @@ export * from './lib/types/blockly-config';
 export * from './lib/constants/src';
 export * from './lib/constants/themes/dark-theme';
 export * from './lib/constants/themes/light-theme';
+export * from './lib/constants/constants';
 
 export * from './lib/ngx-blockly/models/button';
 export * from './lib/ngx-blockly/models/label';
@@ -27,3 +28,5 @@ export * from './lib/functions/format-json';
 
 export * from './lib/custom-blockly-styles/toolbox';
 export * from './lib/custom-blockly-styles/block';
+
+export * from './lib/interceptors/jwt-interceptor';

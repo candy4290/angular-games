@@ -1,0 +1,144 @@
+<xml xmlns="https://developers.google.com/blockly/xml">
+  <variables>
+    <variable type="16" id="S`rnbpLzLk!-mWev5ldB">性别</variable>
+    <variable type="18" id="2ED?0G#TVjrXjfP~KU@^">重点人员类</variable>
+    <variable type="3" id="@nyz*xpzkvuXU@!Rn;H,">常暂住人口</variable>
+    <variable type="4" id="-Ub%G]8+T(2c`03FS.sg">出生地省</variable>
+  </variables>
+  <block type="logic_block_self_add" id="-ncX)SyKQ.tGK4BLK!!O" x="50" y="90">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+    <field name="NAME">OR</field>
+    <value name="NAME1">
+      <block type="logic_block_self_add" id=";LQ2.*$ate8$Ww#VmqV:">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" items="4"></mutation>
+        <field name="NAME">AND</field>
+        <value name="NAME1">
+          <block type="logic_compare" id="*cE/Kr)vc;kmzy=[g-!@">
+            <field name="OP">EQ</field>
+            <value name="A">
+              <block type="variables_get_16__#7cc605__性别" id="%8scvz/oSKP[+v?QmRIx">
+                <field name="VAR" id="S`rnbpLzLk!-mWev5ldB" variabletype="16">性别</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="dropdown__16__性别__#7cc605" id="}N]1E*[P!FXVnt*^UmN}">
+                <field name="NAME">男</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <value name="NAME2">
+          <block type="logic_compare" id="_j:6o,*O+PChuXlb[P9~">
+            <field name="OP">EQ</field>
+            <value name="A">
+              <block type="variables_get_18__#19d25b__重点人员类" id="}hF?yKs3b8!WiWLJ*KP-">
+                <field name="VAR" id="2ED?0G#TVjrXjfP~KU@^" variabletype="18">重点人员类</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="dropdown__18__重点人员类__#19d25b" id="CxlL:oyH]^#:}h]+:Jqf">
+                <field name="NAME">重点人员_涉毒人员</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <value name="NAME3">
+          <block type="logic_compare" id="=Glv8qAdjSXgif5XFL-x">
+            <field name="OP">EQ</field>
+            <value name="A">
+              <block type="variables_get_3__#6d8c24__常暂住人口" id="`!g6L!;^f9wj%GoW0d![">
+                <field name="VAR" id="@nyz*xpzkvuXU@!Rn;H," variabletype="3">常暂住人口</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="dropdown__3__常暂住人口__#6d8c24" id="cDS;E{t|[VoQ!LS!S;l,">
+                <field name="NAME">常住人口</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <value name="NAME4">
+          <block type="logic_compare" id="o!iprV8W/@ye`a.NeL)O">
+            <field name="OP">EQ</field>
+            <value name="A">
+              <block type="variables_get_4__#315062__出生地省" id="?r}Y`h7:/.lc],(-7*KS">
+                <field name="VAR" id="-Ub%G]8+T(2c`03FS.sg" variabletype="4">出生地省</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="dropdown__4__出生地省__#315062" id="vCR*[h*5``u*#t[!2NJo">
+                <field name="NAME">出生地_省_安徽</field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </value>
+    <value name="NAME2">
+      <block type="logic_block_self_add" id="W[A7QFvp68IZ7,#gBFB)">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" items="4"></mutation>
+        <field name="NAME">AND</field>
+        <value name="NAME1">
+          <block type="logic_compare" id="X}@^3PobL2[(-y#cRR|.">
+            <field name="OP">EQ</field>
+            <value name="A">
+              <block type="variables_get_16__#7cc605__性别" id="ml6No6H%EfrW0j(XC+WW">
+                <field name="VAR" id="S`rnbpLzLk!-mWev5ldB" variabletype="16">性别</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="dropdown__16__性别__#7cc605" id="$yo*aP0?tS,I8i#_-oP|">
+                <field name="NAME">男</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <value name="NAME2">
+          <block type="logic_compare" id="$^OwP`_@~(Du6#JXw.Me">
+            <field name="OP">EQ</field>
+            <value name="A">
+              <block type="variables_get_18__#19d25b__重点人员类" id="]i2gP@P)rV!9th5wT3u/">
+                <field name="VAR" id="2ED?0G#TVjrXjfP~KU@^" variabletype="18">重点人员类</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="dropdown__18__重点人员类__#19d25b" id="sFiWK`GHr%=%^]Du2}=u">
+                <field name="NAME">重点人员_涉毒人员</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <value name="NAME3">
+          <block type="logic_compare" id="1awxZ{(nKyZ]0*bi=58B">
+            <field name="OP">EQ</field>
+            <value name="A">
+              <block type="variables_get_3__#6d8c24__常暂住人口" id="hTpgKvtO!|@T*Ze7fdn6">
+                <field name="VAR" id="@nyz*xpzkvuXU@!Rn;H," variabletype="3">常暂住人口</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="dropdown__3__常暂住人口__#6d8c24" id="j}1Vxt`/SYhyvXR-Z=%-">
+                <field name="NAME">常住人口</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <value name="NAME4">
+          <block type="logic_compare" id=")Mu1kV_!m^D0bXOi]%{:">
+            <field name="OP">EQ</field>
+            <value name="A">
+              <block type="variables_get_4__#315062__出生地省" id="3RC$xq[XUX1/[*;MBy-m">
+                <field name="VAR" id="-Ub%G]8+T(2c`03FS.sg" variabletype="4">出生地省</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="dropdown__4__出生地省__#315062" id="RHa}V08hiXvuLIX2M|A@">
+                <field name="NAME">出生地_省_江苏</field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </value>
+  </block>
+</xml>

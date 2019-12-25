@@ -15,14 +15,14 @@ export class VariableGetBlock extends CustomBlock {
             type: 'field_variable',
             name: 'VAR',
             variable: args[0] || 'item',
-            variableTypes: [args[2]],    // Specifies what types to put in the dropdown
-            defaultType: args[2]
+            variableTypes: [args[1]],    // Specifies what types to put in the dropdown
+            defaultType: args[1]
           }
         ],
         style: 'variable_blocks',
-        // colour: args[3] || '%{BKY_VARIABLES_HUE}',
-        // tooltip: `类型为：${args[2]}`,
-        output: args[2],    // Returns a value of 'Panda'
+        // colour: args[2] || '%{BKY_VARIABLES_HUE}',
+        // tooltip: `类型为：${args[1]}`,
+        output: args[1],    // Returns a value of 'Panda'
       };
       this.class = VariableGetBlock;
     }
