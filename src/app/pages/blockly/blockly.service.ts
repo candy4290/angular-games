@@ -18,7 +18,6 @@ export class BlocklyService {
   workspace: NgxBlocklyComponent;
   categoriesInString = ''; // 远程加载的目录结构string表示
   categoriesInArray = [];
-  categoriesInObject = {};
   variables: CustomBlock[] = []; // 当前toolbox中包含的变量
   subscription$ = new Subscription();
   constructor(private http: HttpClient,
@@ -33,6 +32,7 @@ export class BlocklyService {
     // 卸载已经注册的extensions和fieldRegistry,或者使用try catch
     Blockly.Extensions.unregister('blockly_self_add_mutator');
     Blockly.fieldRegistry.unregister('self-selector');
+    Blockly.tree.BaseNode.prototype.categoriesInObject = null;
     Blockly.utils.IdGenerator.nextId_ = 0;
     this.workspace.workspace.dispose();
   }
@@ -120,27 +120,6 @@ export class BlocklyService {
         });
         this.subscription$.add(zip$);
       }
-    };
-
-    // 获取目录的配置文件（选中的图标+未选中时的图标）
-    Blockly.tree.BaseNode.prototype.getCategoryConfig = (labelContext: string) => {
-      let commonUrl: string;
-      let activeUrl: string;
-      switch (labelContext) {
-        case '查询结果':  case '变量': case '逻辑':
-        case '循环': case '数学': case '文本': case '列表':
-          commonUrl = 'https://ng.ant.design/assets/img/logo.svg';
-          activeUrl = 'https://www.primefaces.org/primeng/assets/showcase/images/mask.svg';
-          break;
-        default:
-          commonUrl = (this.categoriesInObject[labelContext] || {}).commonUrl || ' https://ng.ant.design/assets/img/logo.svg';
-          activeUrl =  (this.categoriesInObject[labelContext] || {}).activeUrl || 'https://www.primefaces.org/primeng/assets/showcase/images/mask.svg';
-      }
-      return {
-        itemImg: {
-          commonUrl, activeUrl
-        }
-      };
     };
 
     // 覆盖默认的prompt弹窗
@@ -252,7 +231,7 @@ export class BlocklyService {
         color: categoryes[i].color
       });
       if (categoryes[i].name) {
-        this.categoriesInObject[categoryes[i].name] = {
+        (Blockly.tree.BaseNode.prototype.categoriesInObject || {})[categoryes[i].name] = {
           commonUrl: categoryes[i].commonUrl,
           activeUrl: categoryes[i].activeUrl
         };

@@ -88,3 +88,27 @@ Blockly.Toolbox.prototype.handleBeforeTreeSelected_ = function(node) {
   }
   return true;
 };
+
+// 获取目录的配置文件（选中的图标+未选中时的图标）
+Blockly.tree.BaseNode.prototype.getCategoryConfig = function(labelContext: string) {
+  let commonUrl: string;
+  let activeUrl: string;
+  if (!this.categoriesInObject) {
+    this.categoriesInObject = {};
+  }
+  switch (labelContext) {
+    case '查询结果':  case '变量': case '逻辑':
+    case '循环': case '数学': case '文本': case '列表':
+      commonUrl = 'https://ng.ant.design/assets/img/logo.svg';
+      activeUrl = 'https://www.primefaces.org/primeng/assets/showcase/images/mask.svg';
+      break;
+    default:
+      commonUrl = (this.categoriesInObject[labelContext] || {}).commonUrl || ' https://ng.ant.design/assets/img/logo.svg';
+      activeUrl =  (this.categoriesInObject[labelContext] || {}).activeUrl || 'https://www.primefaces.org/primeng/assets/showcase/images/mask.svg';
+  }
+  return {
+    itemImg: {
+      commonUrl, activeUrl
+    }
+  };
+};
