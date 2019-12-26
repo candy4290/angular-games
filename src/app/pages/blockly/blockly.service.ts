@@ -56,7 +56,6 @@ export class BlocklyService {
           tempBlocksKey.push(
             tempVariableKey
           );
-          // 创建值下拉列表 dropdown__父节点code__父节点name__父节点选中后的颜色
           const tempVariable = this.createValuesDropDownBlock(code, name, categoryColour, labels);
           xmlsValue += tempVariable.toXML();
           tempBlocksValue.push(
@@ -239,9 +238,11 @@ export class BlocklyService {
    * @param {string} code 目录code
    * @param {string} name 目录name
    * @param {string} categoryColour 目录颜色
+   * @param {string} fieldValue filed的当前值
    * @memberof BlocklyService
    */
-  createValuesDropDownBlock(code: string, name: string, categoryColour: string, labels: string[]) {
+  createValuesDropDownBlock(code: string, name: string, categoryColour: string, labels: string[], fieldValue?: string) {
+    console.log(fieldValue);
     const dropdownBlockType = this.getDropDownBlockType(code, name, categoryColour);
     const extensionName = `extension_${code}`;
     const tempVariable =  new ValuesDropDownBlock(dropdownBlockType, null, null, extensionName, code, categoryColour);
@@ -250,7 +251,7 @@ export class BlocklyService {
         Blockly.Extensions.register(extensionName,
           function() {
             this.getInput('INPUT')
-              .appendField(new Blockly.SelfSelectorField(labels), 'NAME');
+              .appendField(new Blockly.SelfSelectorField(labels, fieldValue), 'NAME');
           });
       } catch {}
       this.initVariableBlock(tempVariable);
@@ -273,7 +274,7 @@ export class BlocklyService {
   /**
    *  解析xml并加载其中的block
    */
-  parseXmlAndInitBlock(result: string): Observable {
+  parseXmlAndInitBlock(result: string): Observable<any> {
     const rxs: Observable<any>[] = [];
     const labels = [];
     let labelStart = 0;
@@ -289,12 +290,16 @@ export class BlocklyService {
     labels.forEach(label => {
       const blockTypeStart = label.indexOf('type="');
       const blockTypeEnd =  label.indexOf('"', blockTypeStart + 6);
+      const fieldStart = label.indexOf('<field');
+      const filedValueStart = label.indexOf('>', fieldStart + 6);
+      const filedValueEnd = label.indexOf('<', filedValueStart + 1);
       const temps = label.slice(blockTypeStart, blockTypeEnd).split('__');
       if (dropdownValues.findIndex(item => item.code === temps[1]) === -1) {
         dropdownValues.push({
           code: temps[1],
           name: temps[2],
-          categoryColour: temps[3]
+          categoryColour: temps[3],
+          fieldValue: label.slice(filedValueStart + 1, filedValueEnd)
         });
       }
     });
@@ -309,7 +314,7 @@ export class BlocklyService {
         }).pipe(tap((rsp: any) => {
             // tslint:disable-next-line: no-shadowed-variable
           const labels = (rsp.results  || []).map((item: any) => [item.name, item.name]);
-          this.createValuesDropDownBlock(item.code, item.name, item.categoryColour, labels);
+          this.createValuesDropDownBlock(item.code, item.name, item.categoryColour, labels, item.fieldValue);
         }));
         rxs.push(temp$);
       }

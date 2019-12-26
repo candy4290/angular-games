@@ -70,6 +70,7 @@ export class SelfSelectorField {
             return optNewValue;
           }
         };
+        // 初始值为空，默认选中第一条
         if (optValue === null) {
           optValue = Blockly.SelfSelectorField.DEFAULT_VALUE || menuGenerator[0][0];
           this.selectedValue = optValue;
@@ -130,6 +131,7 @@ export class SelfSelectorField {
           this.selectedValue = this.variables[e.target.innerText].key;
         };
         this.showEditor_ = function() {
+          this.selectedValue = this.value_;
           Blockly.SelfSelectorField.superClass_.showEditor_.call(this);
           const div = Blockly.WidgetDiv.DIV;
           if (!div.firstChild) {

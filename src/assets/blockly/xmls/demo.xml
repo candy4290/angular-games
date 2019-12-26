@@ -37,7 +37,7 @@
             </value>
             <value name="B">
               <block type="dropdown__18__重点人员类__#19d25b" id="CxlL:oyH]^#:}h]+:Jqf">
-                <field name="NAME">重点人员_涉毒人员</field>
+                <field name="NAME">重点人员_刑事犯罪前科人员</field>
               </block>
             </value>
           </block>
@@ -67,7 +67,7 @@
             </value>
             <value name="B">
               <block type="dropdown__4__出生地省__#315062" id="vCR*[h*5``u*#t[!2NJo">
-                <field name="NAME">出生地_省_安徽</field>
+                <field name="NAME">出生地_省_黑龙江</field>
               </block>
             </value>
           </block>
@@ -88,7 +88,7 @@
             </value>
             <value name="B">
               <block type="dropdown__16__性别__#7cc605" id="$yo*aP0?tS,I8i#_-oP|">
-                <field name="NAME">男</field>
+                <field name="NAME">女</field>
               </block>
             </value>
           </block>
@@ -103,7 +103,7 @@
             </value>
             <value name="B">
               <block type="dropdown__18__重点人员类__#19d25b" id="sFiWK`GHr%=%^]Du2}=u">
-                <field name="NAME">重点人员_涉毒人员</field>
+                <field name="NAME">重点人员_刑事犯罪前科人员_盗窃汽车类前科人员</field>
               </block>
             </value>
           </block>
@@ -118,7 +118,7 @@
             </value>
             <value name="B">
               <block type="dropdown__3__常暂住人口__#6d8c24" id="j}1Vxt`/SYhyvXR-Z=%-">
-                <field name="NAME">常住人口</field>
+                <field name="NAME">暂住人口</field>
               </block>
             </value>
           </block>
