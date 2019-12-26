@@ -248,10 +248,10 @@ export class BlocklyService {
     if (!Blockly.Blocks[dropdownBlockType]) {
       try {
         Blockly.Extensions.register(extensionName,
-            function() {
-              this.getInput('INPUT')
-                .appendField(new Blockly.SelfSelectorField(labels), 'NAME');
-            });
+          function() {
+            this.getInput('INPUT')
+              .appendField(new Blockly.SelfSelectorField(labels), 'NAME');
+          });
       } catch {}
       this.initVariableBlock(tempVariable);
     }
@@ -261,9 +261,9 @@ export class BlocklyService {
   /**
    * 获取下拉block的jsonType
    *
-   * @param {string} code
-   * @param {string} name
-   * @param {string} categoryColour
+   * @param {string} code 所属目录code
+   * @param {string} name 所属目录name
+   * @param {string} categoryColour 所属目录颜色
    * @memberof BlocklyService
    */
   getDropDownBlockType(code: string, name: string, categoryColour: string) {
@@ -273,13 +273,11 @@ export class BlocklyService {
   /**
    *  解析xml并加载其中的block
    */
-  parseXmlAndInitBlock(result: string) {
+  parseXmlAndInitBlock(result: string): Observable {
     const rxs: Observable<any>[] = [];
-
     const labels = [];
     let labelStart = 0;
     let labelEnd = 0;
-
     while (labelStart !== -1) {
       labelStart = result.indexOf('<block type="dropdown__', labelEnd);
       if (labelStart !== -1) {
@@ -292,7 +290,6 @@ export class BlocklyService {
       const blockTypeStart = label.indexOf('type="');
       const blockTypeEnd =  label.indexOf('"', blockTypeStart + 6);
       const temps = label.slice(blockTypeStart, blockTypeEnd).split('__');
-      // dropdownValues去重；
       if (dropdownValues.findIndex(item => item.code === temps[1]) === -1) {
         dropdownValues.push({
           code: temps[1],
@@ -302,11 +299,10 @@ export class BlocklyService {
       }
     });
     dropdownValues.forEach(item => {
-      // dropdown__父节点code__父节点name__父节点选中后的颜色
       const dropdownBlockType = this.getDropDownBlockType(item.code, item.name, item.categoryColour);
       if (!Blockly.Blocks[dropdownBlockType]) {
         this.createVariableGetBlock(item.name, item.code, item.categoryColour);
-        // 获取labels注册extension
+        // 获取标签
         const temp$ = this.http.put('http://10.19.248.200:31082/api/v1/tag/children', {
           code: item.code,
           name: item.name
