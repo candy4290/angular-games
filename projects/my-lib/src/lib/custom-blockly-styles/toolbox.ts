@@ -112,3 +112,89 @@ Blockly.tree.BaseNode.prototype.getCategoryConfig = function(labelContext: strin
     }
   };
 };
+
+// 增加baseNode的属性：code,以便于点击目录时，异步加载block
+Blockly.Toolbox.prototype.syncTrees_ = function(treeIn, treeOut, pathToMedia) {
+  let openNode = null;
+  let lastElement = null;
+  for (let i = 0, childIn; childIn = treeIn.childNodes[i]; i++) {
+    if (!childIn.tagName) {
+      // Skip over text.
+      continue;
+    }
+    switch (childIn.tagName.toUpperCase()) {
+      case 'CATEGORY':
+        // Decode the category name for any potential message references
+        // (eg. `%{BKY_CATEGORY_NAME_LOGIC}`).
+        const categoryName = Blockly.utils.replaceMessageReferences(
+            childIn.getAttribute('name'));
+        const childOut = this.tree_.createNode(categoryName);
+        childOut.onSizeChanged(this.handleNodeSizeChanged_);
+        childOut.blocks = [];
+        treeOut.add(childOut);
+        const custom = childIn.getAttribute('custom');
+        if (custom) {
+          // Variables and procedures are special dynamic categories.
+          childOut.blocks = custom;
+        } else {
+          const newOpenNode = this.syncTrees_(childIn, childOut, pathToMedia);
+          if (newOpenNode) {
+            openNode = newOpenNode;
+          }
+        }
+
+        const styleName = childIn.getAttribute('categorystyle');
+        const colour = childIn.getAttribute('colour');
+        const code = childIn.getAttribute('code');
+        if (code) {
+          this.setCode_(code, childOut, categoryName);
+        }
+        if (colour && styleName) {
+          childOut.hexColour = '';
+          console.warn('Toolbox category "' + categoryName +
+              '" can not have both a style and a colour');
+        } else if (styleName) {
+          this.setColourFromStyle_(styleName, childOut, categoryName);
+        } else {
+          this.setColour_(colour, childOut, categoryName);
+        }
+
+        if (childIn.getAttribute('expanded') === 'true') {
+          if (childOut.blocks.length) {
+            // This is a category that directly contains blocks.
+            // After the tree is rendered, open this category and show flyout.
+            openNode = childOut;
+          }
+          childOut.setExpanded(true);
+        } else {
+          childOut.setExpanded(false);
+        }
+        lastElement = childIn;
+        break;
+      case 'SEP':
+        if (lastElement && lastElement.tagName.toUpperCase() === 'CATEGORY') {
+          // Separator between two categories.
+          // <sep></sep>
+          treeOut.add(new Blockly.Toolbox.TreeSeparator(
+              /** @type {!Blockly.tree.BaseNode.Config} */ (this.treeSeparatorConfig_)));
+        }
+        break;
+        // Otherwise falls through.
+      case 'BLOCK':
+      case 'SHADOW':
+      case 'LABEL':
+      case 'BUTTON':
+        treeOut.blocks.push(childIn);
+        lastElement = childIn;
+        break;
+    }
+  }
+  return openNode;
+};
+
+Blockly.Toolbox.prototype.setCode_ = function(codeValue, childOut,
+  categoryName) {
+  if (codeValue) {
+    childOut.code = codeValue;
+  }
+};

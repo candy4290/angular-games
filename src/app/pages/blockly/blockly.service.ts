@@ -17,7 +17,6 @@ export class BlocklyService {
   loadedVariables = new Set(); // 存储已加载的变量block的type
   workspace: NgxBlocklyComponent;
   categoriesInString = ''; // 远程加载的目录结构string表示
-  categoriesInArray = [];
   variables: CustomBlock[] = []; // 当前toolbox中包含的变量
   subscription$ = new Subscription();
   constructor(private http: HttpClient,
@@ -28,7 +27,6 @@ export class BlocklyService {
     this.subscription$.unsubscribe();
     this.searchResult = null;
     this.categoriesInString = '';
-    this.categoriesInArray = [];
     // 卸载已经注册的extensions和fieldRegistry,或者使用try catch
     Blockly.Extensions.unregister('blockly_self_add_mutator');
     Blockly.fieldRegistry.unregister('self-selector');
@@ -98,13 +96,13 @@ export class BlocklyService {
   changeBlocklyDefaultStyle() {
     // 异步加载目录下的block,使用refreshSelection动态更新flyout中的block
     Blockly.Toolbox.prototype.loadVariable = (node) => {
+      console.log(node);
       const categoryColor = node.hexColour;
       const categoryName = node.content_;
-      const selectedCategoryes = this.categoriesInArray.filter(item => item.name === categoryName);
-      const categoryId = ((selectedCategoryes || [])[0] || {}).code;
-      if (categoryId && node.blocks.length === 0 && categoryName !== '查询结果') {
+      const categoryCode = node.code;
+      if (categoryCode && node.blocks.length === 0 && categoryName !== '查询结果') {
         // 异步加载blocks
-        const zip$ = this.getDropDown(categoryId, categoryName, categoryColor).subscribe(rsp => {
+        const zip$ = this.getDropDown(categoryCode, categoryName, categoryColor).subscribe(rsp => {
           const treeControl = this.workspace.workspace.getToolbox().tree_; // 每次调用renderTree都会生成新的TreeControl
           const preSelectedItem = treeControl.getSelectedItem();
           if (rsp[0][1]) {
@@ -224,19 +222,13 @@ export class BlocklyService {
    */
   jsonToXml(categoryes: any[] = []) {
     for (let i = 0, len = categoryes.length ; i < len; i++) {
-      this.categoriesInArray.push({
-        code: categoryes[i].code,
-        name: categoryes[i].name,
-        parent: categoryes[i].parent,
-        color: categoryes[i].color
-      });
       if (categoryes[i].name) {
         (Blockly.tree.BaseNode.prototype.categoriesInObject || {})[categoryes[i].name] = {
           commonUrl: categoryes[i].commonUrl,
           activeUrl: categoryes[i].activeUrl
         };
       }
-      this.categoriesInString += `<category name="${categoryes[i].name}" colour="${categoryes[i].color || generateColor()}">`;
+      this.categoriesInString += `<category code="${categoryes[i].code}" name="${categoryes[i].name}" colour="${categoryes[i].color || generateColor()}">`;
       const children = categoryes[i].tagClassChildren || [];
       if (children.length > 0) {
         this.jsonToXml(children);
