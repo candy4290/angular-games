@@ -14,6 +14,32 @@ export class SelfSelectorField {
           };
         });
         optValue = this.doClassValidation_(optValue);
+        // 没有搜索结果或全显示
+        this.controlDIsplayWithoutResult = function(noResult) {
+          for (let i = 0, len = this.imageElement_.children.length; i < len; i++) {
+            const item = this.imageElement_.children.item(i);
+            if (i === 0) {
+              item.style.display = noResult ? 'block' : 'none';
+              continue;
+            }
+            item.style.display = noResult ? 'none' : 'block';
+          }
+        };
+        // 根据关键字来空值是否显示
+        this.controlDisplayByKeyWords = function(keyworks) {
+          for (let i = 0, len =  this.imageElement_.children.length; i < len; i++) {
+            const item = this.imageElement_.children.item(i);
+            if (i === 0) {
+              item.style.display = 'none';
+              continue;
+            }
+            if (item && !item.innerText.includes(keyworks)) {
+              item.style.display = 'none';
+            } else {
+              item.style.display = 'block';
+            }
+          }
+        };
         // 检查输入是否有效
         this.doClassValidation_ = function(optNewValue) {
           if (optNewValue === null || optNewValue === undefined) {
@@ -21,14 +47,7 @@ export class SelfSelectorField {
           }
           if (!this.variables[optNewValue]) {
             if (!optNewValue) {
-              for (let i = 0, len =  this.imageElement_.children.length; i < len; i++) {
-                const item = this.imageElement_.children.item(i);
-                if (i === 0) {
-                  item.style.display = 'none';
-                  continue;
-                }
-                item.style.display = 'block';
-              }
+              this.controlDIsplayWithoutResult(false);
               return null;
             } else {
               // 筛选下拉列表
@@ -39,45 +58,15 @@ export class SelfSelectorField {
                 }
               });
               if (lists.length > 0) {
-                for (let i = 0, len =  this.imageElement_.children.length; i < len; i++) {
-                  const item = this.imageElement_.children.item(i);
-                  if (i === 0) {
-                    item.style.display = 'none';
-                    continue;
-                  }
-                  if (item && !item.innerText.includes(optNewValue)) {
-                    item.style.display = 'none';
-                  } else {
-                    item.style.display = 'block';
-                  }
-                }
+                this.controlDisplayByKeyWords(optNewValue);
               } else {
-                // 没有搜索结果
-                for (let i = 0, len = this.imageElement_.children.length; i < len; i++) {
-                  const item = this.imageElement_.children.item(i);
-                  if (i === 0) {
-                    item.style.display = 'block';
-                  } else {
-                    item.style.display = 'none';
-                  }
-                }
+                this.controlDIsplayWithoutResult(true);
               }
               return null;
             }
           } else {
             if (this.imageElement_) {
-              for (let i = 0, len =  this.imageElement_.children.length; i < len; i++) {
-                const item = this.imageElement_.children.item(i);
-                if (i === 0) {
-                  item.style.display = 'none';
-                  continue;
-                }
-                if (item && !item.innerText.includes(optNewValue)) {
-                  item.style.display = 'none';
-                } else {
-                  item.style.display = 'block';
-                }
-              }
+              this.controlDisplayByKeyWords(optNewValue);
             }
             return optNewValue;
           }
