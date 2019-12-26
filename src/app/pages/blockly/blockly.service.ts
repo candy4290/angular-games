@@ -26,6 +26,7 @@ export class BlocklyService {
     this.subscription$.unsubscribe();
     this.searchResult = null;
     this.categoriesInString = '';
+    this.loadedVariables.clear();
     // 卸载已经注册的extensions和fieldRegistry,或者使用try catch
     Blockly.Extensions.unregister('blockly_self_add_mutator');
     Blockly.fieldRegistry.unregister('self-selector');
@@ -35,19 +36,9 @@ export class BlocklyService {
   }
 
   /**
-   * 获取xml文件内容
-   *
-   */
-  getXml(path?: string) {
-    return this.http.get(path || 'assets/blockly/xmls/demo3.xml', {
-      responseType: 'text'
-    });
-  }
-
-  /**
    *  获取标签值（自动生成变量）,并生成block及其javascript方法
    */
-  getDropDown(code: string, name: string, categoryColor: string): Observable<any[]> {
+  getDropDown(code: string, name: string, categoryColour: string): Observable<any[]> {
     return this.http.put('http://10.19.248.200:31082/api/v1/tag/children', {
       name,
       code
@@ -60,25 +51,13 @@ export class BlocklyService {
         let xmlsValue = '';
         if (labels.length > 0) {
           // 创建变量
-          const variableBlockType = `variables_get_${code}__${name}__${categoryColor}`;
-          this.loadedVariables.add(variableBlockType);
-          const tempVariableKey =  new VariableGetBlock(variableBlockType, null, null, name, code, categoryColor);
-          this.initVariableBlock(tempVariableKey);
+          const tempVariableKey = this.createVariableGetBlock(name, code, categoryColour);
           xmlsKey += tempVariableKey.toXML();
           tempBlocksKey.push(
             tempVariableKey
           );
           // 创建值下拉列表 dropdown__父节点code__父节点name__父节点选中后的颜色
-          const tempVariable =  new ValuesDropDownBlock(`dropdown__${code}__${name}__${categoryColor}`, null, null, `extension_${code}`, code, categoryColor);
-          try {
-            Blockly.Extensions.register(`extension_${code}`,
-              function() {
-                this.getInput('INPUT')
-                .appendField(new Blockly.SelfSelectorField(labels), 'NAME');
-              });
-            } catch (error) {
-          }
-          this.initVariableBlock(tempVariable);
+          const tempVariable = this.createValuesDropDownBlock(code, name, categoryColour, labels);
           xmlsValue += tempVariable.toXML();
           tempBlocksValue.push(
             tempVariable
@@ -95,13 +74,12 @@ export class BlocklyService {
   changeBlocklyDefaultStyle() {
     // 异步加载目录下的block,使用refreshSelection动态更新flyout中的block
     Blockly.Toolbox.prototype.loadVariable = (node) => {
-      console.log(node);
-      const categoryColor = node.hexColour;
+      const categoryColour = node.hexColour;
       const categoryName = node.content_;
       const categoryCode = node.code;
       if (categoryCode && node.blocks.length === 0 && categoryName !== '查询结果') {
         // 异步加载blocks
-        const zip$ = this.getDropDown(categoryCode, categoryName, categoryColor).subscribe(rsp => {
+        const zip$ = this.getDropDown(categoryCode, categoryName, categoryColour).subscribe(rsp => {
           const treeControl = this.workspace.workspace.getToolbox().tree_; // 每次调用renderTree都会生成新的TreeControl
           const preSelectedItem = treeControl.getSelectedItem();
           if (rsp[0][1]) {
@@ -237,45 +215,70 @@ export class BlocklyService {
   }
 
   /**
+   * 创建变量
+   *
+   * @param {string} name 变量名
+   * @param {string} code 所属目录的code---对应变量的type
+   * @param {string} categoryColour 所属目录的颜色
+   * @returns
+   * @memberof BlocklyService
+   */
+  createVariableGetBlock(name: string, code: string, categoryColour: string) {
+    const variableBlockType = `variables_get_${code}__${categoryColour}__${name}`;
+    this.loadedVariables.add(variableBlockType);
+    const tempVariableKey = new VariableGetBlock(variableBlockType, null, null, name, code, categoryColour);
+    if (!Blockly.Blocks[variableBlockType]) {
+      this.initVariableBlock(tempVariableKey);
+    }
+    return tempVariableKey;
+  }
+
+  /**
+   * 创建下拉block
+   *
+   * @param {string} code 目录code
+   * @param {string} name 目录name
+   * @param {string} categoryColour 目录颜色
+   * @memberof BlocklyService
+   */
+  createValuesDropDownBlock(code: string, name: string, categoryColour: string, labels: string[]) {
+    const dropdownBlockType = this.getDropDownBlockType(code, name, categoryColour);
+    const extensionName = `extension_${code}`;
+    const tempVariable =  new ValuesDropDownBlock(dropdownBlockType, null, null, extensionName, code, categoryColour);
+    if (!Blockly.Blocks[dropdownBlockType]) {
+      try {
+        Blockly.Extensions.register(extensionName,
+            function() {
+              this.getInput('INPUT')
+                .appendField(new Blockly.SelfSelectorField(labels), 'NAME');
+            });
+      } catch {}
+      this.initVariableBlock(tempVariable);
+    }
+    return tempVariable;
+  }
+
+  /**
+   * 获取下拉block的jsonType
+   *
+   * @param {string} code
+   * @param {string} name
+   * @param {string} categoryColour
+   * @memberof BlocklyService
+   */
+  getDropDownBlockType(code: string, name: string, categoryColour: string) {
+    return `dropdown__${code}__${name}__${categoryColour}`;
+  }
+
+  /**
    *  解析xml并加载其中的block
    */
   parseXmlAndInitBlock(result: string) {
-    const rxs = [];
-    const tags = [];
-    let variableStart = 0;
-    let variableEnd = 0;
+    const rxs: Observable<any>[] = [];
 
     const labels = [];
     let labelStart = 0;
     let labelEnd = 0;
-
-    while (variableStart !== -1) {
-      variableStart = result.indexOf('<block type="variables_get', variableEnd);
-      if (variableStart !== -1) {
-        variableEnd = result.indexOf('</block>', variableStart) + 8;
-        tags.push(result.slice(variableStart, variableEnd).replace(/\s*/g, ''));
-      }
-    }
-    const variables = [];
-    tags.forEach(tag => {
-      const temp = tag.indexOf('type="');
-      const typeIndx = tag.indexOf('variabletype="') ;
-      const blockType = tag.slice(temp + 6, tag.indexOf('"', temp + 6));
-      const types = blockType.split('__');
-      const variableType = tag.slice(typeIndx + 14, tag.indexOf('"', typeIndx + 14));
-      variables.push({
-        key: blockType,
-        type: variableType,
-        value: types[2],
-        categoryColour: types[1]
-      });
-    });
-    variables.forEach(variable => {
-      if (!Blockly.Blocks[variable.key]) {
-        const temp = new VariableGetBlock(variable.key, null, null, variable.value, variable.type, variable.categoryColour);
-        this.initVariableBlock(temp);
-      }
-    });
 
     while (labelStart !== -1) {
       labelStart = result.indexOf('<block type="dropdown__', labelEnd);
@@ -300,25 +303,17 @@ export class BlocklyService {
     });
     dropdownValues.forEach(item => {
       // dropdown__父节点code__父节点name__父节点选中后的颜色
-      const dropdownBlockType = `dropdown__${item.code}__${item.name}__${item.categoryColour}`;
+      const dropdownBlockType = this.getDropDownBlockType(item.code, item.name, item.categoryColour);
       if (!Blockly.Blocks[dropdownBlockType]) {
-        const tempVariable =  new ValuesDropDownBlock(dropdownBlockType,
-        null, null, `extension_${item.code}`, item.code, item.categoryColour);
+        this.createVariableGetBlock(item.name, item.code, item.categoryColour);
         // 获取labels注册extension
         const temp$ = this.http.put('http://10.19.248.200:31082/api/v1/tag/children', {
           code: item.code,
           name: item.name
         }).pipe(tap((rsp: any) => {
-          // tslint:disable-next-line: no-shadowed-variable
+            // tslint:disable-next-line: no-shadowed-variable
           const labels = (rsp.results  || []).map((item: any) => [item.name, item.name]);
-          try {
-            Blockly.Extensions.register(`extension_${item.code}`,
-                function() {
-                  this.getInput('INPUT')
-                    .appendField(new Blockly.SelfSelectorField(labels), 'NAME');
-                });
-          } catch {}
-          this.initVariableBlock(tempVariable);
+          this.createValuesDropDownBlock(item.code, item.name, item.categoryColour, labels);
         }));
         rxs.push(temp$);
       }
