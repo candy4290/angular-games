@@ -20,38 +20,50 @@ export class SelfSelectorField {
             return null;
           }
           if (!this.variables[optNewValue]) {
-            // 筛选下拉列表
-            const lists = [];
-            menuGenerator.forEach(item => {
-              if (item[0].includes(optNewValue)) {
-                lists.push(item);
-              }
-            });
-            if (lists.length > 0) {
+            if (!optNewValue) {
               for (let i = 0, len =  this.imageElement_.children.length; i < len; i++) {
                 const item = this.imageElement_.children.item(i);
                 if (i === 0) {
                   item.style.display = 'none';
                   continue;
                 }
-                if (item && !item.innerText.includes(optNewValue)) {
-                  item.style.display = 'none';
-                } else {
-                  item.style.display = 'block';
-                }
+                item.style.display = 'block';
               }
+              return null;
             } else {
-              // 没有搜索结果
-              for (let i = 0, len =  this.imageElement_.children.length; i < len; i++) {
-                const item = this.imageElement_.children.item(i);
-                if (i === 0) {
-                  item.style.display = 'block';
-                } else {
-                  item.style.display = 'none';
+              // 筛选下拉列表
+              const lists = []; // 符合模糊匹配的结果集
+              menuGenerator.forEach(item => {
+                if (item[0].includes(optNewValue)) {
+                  lists.push(item);
+                }
+              });
+              if (lists.length > 0) {
+                for (let i = 0, len =  this.imageElement_.children.length; i < len; i++) {
+                  const item = this.imageElement_.children.item(i);
+                  if (i === 0) {
+                    item.style.display = 'none';
+                    continue;
+                  }
+                  if (item && !item.innerText.includes(optNewValue)) {
+                    item.style.display = 'none';
+                  } else {
+                    item.style.display = 'block';
+                  }
+                }
+              } else {
+                // 没有搜索结果
+                for (let i = 0, len = this.imageElement_.children.length; i < len; i++) {
+                  const item = this.imageElement_.children.item(i);
+                  if (i === 0) {
+                    item.style.display = 'block';
+                  } else {
+                    item.style.display = 'none';
+                  }
                 }
               }
+              return null;
             }
-            return null;
           } else {
             if (this.imageElement_) {
               for (let i = 0, len =  this.imageElement_.children.length; i < len; i++) {

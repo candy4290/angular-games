@@ -242,7 +242,6 @@ export class BlocklyService {
    * @memberof BlocklyService
    */
   createValuesDropDownBlock(code: string, name: string, categoryColour: string, labels: string[], fieldValue?: string) {
-    console.log(fieldValue);
     const dropdownBlockType = this.getDropDownBlockType(code, name, categoryColour);
     const extensionName = `extension_${code}`;
     const tempVariable =  new ValuesDropDownBlock(dropdownBlockType, null, null, extensionName, code, categoryColour);
