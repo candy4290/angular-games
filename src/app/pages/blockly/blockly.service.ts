@@ -14,10 +14,9 @@ declare var Blockly: any;
 
 export class BlocklyService {
   searchResult: HTMLElement; // 搜索结果dom元素
-  loadedVariables = new Set(); // 存储已加载的变量block的type
+  loadedVariables = new Set(); // 存储已加载的变量block的type --- 暂时用来做搜索用，后面可以删除
   workspace: NgxBlocklyComponent;
   categoriesInString = ''; // 远程加载的目录结构string表示
-  variables: CustomBlock[] = []; // 当前toolbox中包含的变量
   subscription$ = new Subscription();
   constructor(private http: HttpClient,
               private modalService: NzModalService) {
