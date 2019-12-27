@@ -70,12 +70,12 @@ export class CreateVariableComponent implements OnInit, AfterViewInit, OnDestroy
     // 更新toolbox
     // tslint:disable-next-line: no-string-literal
     const index = this.ngxToolboxBuilder.nodes.findIndex(item => item['name'] === '变量');
-    this.blockly.variables.push(tempVariable);
+    // this.blockly.variables.push(tempVariable);
     this.ngxToolboxBuilder.nodes[index] = new Category(
       [
         new CreateVariableButton('加载变量', 'loadVariables' ),
         new CreateVariableButton('创建变量', 'createAge' ),
-        ...this.blockly.variables,
+        // ...this.blockly.variables,
       ], '#FF00FF', '变量', null);
     const xml = Blockly.Xml.textToDom(`<xml>
     ${variableXml}
