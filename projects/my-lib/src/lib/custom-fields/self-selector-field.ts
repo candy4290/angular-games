@@ -100,6 +100,7 @@ export class SelfSelectorField {
             div.className = 'goog-menuitem goog-option';
             if (this.selectedValue === item[0]) {
               div.className += ' goog-option-selected';
+              this.selectedMenuItem_ = div;
             }
             const innerDiv = document.createElement('div');
             innerDiv.className = 'goog-menuitem-content';
@@ -136,7 +137,6 @@ export class SelfSelectorField {
           Blockly.SelfSelectorField.superClass_.showEditor_.call(this);
           const div = Blockly.WidgetDiv.DIV;
           if (!div.firstChild) {
-            // Mobile interface uses Blockly.prompt.
             return;
           }
           // Build the DOM.
@@ -146,6 +146,10 @@ export class SelfSelectorField {
 
           Blockly.DropDownDiv.showPositionedByField(
               this, this.dropdownDispose_.bind(this));
+
+          if (this.selectedMenuItem_) { // 滚动到选中位置
+            editor.parentNode.scrollTop = this.selectedMenuItem_.offsetTop;
+          }
 
           this.clickWrapper_ =
               Blockly.bindEvent_(this.imageElement_, 'click', this,
