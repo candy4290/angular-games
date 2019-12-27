@@ -4,7 +4,7 @@ declare var Blockly: any;
 
 export class SelfSelectorField {
     constructor() {
-      Blockly.SelfSelectorField = function(menuGenerator, optValue, optValidator) {
+      Blockly.SelfSelectorField = function(menuGenerator, optValue) {
         menuGenerator = menuGenerator || [];
         this.variables = {};
         menuGenerator.forEach(item => {
@@ -40,7 +40,9 @@ export class SelfSelectorField {
               item.style.display = 'block';
             }
           }
-          Blockly.DropDownDiv.showPositionedByField(this, this.dropdownDispose_.bind(this));
+          if (Blockly.DropDownDiv.isVisible()) {
+            Blockly.DropDownDiv.showPositionedByField(this, this.dropdownDispose_.bind(this));
+          }
         };
         // 检查输入是否有效
         this.doClassValidation_ = function(optNewValue) {
@@ -131,7 +133,7 @@ export class SelfSelectorField {
             return;
           }
           this.hide_();
-          this.setEditorValue_(text);
+          this.setEditorValue_(text); // 触发了doClassValidation_，如何避免触发？
           this.selectedValue = this.variables[text].key;
         };
         this.showEditor_ = function() {
@@ -150,7 +152,7 @@ export class SelfSelectorField {
           }
           this.clickWrapper_ = Blockly.bindEvent_(this.imageElement_, 'click', this, this.updateSelected);
         };
-        Blockly.SelfSelectorField.superClass_.constructor.call(this, optValue, optValidator);
+        Blockly.SelfSelectorField.superClass_.constructor.call(this, optValue);
       };
       Blockly.utils.object.inherits(Blockly.SelfSelectorField, Blockly.FieldTextInput);
 
