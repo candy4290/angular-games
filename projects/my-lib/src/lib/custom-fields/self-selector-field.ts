@@ -24,6 +24,7 @@ export class SelfSelectorField {
             }
             item.style.display = noResult ? 'none' : 'block';
           }
+          Blockly.DropDownDiv.showPositionedByField(this, this.dropdownDispose_.bind(this));
         };
         // 根据关键字来空值是否显示
         this.controlDisplayByKeyWords = function(keyworks) {
@@ -39,6 +40,7 @@ export class SelfSelectorField {
               item.style.display = 'block';
             }
           }
+          Blockly.DropDownDiv.showPositionedByField(this, this.dropdownDispose_.bind(this));
         };
         // 检查输入是否有效
         this.doClassValidation_ = function(optNewValue) {
@@ -125,12 +127,12 @@ export class SelfSelectorField {
         // 更新选中项(展示值更新,选中项目的样式更新)
         this.updateSelected = (e: any) => {
           const text = e.target.innerText;
-          if (text === '暂无数据') {
+          if (text === '暂无数据' || !text) {
             return;
           }
           this.hide_();
           this.setEditorValue_(text);
-          this.selectedValue = this.variables[e.target.innerText].key;
+          this.selectedValue = this.variables[text].key;
         };
         this.showEditor_ = function() {
           this.selectedValue = this.value_;
@@ -139,21 +141,14 @@ export class SelfSelectorField {
           if (!div.firstChild) {
             return;
           }
-          // Build the DOM.
           const editor = this.dropdownCreate_();
           Blockly.DropDownDiv.getContentDiv().appendChild(editor);
           Blockly.DropDownDiv.setColour(this.sourceBlock_.colour_, this.sourceBlock_.colour_);
-
-          Blockly.DropDownDiv.showPositionedByField(
-              this, this.dropdownDispose_.bind(this));
-
+          Blockly.DropDownDiv.showPositionedByField(this, this.dropdownDispose_.bind(this));
           if (this.selectedMenuItem_) { // 滚动到选中位置
             editor.parentNode.scrollTop = this.selectedMenuItem_.offsetTop;
           }
-
-          this.clickWrapper_ =
-              Blockly.bindEvent_(this.imageElement_, 'click', this,
-                  this.updateSelected);
+          this.clickWrapper_ = Blockly.bindEvent_(this.imageElement_, 'click', this, this.updateSelected);
         };
         Blockly.SelfSelectorField.superClass_.constructor.call(this, optValue, optValidator);
       };
