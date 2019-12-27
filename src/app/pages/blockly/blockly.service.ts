@@ -71,7 +71,7 @@ export class BlocklyService {
    * 更改Blockly默认样式
    */
   changeBlocklyDefaultStyle() {
-    // 异步加载目录下的block,使用refreshSelection动态更新flyout中的block
+    // 异步加载目录下的block,使用refreshSelection动态更新flyout中的block. TODO：如果目录中的标签已经都加载过，则无需异步请求，直接生成相应xml就可以
     Blockly.Toolbox.prototype.loadVariable = (node) => {
       const categoryColour = node.hexColour;
       const categoryName = node.content_;
