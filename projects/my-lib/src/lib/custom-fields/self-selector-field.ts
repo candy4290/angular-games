@@ -148,7 +148,7 @@ export class SelfSelectorField {
           Blockly.DropDownDiv.setColour(this.sourceBlock_.colour_, this.sourceBlock_.colour_);
           Blockly.DropDownDiv.showPositionedByField(this, this.dropdownDispose_.bind(this));
           if (this.selectedMenuItem_) { // 滚动到选中位置
-            editor.parentNode.scrollTop = this.selectedMenuItem_.offsetTop;
+            editor.parentNode.scrollTop = this.selectedMenuItem_.offsetTop - 30;
           }
           this.clickWrapper_ = Blockly.bindEvent_(this.imageElement_, 'click', this, this.updateSelected);
         };
