@@ -5,6 +5,7 @@ declare var Blockly: any;
 export class SelfSelectorField {
     constructor() {
       Blockly.SelfSelectorField = function(menuGenerator, optValue, that) {
+        // this.multipleMode = true;
         menuGenerator = menuGenerator || [];
         this.variables = {};
         menuGenerator.forEach(item => {

@@ -116,3 +116,40 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .boolean { color: blue; }
 .null { color: magenta; }
 .key { color: red; }
+
+:focus {
+  outline-width: 0;
+}
+// blockly ul
+.app-blockly-ul {
+  display: flex;
+  height: 100%;
+  padding-inline-start: 0;
+  margin-bottom: 0;
+  background: #fff;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}
+.app-blockly-li {
+  height: 100%;
+  flex: 0 0 auto;
+  list-style-type:none;
+  background: #eee;
+  margin-right:4px;
+  &:last-child {
+    margin-right: 0;
+  }
+  input {
+    height: 100%;
+    background: none;
+    border: none;
+    width: .75em;
+    &:focus {
+      outline-width: 0;
+    }
+  }
+}
