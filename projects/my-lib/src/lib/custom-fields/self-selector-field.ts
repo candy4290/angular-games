@@ -4,7 +4,7 @@ declare var Blockly: any;
 
 export class SelfSelectorField {
     constructor() {
-      Blockly.SelfSelectorField = function(menuGenerator, optValue) {
+      Blockly.SelfSelectorField = function(menuGenerator, optValue, that) {
         menuGenerator = menuGenerator || [];
         this.variables = {};
         menuGenerator.forEach(item => {
@@ -72,6 +72,7 @@ export class SelfSelectorField {
             if (this.imageElement_) {
               this.controlDisplayByKeyWords(optNewValue);
             }
+            that.setTooltip(optNewValue);
             return optNewValue;
           }
         };
@@ -79,7 +80,7 @@ export class SelfSelectorField {
         if (optValue === null) {
           optValue = Blockly.SelfSelectorField.DEFAULT_VALUE || menuGenerator[0][0];
           this.selectedValue = optValue;
-        }  // Else the original value is fine.
+        }
         this.dropdownCreate_ = function() {
           this.imageElement_ = document.createElement('div');
           this.imageElement_.className = 'goog-menu goog-menu-vertical blocklyNonSelectable blocklyDropdownMenu';

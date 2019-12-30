@@ -343,3 +343,5 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
 //   this.finalize_();
 // };
 
+// file输入的最大字符数，超出显示省略号
+// Blockly.Field.prototype.maxDisplayLength = 10;
