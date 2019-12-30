@@ -139,11 +139,18 @@ export class BlocklyService {
   searchBlockByName(keyWords: string) {
     let result = '' ;
     const toolbox = this.workspace.workspace.getToolbox();
+    const that = this;
     this.loadedVariables.forEach((item: string) => {
       const temp =  item.split('__');
-      const value = temp[1];
+      const value = temp[3];
+      const dropdownType = that.getDropDownBlockType(temp[1], value, temp[2]);
       if (value.indexOf(keyWords) > -1) {
-        result += `<block type='${item}'></block>`;
+        result += `
+        <label text="${value}-变量"></label>
+        <block type='${item}'></block>
+        <label text="${value}-值"></label>
+        <block type="${dropdownType}"></block>
+        `;
       }
     });
 
@@ -223,7 +230,7 @@ export class BlocklyService {
    * @memberof BlocklyService
    */
   createVariableGetBlock(name: string, code: string, categoryColour: string) {
-    const variableBlockType = `variables_get_${code}__${categoryColour}__${name}`;
+    const variableBlockType = `variables_get__${code}__${categoryColour}__${name}`;
     this.loadedVariables.add(variableBlockType);
     const tempVariableKey = new VariableGetBlock(variableBlockType, null, null, name, code, categoryColour);
     if (!Blockly.Blocks[variableBlockType]) {
