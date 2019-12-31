@@ -28,5 +28,6 @@ export * from './lib/functions/format-json';
 
 export * from './lib/custom-blockly-styles/toolbox';
 export * from './lib/custom-blockly-styles/block';
+export * from './lib/custom-blockly-styles/field-text-input';
 
 export * from './lib/interceptors/jwt-interceptor';
