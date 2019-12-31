@@ -114,7 +114,7 @@ export class SelfSelectorField {
           menuGenerator.forEach(item => {
             const div = document.createElement('div');
             div.className = 'goog-menuitem goog-option';
-            if (this.selectedValue.includes(item[0])) {
+            if (this.selectedValue === item[0]) {
               div.className += ' goog-option-selected';
               this.selectedMenuItem_ = div;
             }
