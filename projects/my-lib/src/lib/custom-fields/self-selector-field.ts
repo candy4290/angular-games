@@ -4,8 +4,8 @@ declare var Blockly: any;
 
 export class SelfSelectorField {
     constructor() {
-      Blockly.SelfSelectorField = function(menuGenerator, optValue, that) {
-        // this.multipleMode = true;
+      Blockly.SelfSelectorField = function(menuGenerator, optValue, that, multipleMode) {
+        this.multipleMode = multipleMode;
         menuGenerator = menuGenerator || [];
         this.variables = {};
         menuGenerator.forEach(item => {
@@ -49,6 +49,16 @@ export class SelfSelectorField {
         this.doClassValidation_ = function(optNewValue) {
           if (optNewValue === null || optNewValue === undefined) {
             return null;
+          }
+          if (optNewValue.indexOf(',') > -1) {
+            const temp = optNewValue.split(',');
+            temp.forEach((item, index) => {
+              if (item && this.variables[item]) {
+              } else {
+                temp.splice(index, 1);
+              }
+            });
+            return temp.join(',');
           }
           if (!this.variables[optNewValue]) {
             if (!optNewValue) {
@@ -104,7 +114,7 @@ export class SelfSelectorField {
           menuGenerator.forEach(item => {
             const div = document.createElement('div');
             div.className = 'goog-menuitem goog-option';
-            if (this.selectedValue === item[0]) {
+            if (this.selectedValue.includes(item[0])) {
               div.className += ' goog-option-selected';
               this.selectedMenuItem_ = div;
             }
@@ -134,12 +144,28 @@ export class SelfSelectorField {
           if (text === '暂无数据' || !text) {
             return;
           }
-          this.hide_();
-          this.setEditorValue_(text); // 触发了doClassValidation_，如何避免触发？
-          this.selectedValue = this.variables[text].key;
+          if (this.multipleMode) {
+            const preValue = this.getValue();
+            if (preValue) {
+              if (preValue.includes(text)) {
+                // 取消选中
+                this.htmlInput_.value = this.value_ = preValue.split(',').filter(item => item !== text).join(',');
+              } else {
+                this.htmlInput_.value = this.value_ = preValue + `,${text}`;
+              }
+            } else {
+              this.htmlInput_.value = this.value_ = text;
+            }
+            this.editUlList(e.target);
+            this.selectedValue += `,${this.variables[text].key}`;
+          } else {
+            this.hide_();
+            this.setEditorValue_(text);
+            this.selectedValue = this.variables[text].key;
+          }
         };
         this.showEditor_ = function() {
-          this.selectedValue = this.value_;
+          this.selectedValue = this.getValue();
           Blockly.SelfSelectorField.superClass_.showEditor_.call(this);
           const div = Blockly.WidgetDiv.DIV;
           if (!div.firstChild) {

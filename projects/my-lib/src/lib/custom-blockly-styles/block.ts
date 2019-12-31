@@ -361,11 +361,50 @@ Blockly.FieldTextInput.prototype.showInlineEditor_ = function(quietInput) {
   }
 };
 
+Blockly.FieldTextInput.prototype.editUlList = function(e) {
+  if (e.parentNode.className.includes('goog-menuitem goog-option')) {
+    e = e.parentNode;
+  }
+  const values = this.getEditorText_(this.value_).split(',');
+  const htmlUl = document.getElementsByClassName('app-blockly-ul')[0];
+  for (let i = 0, len = htmlUl.children.length - 1; i < len; i++) {
+    const li = <HTMLElement>htmlUl.children[i];
+    const index = values.indexOf(li.innerText);
+    if (index === -1) {
+      htmlUl.removeChild(li);
+      e.className = 'goog-menuitem goog-option';
+      i--; len --;
+    } else {
+      values.splice(index, 1);
+    }
+  }
+  // 新增li
+  values.forEach(value => {
+    if (value) {
+      e.className += ' goog-option-selected';
+      const htmlLi = document.createElement('li');
+      htmlLi.className = 'app-blockly-li';
+      htmlLi.innerText = value;
+      htmlUl.insertBefore(htmlLi, htmlUl.lastChild);
+    }
+  });
+  this.htmlInput_.focus();
+  const scrollFather = this.htmlInput_.parentNode.parentNode;
+  scrollFather.scrollLeft = 1000;
+  this.forceRerender();
+  if (Blockly.DropDownDiv.isVisible()) {
+    Blockly.DropDownDiv.showPositionedByField(this, this.dropdownDispose_.bind(this));
+  }
+};
+
 Blockly.FieldTextInput.prototype.widgetCreate_ = function() {
   const div = Blockly.WidgetDiv.DIV;
   if (this.multipleMode) {
     const htmlUl = document.createElement('ul');
     htmlUl.className = 'app-blockly-ul';
+    const fontSize =
+        (Blockly.FieldTextInput.FONTSIZE * this.workspace_.scale) + 'px';
+    div.style.fontSize = fontSize;
     const values = this.getEditorText_(this.value_);
     if (values) {
       values.split(',').forEach(value => {
@@ -424,12 +463,13 @@ Blockly.FieldTextInput.prototype.widgetCreate_ = function() {
 };
 
 Blockly.FieldTextInput.prototype.onHtmlInputChange_ = function(_e) {
-  const text = this.htmlInput_.value || this.htmlInput_.innerText;
+  const text = this.multipleMode ? this.htmlInput_.innerText : this.htmlInput_.value;
   if (text !== this.htmlInput_.oldValue_) {
     this.htmlInput_.oldValue_ = text;
     Blockly.Events.setGroup(true);
     const value = this.getValueFromEditorText_(text);
     this.setValue(value);
+    this.forceRerender();
     Blockly.Events.setGroup(false);
   }
 };
