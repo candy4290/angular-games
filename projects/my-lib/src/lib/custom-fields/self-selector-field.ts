@@ -5,13 +5,13 @@ declare var Blockly: any;
 export class SelfSelectorField {
     constructor() {
       Blockly.SelfSelectorField = function(menuGenerator, optValue, that, multipleMode) {
-        this.multipleMode = true;
+        this.multipleMode = multipleMode;
         menuGenerator = menuGenerator || [];
         this.variables = {};
         menuGenerator.forEach(item => {
           this.variables[item[0]] = {
-            key: item[0],
-            value: item[1]
+            key: item[0], // 真实值
+            value: item[1] // 用来显示的值
           };
         });
         optValue = this.doClassValidation_(optValue);
@@ -159,8 +159,7 @@ export class SelfSelectorField {
           if (this.multipleMode) {
             const preValue = this.getValue();
             if (preValue) {
-              if (preValue.includes(text)) {
-                // 取消选中
+              if (preValue.includes(text)) { // 取消选中
                 this.lastSelectedItemValue_ = null;
                 this.htmlInput_.value = this.value_ = preValue.split(',').filter(item => item !== text).join(',');
               } else {
@@ -171,7 +170,7 @@ export class SelfSelectorField {
               this.lastSelectedItemValue_ = text;
               this.htmlInput_.value = this.value_ = text;
             }
-            this.editUlList(e);
+            this.editUlList(e); // 更新inlineText
             this.selectedValue = this.value_;
             this.setTooltip(this.selectedValue);
           } else {
