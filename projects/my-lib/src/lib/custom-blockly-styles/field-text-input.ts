@@ -17,10 +17,7 @@ export default Blockly.FieldTextInput.prototype.showInlineEditor_ = function(qui
   }
 };
 
-Blockly.FieldTextInput.prototype.editUlList = function(e) {
-  if (e.parentNode.className.includes('goog-menuitem goog-option')) {
-    e = e.parentNode;
-  }
+Blockly.FieldTextInput.prototype.editUlList = function(e: HTMLElement) {
   const values = this.getEditorText_(this.value_).split(',');
   const htmlUl = document.getElementsByClassName('app-blockly-ul')[0];
   for (let i = 0, len = htmlUl.children.length - 1; i < len; i++) {

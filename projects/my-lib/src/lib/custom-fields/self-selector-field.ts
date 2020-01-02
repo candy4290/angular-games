@@ -5,7 +5,7 @@ declare var Blockly: any;
 export class SelfSelectorField {
     constructor() {
       Blockly.SelfSelectorField = function(menuGenerator, optValue, that, multipleMode) {
-        this.multipleMode = multipleMode;
+        this.multipleMode = true;
         menuGenerator = menuGenerator || [];
         this.variables = {};
         menuGenerator.forEach(item => {
@@ -121,6 +121,8 @@ export class SelfSelectorField {
             div.className = 'goog-menuitem goog-option';
             if (this.selectedValue.split(',').indexOf(item[0]) > -1) {
               div.className += ' goog-option-selected';
+            }
+            if (item[0] === this.lastSelectedItemValue_) {
               this.selectedMenuItem_ = div;
             }
             const innerDiv = document.createElement('div');
@@ -145,7 +147,12 @@ export class SelfSelectorField {
 
         // 更新选中项(展示值更新,选中项目的样式更新)
         this.updateSelected = (e: any) => {
-          const text = e.target.innerText;
+          if (e.target.parentNode.className.includes('goog-menuitem goog-option')) {
+            e = e.target.parentNode;
+          } else {
+            e = e.target;
+          }
+          const text = e.innerText;
           if (text === '暂无数据' || !text) {
             return;
           }
@@ -154,20 +161,24 @@ export class SelfSelectorField {
             if (preValue) {
               if (preValue.includes(text)) {
                 // 取消选中
+                this.lastSelectedItemValue_ = null;
                 this.htmlInput_.value = this.value_ = preValue.split(',').filter(item => item !== text).join(',');
               } else {
+                this.lastSelectedItemValue_ = text;
                 this.htmlInput_.value = this.value_ = preValue + `,${text}`;
               }
             } else {
+              this.lastSelectedItemValue_ = text;
               this.htmlInput_.value = this.value_ = text;
             }
-            this.editUlList(e.target);
+            this.editUlList(e);
             this.selectedValue = this.value_;
             this.setTooltip(this.selectedValue);
           } else {
             this.hide_();
             this.setEditorValue_(text);
             this.selectedValue = this.variables[text].key;
+            this.lastSelectedItemValue_ = text;
             this.setTooltip(this.selectedValue);
           }
         };
