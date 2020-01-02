@@ -50,6 +50,7 @@ export class SelfSelectorField {
           if (optNewValue === null || optNewValue === undefined) {
             return null;
           }
+          // 多选初始化时生效
           if (optNewValue.indexOf(',') > -1) {
             const temp = optNewValue.split(',');
             temp.forEach((item, index) => {
@@ -58,13 +59,15 @@ export class SelfSelectorField {
                 temp.splice(index, 1);
               }
             });
-            return temp.join(',');
+            const tempValue = temp.join(',');
+            that.setTooltip(tempValue);
+            return tempValue;
           }
-          if (!this.variables[optNewValue]) {
-            if (!optNewValue) {
+          if (!this.variables[optNewValue]) { // 输入值不可以直接匹配列表中的某一项，进入模糊查询
+            if (!optNewValue) { // 输入为空，显示所有下拉列表
               this.controlDIsplayWithoutResult(false);
               return null;
-            } else {
+            } else { // 输入不为空，模糊查询
               // 筛选下拉列表
               const lists = []; // 符合模糊匹配的结果集
               menuGenerator.forEach(item => {
@@ -73,13 +76,13 @@ export class SelfSelectorField {
                 }
               });
               if (lists.length > 0) {
-                this.controlDisplayByKeyWords(optNewValue);
+                this.controlDisplayByKeyWords(optNewValue); // 匹配到结果集，下拉列表中只显示匹配到的结果
               } else {
-                this.controlDIsplayWithoutResult(true);
+                this.controlDIsplayWithoutResult(true); // 未匹配上，显示”暂无结果“
               }
               return null;
             }
-          } else {
+          } else { // 输入值，可以直接匹配列表中的某一项
             if (this.imageElement_) {
               this.controlDisplayByKeyWords(optNewValue);
             }
@@ -90,6 +93,8 @@ export class SelfSelectorField {
         // 初始值为空，默认选中第一条
         if (optValue === null) {
           optValue = Blockly.SelfSelectorField.DEFAULT_VALUE || menuGenerator[0][0];
+          this.selectedValue = optValue;
+        } else {
           this.selectedValue = optValue;
         }
         this.dropdownCreate_ = function() {
@@ -114,7 +119,7 @@ export class SelfSelectorField {
           menuGenerator.forEach(item => {
             const div = document.createElement('div');
             div.className = 'goog-menuitem goog-option';
-            if (this.selectedValue === item[0]) {
+            if (this.selectedValue.split(',').indexOf(item[0]) > -1) {
               div.className += ' goog-option-selected';
               this.selectedMenuItem_ = div;
             }
@@ -157,11 +162,13 @@ export class SelfSelectorField {
               this.htmlInput_.value = this.value_ = text;
             }
             this.editUlList(e.target);
-            this.selectedValue += `,${this.variables[text].key}`;
+            this.selectedValue = this.value_;
+            this.setTooltip(this.selectedValue);
           } else {
             this.hide_();
             this.setEditorValue_(text);
             this.selectedValue = this.variables[text].key;
+            this.setTooltip(this.selectedValue);
           }
         };
         this.showEditor_ = function() {
