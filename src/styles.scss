@@ -135,13 +135,18 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   }
 }
 .app-blockly-li {
+  display: flex;
   height: 100%;
   flex: 0 0 auto;
   list-style-type:none;
-  background: #eee;
-  margin-right:4px;
+  background: #fafafa;
+  color: rgba(0,0,0,.65);
+  border-left: 1px solid #e8e8e8;
+  border-right: 1px solid #e8e8e8;
+  margin-right: 4px;
   &:last-child {
     margin-right: 0;
+    border: none;
   }
   input {
     height: 100%;

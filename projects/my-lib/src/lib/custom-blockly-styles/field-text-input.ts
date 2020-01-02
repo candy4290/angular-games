@@ -21,10 +21,11 @@ Blockly.FieldTextInput.prototype.editUlList = function(e: HTMLElement) {
   const values = this.getEditorText_(this.value_).split(',');
   const htmlUl = document.getElementsByClassName('app-blockly-ul')[0];
   for (let i = 0, len = htmlUl.children.length - 1; i < len; i++) {
-    const li = <HTMLElement>htmlUl.children[i];
+    const li = <HTMLElement>htmlUl.children[i].firstChild;
     const index = values.indexOf(li.innerText);
     if (index === -1) {
-      htmlUl.removeChild(li);
+      htmlUl.removeChild(li.parentElement);
+      li.parentElement.removeEventListener('click', this.deleteEleEvent.bind(this));
       e.className = 'goog-menuitem goog-option';
       i--; len --;
     } else {
@@ -35,9 +36,7 @@ Blockly.FieldTextInput.prototype.editUlList = function(e: HTMLElement) {
   values.forEach(value => {
     if (value) {
       e.className += ' goog-option-selected';
-      const htmlLi = document.createElement('li');
-      htmlLi.className = 'app-blockly-li';
-      htmlLi.innerText = value;
+      const htmlLi = this.createLi(value);
       htmlUl.insertBefore(htmlLi, htmlUl.lastChild);
     }
   });
@@ -48,6 +47,28 @@ Blockly.FieldTextInput.prototype.editUlList = function(e: HTMLElement) {
   if (Blockly.DropDownDiv.isVisible()) {
     Blockly.DropDownDiv.showPositionedByField(this, this.dropdownDispose_.bind(this));
   }
+};
+
+Blockly.FieldTextInput.prototype.deleteEleEvent = function(e) {
+  const text = (<HTMLElement>(<HTMLElement>e.target).previousElementSibling).innerText;
+  this.updateSelected(this.findDropDownItemByName(text));
+};
+
+Blockly.FieldTextInput.prototype.createLi = function(value) {
+  const htmlLi = document.createElement('li');
+  htmlLi.className = 'app-blockly-li';
+  const innerText = document.createElement('div');
+  innerText.innerText = value;
+  htmlLi.appendChild(innerText);
+  const deleteEle = document.createElement('div');
+  deleteEle.innerText = 'x';
+  deleteEle.style.color = 'rgba(0,0,0,.45)';
+  deleteEle.style.padding = '0 4px';
+  deleteEle.style.cursor = 'pointer';
+  deleteEle.setAttribute('title', '点击删除');
+  (<Element>deleteEle).addEventListener('click', this.deleteEleEvent.bind(this));
+  htmlLi.appendChild(deleteEle);
+  return htmlLi;
 };
 
 Blockly.FieldTextInput.prototype.widgetCreate_ = function() {
@@ -61,9 +82,7 @@ Blockly.FieldTextInput.prototype.widgetCreate_ = function() {
     const values = this.getEditorText_(this.value_);
     if (values) {
       values.split(',').forEach(value => {
-        const htmlLi = document.createElement('li');
-        htmlLi.className = 'app-blockly-li';
-        htmlLi.innerText = value;
+        const htmlLi = this.createLi(value);
         htmlUl.appendChild(htmlLi);
       });
     }
@@ -148,7 +167,7 @@ Blockly.FieldTextInput.prototype.onHtmlInputKeyDown_ = function(e) {
     if (innerText.length === 0) {
       const htmlUl = document.getElementsByClassName('app-blockly-ul')[0];
       if (htmlUl.children.length > 1) {
-        const toDeleteUi = <HTMLElement>htmlUl.children.item(htmlUl.children.length - 2);
+        const toDeleteUi = <HTMLElement>htmlUl.children.item(htmlUl.children.length - 2).firstChild;
         this.updateSelected(this.findDropDownItemByName(toDeleteUi.innerText));
       }
     }
