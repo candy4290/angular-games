@@ -96,6 +96,7 @@ export class SelfSelectorField {
           this.selectedValue = optValue;
         } else {
           this.selectedValue = optValue;
+          this.lastSelectedItemValue_ = (optValue || []).split(',')[0];
         }
         this.dropdownCreate_ = function() {
           this.imageElement_ = document.createElement('div');
