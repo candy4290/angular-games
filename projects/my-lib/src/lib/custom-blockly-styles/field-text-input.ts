@@ -128,3 +128,41 @@ Blockly.FieldTextInput.prototype.onHtmlInputChange_ = function(_e) {
     Blockly.Events.setGroup(false);
   }
 };
+
+Blockly.FieldTextInput.prototype.onHtmlInputKeyDown_ = function(e) {
+  if (e.keyCode === Blockly.utils.KeyCodes.ENTER) {
+    Blockly.WidgetDiv.hide();
+    Blockly.DropDownDiv.hideWithoutAnimation();
+  } else if (e.keyCode === Blockly.utils.KeyCodes.ESC) {
+    this.htmlInput_.value = this.htmlInput_.defaultValue;
+    Blockly.WidgetDiv.hide();
+    Blockly.DropDownDiv.hideWithoutAnimation();
+  } else if (e.keyCode === Blockly.utils.KeyCodes.TAB) {
+    Blockly.WidgetDiv.hide();
+    Blockly.DropDownDiv.hideWithoutAnimation();
+    this.sourceBlock_.tab(this, !e.shiftKey);
+    e.preventDefault();
+  } else if (this.multipleMode && e.keyCode === Blockly.utils.KeyCodes.BACKSPACE) {
+    // 删除inputline text中的一项
+    const innerText = (this.htmlInput_.innerText || '');
+    if (innerText.length === 0) {
+      const htmlUl = document.getElementsByClassName('app-blockly-ul')[0];
+      if (htmlUl.children.length > 1) {
+        const toDeleteUi = <HTMLElement>htmlUl.children.item(htmlUl.children.length - 2);
+        this.updateSelected(this.findDropDownItemByName(toDeleteUi.innerText));
+      }
+    }
+  }
+};
+
+Blockly.FieldTextInput.prototype.findDropDownItemByName = function(text) {
+  const menuItems = document.getElementsByClassName('goog-menuitem');
+  for (let i = 0, len = menuItems.length; i < len; i++) {
+    const tempElement = <HTMLElement>menuItems.item(i).children.item(0);
+    if (tempElement.innerText === text) {
+      return {target: tempElement.parentElement};
+    }
+  }
+};
+
+
