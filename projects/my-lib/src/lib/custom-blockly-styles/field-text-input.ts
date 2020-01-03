@@ -24,6 +24,7 @@ Blockly.FieldTextInput.prototype.editUlList = function(e: HTMLElement) {
     const li = <HTMLElement>htmlUl.children[i].firstChild;
     const index = values.indexOf(li.innerText);
     if (index === -1) {
+      // li.parentElement.style.animation = 'fadeOut 0.2s ease-in-out';
       htmlUl.removeChild(li.parentElement);
       li.parentElement.removeEventListener('click', this.deleteEleEvent.bind(this));
       e.className = 'goog-menuitem goog-option';
@@ -36,7 +37,7 @@ Blockly.FieldTextInput.prototype.editUlList = function(e: HTMLElement) {
   values.forEach(value => {
     if (value) {
       e.className += ' goog-option-selected';
-      const htmlLi = this.createLi(value);
+      const htmlLi = this.createLi(value, true);
       htmlUl.insertBefore(htmlLi, htmlUl.lastChild);
     }
   });
@@ -54,9 +55,12 @@ Blockly.FieldTextInput.prototype.deleteEleEvent = function(e) {
   this.updateSelected(this.findDropDownItemByName(text));
 };
 
-Blockly.FieldTextInput.prototype.createLi = function(value) {
+Blockly.FieldTextInput.prototype.createLi = function(value, hasAnimation) {
   const htmlLi = document.createElement('li');
   htmlLi.className = 'app-blockly-li';
+  if (hasAnimation) {
+    htmlLi.style.animation = 'fadeIn 0.2s ease-in-out';
+  }
   const innerText = document.createElement('div');
   innerText.innerText = value;
   htmlLi.appendChild(innerText);

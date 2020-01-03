@@ -5,7 +5,7 @@ declare var Blockly: any;
 export class SelfSelectorField {
     constructor() {
       Blockly.SelfSelectorField = function(menuGenerator, optValue, that, multipleMode) {
-        this.multipleMode = multipleMode;
+        this.multipleMode = true;
         menuGenerator = menuGenerator || [];
         this.variables = {};
         menuGenerator.forEach(item => {
@@ -17,6 +17,9 @@ export class SelfSelectorField {
         optValue = this.doClassValidation_(optValue);
         // 没有搜索结果或全显示
         this.controlDIsplayWithoutResult = function(noResult) {
+          if (!this.imageElement_) {
+            return;
+          }
           for (let i = 0, len = this.imageElement_.children.length; i < len; i++) {
             const item = this.imageElement_.children.item(i);
             if (i === 0) {
@@ -29,6 +32,9 @@ export class SelfSelectorField {
         };
         // 根据关键字来空值是否显示
         this.controlDisplayByKeyWords = function(keyworks) {
+          if (!this.imageElement_) {
+            return;
+          }
           for (let i = 0, len =  this.imageElement_.children.length; i < len; i++) {
             const item = this.imageElement_.children.item(i);
             if (i === 0) {
@@ -83,9 +89,7 @@ export class SelfSelectorField {
               return null;
             }
           } else { // 输入值，可以直接匹配列表中的某一项
-            if (this.imageElement_) {
-              this.controlDisplayByKeyWords(optNewValue);
-            }
+            this.controlDisplayByKeyWords(optNewValue);
             that.setTooltip(optNewValue);
             return optNewValue;
           }
