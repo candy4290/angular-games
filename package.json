@@ -30,6 +30,7 @@
     "ng-zorro-antd": "^8.5.1",
     "ngx-blockly": "0.0.45",
     "rxjs": "~6.4.0",
+    "stream-plus": "0.0.2",
     "tslib": "^1.10.0",
     "xml2js": "^0.4.23",
     "zone.js": "~0.9.1"
