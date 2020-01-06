@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { CustomBlock, NgxBlocklyConfig, NgxBlocklyComponent } from 'ngx-blockly';
 import { map, tap } from 'rxjs/operators';
 import { VariableGetBlock, ValuesDropDownBlock } from 'my-lib';
-import { of, Subscription, Observable, zip } from 'rxjs';
+import { of, Observable, zip } from 'rxjs';
 import { generateColor } from 'my-lib';
 import { NzModalService } from 'ng-zorro-antd';
 import { RenameVariableComponent } from './rename-variable/rename-variable.component';
@@ -17,13 +17,11 @@ export class BlocklyService {
   loadedVariables = new Set(); // 存储已加载的变量block的type --- 暂时用来做搜索用，后面可以删除
   workspace: NgxBlocklyComponent;
   categoriesInString = ''; // 远程加载的目录结构string表示
-  subscription$ = new Subscription();
   constructor(private http: HttpClient,
               private modalService: NzModalService) {
   }
 
   clear() {
-    this.subscription$.unsubscribe();
     this.searchResult = null;
     this.categoriesInString = '';
     this.loadedVariables.clear();
@@ -78,7 +76,7 @@ export class BlocklyService {
       const categoryCode = node.code;
       if (categoryCode && node.blocks.length === 0 && categoryName !== '查询结果') {
         // 异步加载blocks
-        const zip$ = this.getDropDown(categoryCode, categoryName, categoryColour).subscribe(rsp => {
+        this.getDropDown(categoryCode, categoryName, categoryColour).subscribe(rsp => {
           const treeControl = this.workspace.workspace.getToolbox().tree_; // 每次调用renderTree都会生成新的TreeControl
           const preSelectedItem = treeControl.getSelectedItem();
           if (rsp[0][1]) {
@@ -92,7 +90,6 @@ export class BlocklyService {
             this.workspace.workspace.getToolbox().refreshSelection();
           }
         });
-        this.subscription$.add(zip$);
       }
     };
 

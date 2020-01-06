@@ -3,11 +3,11 @@ import { NgxBlocklyConfig, NgxBlocklyGeneratorConfig,
   NgxBlocklyComponent, CustomBlock, NgxToolboxBuilderService } from 'ngx-blockly';
 import { BlocklyService } from './blockly.service';
 import { LOGIC_CATEGORY, MATH_CATEGORY, TEXT_CATEGORY } from './category';
-import { Subscription, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { AndOrBlock, ValuesDropDownBlock, SelfSelectorField, DarkTheme, jsonShowFn } from 'my-lib';
 import { DOCUMENT } from '@angular/common';
 import { NzMessageService, NzModalService, NzModalRef } from 'ng-zorro-antd';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 import { CreateVariableComponent } from './create-variable/create-variable.component';
 
 @Component({
@@ -52,7 +52,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
     javascript: true,
   };
   keyWords: string;
-  private subscription$ = new Subscription();
+  private destroy$ = new Subject();
   private nzModalRef$: NzModalRef;
   private searchItems$ = new Subject<string>();
   @ViewChild('searchInput', {static: true}) searchInput: any;
@@ -75,14 +75,14 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    const search$ = this.searchItems$.pipe(
+    this.searchItems$.pipe(
       debounceTime(300),
       distinctUntilChanged(),
       switchMap((rsp: string) => {
         return this.blockly.searchBlockByName(rsp);
-      })
+      }),
+      takeUntil(this.destroy$),
     ).subscribe();
-    this.subscription$.add(search$);
 
   }
 
@@ -97,7 +97,8 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription$.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
     if (this.nzModalRef$) {
       this.nzModalRef$.close();
     }
@@ -165,7 +166,7 @@ export class BlocklyComponent implements OnInit, AfterViewInit, OnDestroy {
       fileReader.readAsText(file);
       fileReader.onload = () => {
         const result = `${fileReader.result}`;
-        this.blockly.parseXmlAndInitBlock(result).subscribe(() => {
+        this.blockly.parseXmlAndInitBlock(result).pipe(takeUntil(this.destroy$)).subscribe(() => {
           this.messageService.success('文件导入成功！');
           this.workspace.fromXml(result);
           // 暂时用来解决blockly fromXml后会展示flyout(即便其是空的)的bug
