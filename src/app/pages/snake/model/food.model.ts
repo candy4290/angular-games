@@ -23,6 +23,12 @@ export class Food {
     return new Position(y, x);
   }
 
+  /**
+   * 随机生成一个食物的位置（要排除蛇头和身体的位置）
+   *
+   * @param {Snack} snack
+   * @memberof Food
+   */
   fresh(snack: Snack): void {
     this.history.push(this.position);
     let randomPosition;

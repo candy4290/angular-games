@@ -1,0 +1,32 @@
+$suff: '.app-snake';
+:host {
+  display: block;
+}
+#{$suff} {
+ &-map {
+  width: 601px;
+  height: 601px;
+  border-left: 1px solid #cccccc;
+  border-top: 1px solid #cccccc;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  &-grid {
+    border-bottom: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
+    width: 20px;
+    height: 20px;
+  }
+  &-food {
+    background: #bb9246;
+  }
+  &-snack {
+    &-header {
+      background: red;
+    }
+    &-body {
+      background: #eee;
+    }
+  }
+ }
+}

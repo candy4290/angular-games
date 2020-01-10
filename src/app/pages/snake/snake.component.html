@@ -1,0 +1,8 @@
+<div class="app-snake">
+  <div class="app-snake-map">
+    <div *ngFor="let position of map?.positions" class="app-snake-map-grid"
+    [ngClass]="{'app-snake-map-food': currentFood?.isSelf(position),
+  'app-snake-map-snack-header': snack?.isHead(position), 'app-snake-map-snack-body': snack?.isBody(position)}">
+    </div>
+  </div>
+</div>
