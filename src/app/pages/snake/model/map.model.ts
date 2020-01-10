@@ -14,6 +14,5 @@ export class GameMap {
     this.positions = NumberStream.from(0, this.y)
       .flatMap(($y) => NumberStream.from(0, this.x).map(($x) => new Position($y, $x)))
       .toArray();
-      console.log(this.positions);
   }
 }
