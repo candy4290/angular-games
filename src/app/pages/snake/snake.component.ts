@@ -60,7 +60,6 @@ export class SnakeComponent implements OnInit {
       map((event: any) => event.keyCode),
       tap(() => this.startMove = true)
     ).subscribe(keyCode => {
-      console.log(keyCode);
       if (this.lastArrow === RIGHT_ARROW && keyCode === LEFT_ARROW) {
         return;
       }
