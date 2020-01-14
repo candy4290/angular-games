@@ -31,8 +31,8 @@ export class WaterfallComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this._document.addEventListener('resize', () => {this.delayedResize(); });
-    this._document.addEventListener('scroll', () => {this.delayedScroll(); });
+    window.addEventListener('resize', () => {this.delayedResize(); });
+    // window.addEventListener('scroll', () => {this.delayedScroll(); });
     this.columnCount = this.getColumnCount();
     this.resetHeights(this.columnCount);
     this.manageCells();
@@ -97,8 +97,8 @@ export class WaterfallComponent implements OnInit, AfterViewInit {
       cell.className = 'cell ready';
       cells.push(cell);
       cell.innerHTML = `
-        <p><a href="#"><img src="assets/img/${image}.jpg" height="${image.height}" width="${image.width}" /></a></p>
-        <h2><a href="#">${image}</a></h2>
+        <p><a href="#"><img src="assets/img/${image}.jpg" height="${image.height}" width="${'100%'}" /></a></p>
+        <h2><a href="#"></a></h2>
         <span class="like">Like!</span>
         <span class="mark">Mark!</span>
       `;
@@ -107,20 +107,21 @@ export class WaterfallComponent implements OnInit, AfterViewInit {
     this.cells.nativeElement.appendChild(fragment);
   }
 
-  adjustCells(cells: any[], reflow?: boolean) {
+  adjustCells(cells: HTMLCollection, reflow?: boolean) {
     let columnIndex: number;
     let columnHeight: number;
-    cells.forEach(cell => {
+    for (let i = 0; i < cells.length; i++) {
+      const cell = <HTMLElement>cells.item(i);
       columnIndex = this.getMixKey(this.columnHeights);
       columnHeight = this.columnHeights[columnIndex];
-      cell.style.height = (cell.offsetHeight - this.CELL_PADDING) + 'px';
+      cell.style.height = (cell.offsetHeight - this.CELL_PADDING / 2) + 'px';
       cell.style.left = columnIndex * (this.COLUMN_WIDTH + this.GAP_WIDTH) + 'px';
       cell.style.top = columnHeight + 'px';
       this.columnHeights[columnIndex] = columnHeight + this.GAP_HEIGHT + cell.offsetHeight;
       if (!reflow) {
         cell.className = 'cell ready';
       }
-    });
+    }
     this.cells.nativeElement.style.height = this.getMaxVal(this.columnHeights) + 'px';
     this.manageCells();
   }
@@ -137,25 +138,27 @@ export class WaterfallComponent implements OnInit, AfterViewInit {
   }
 
   manageCells() {
-    this.managing = true;
-    console.log(this.cells);
-    const cells = (this.cells.nativeElement || this.cells).children;
-    const viewportTop = (document.body.scrollTop || document.documentElement.scrollTop) - (this.cells.nativeElement || this.cells).style.offsetTop;
+    if (!this.cells.nativeElement) {
+      return;
+    }
+    // this.managing = true;
+    const cells = <HTMLCollection>(this.cells.nativeElement.children);
+    const viewportTop = (document.body.scrollTop || document.documentElement.scrollTop) - (this.cells.nativeElement).style.offsetTop || 0;
     const viewportBottom = (window.innerHeight || document.documentElement.clientHeight) + viewportTop;
-
     // Remove cells' contents if they are too far away from the viewport. Get them back if they are near.
     // TODO: remove the cells from DOM should be better :<
     for (let i = 0, l = cells.length; i < l; i++) {
-      if ((cells[i].offsetTop - viewportBottom > this.THRESHOLD) || (viewportTop - cells[i].offsetTop - cells[i].offsetHeight > this.THRESHOLD)) {
-        if (cells[i].className === 'cell ready') {
-          cells[i].fragment = cells[i].innerHTML;
-          cells[i].innerHTML = '';
-          cells[i].className = 'cell shadow';
+      const item = <HTMLElement>(cells.item(i));
+      if ((item.offsetTop - viewportBottom > this.THRESHOLD) || (viewportTop - item.offsetTop - item.offsetHeight > this.THRESHOLD)) {
+        if (item.className === 'cell ready') {
+          item['fragment'] = item.innerHTML;
+          item.innerHTML = '';
+          item.className = 'cell shadow';
         }
       } else {
-        if (cells[i].className === 'cell shadow') {
-          cells[i].innerHTML = cells[i].fragment;
-          cells[i].className = 'cell ready';
+        if (item.className === 'cell shadow') {
+          item.innerHTML = item['fragment'];
+          item.className = 'cell ready';
         }
       }
     }
@@ -167,20 +170,26 @@ export class WaterfallComponent implements OnInit, AfterViewInit {
     }
 
     // Unlock managing state.
-    this.managing = false;
+    // this.managing = false;
   }
 
   delayedScroll() {
     clearTimeout(this.scrollDelay);
-    if (!this.managing) {
+    // if (!this.managing) {
       // Avoid managing cells for unnecessity.
-      this.scrollDelay = setTimeout(this.manageCells, 500);
-    }
+      this.scrollDelay = setTimeout(
+        () => {
+          this.manageCells();
+        }, 500);
+    // }
   }
 
   delayedResize() {
     clearTimeout(this.resizeDelay);
-    this.resizeDelay = setTimeout(this.reflowCells, 500);
+    this.resizeDelay = setTimeout(
+      () => {
+        this.reflowCells();
+      }, 500);
   }
 
 }
