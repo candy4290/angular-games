@@ -34,9 +34,15 @@ export class BlocklyService {
   }
 
   /**
-   *  获取标签值（自动生成变量）,并生成block及其javascript方法
+   * 根据目录code,name生成相应的变量、值、变量&值逻辑表达式
+   *
+   * @param {string} code 所属目录的code
+   * @param {string} name 所属目录的名称
+   * @param {string} categoryColour 所属目录的颜色
+   * @returns {Observable<string[]>} 返回一个string数组,包含三个数值，分别为变量、值、变量&值逻辑表达式的xml
+   * @memberof BlocklyService
    */
-  getDropDown(code: string, name: string, categoryColour: string): Observable<any[]> {
+  getDropDown(code: string, name: string, categoryColour: string): Observable<string[]> {
     return this.http.put('http://10.19.248.200:31082/api/v1/tag/children', {
       name,
       code
@@ -47,6 +53,7 @@ export class BlocklyService {
         const labels = (rsp.results  || []).map((item: any) => [item.name, item.name]);
         let xmlsKey = '';
         let xmlsValue = '';
+        let xmlsCombinedBlocks = '';
         if (labels.length > 0) {
           // 创建变量
           const tempVariableKey = this.createVariableGetBlock(name, code, categoryColour);
@@ -54,13 +61,26 @@ export class BlocklyService {
           tempBlocksKey.push(
             tempVariableKey
           );
+          // 创建值
           const tempVariable = this.createValuesDropDownBlock(code, name, categoryColour, labels);
           xmlsValue += tempVariable.toXML();
           tempBlocksValue.push(
             tempVariable
           );
+          // 创建键值对逻辑处理块
+          xmlsCombinedBlocks = `
+            <block type="logic_compare">
+              <field name="OP">EQ</field>
+              <value name="A">
+                ${xmlsKey}
+              </value>
+              <value name="B">
+                ${xmlsValue}
+              </value>
+            </block>
+          `;
         }
-        return [[tempBlocksKey, xmlsKey], [tempBlocksValue, xmlsValue]];
+        return [xmlsKey, xmlsValue, xmlsCombinedBlocks];
       })
     );
   }
@@ -79,12 +99,14 @@ export class BlocklyService {
         this.getDropDown(categoryCode, categoryName, categoryColour).subscribe(rsp => {
           const treeControl = this.workspace.workspace.getToolbox().tree_; // 每次调用renderTree都会生成新的TreeControl
           const preSelectedItem = treeControl.getSelectedItem();
-          if (rsp[0][1]) {
+          if (rsp[0]) {
             const xml = Blockly.Xml.textToDom(`<xml>
             <label text="${categoryName}-变量"></label>
-            ${rsp[0][1]}
+            ${rsp[0]}
             <label text="${categoryName}-值"></label>
-            ${rsp[1][1]}
+            ${rsp[1]}
+            <label text="${categoryName}-表达式"></label>
+            ${rsp[2]}
             </xml>`);
             preSelectedItem.blocks.push(...xml.children);
             this.workspace.workspace.getToolbox().refreshSelection();
