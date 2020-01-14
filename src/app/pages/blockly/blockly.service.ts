@@ -68,21 +68,32 @@ export class BlocklyService {
             tempVariable
           );
           // 创建键值对逻辑处理块
-          xmlsCombinedBlocks = `
-            <block type="logic_compare">
-              <field name="OP">EQ</field>
-              <value name="A">
-                ${xmlsKey}
-              </value>
-              <value name="B">
-                ${xmlsValue}
-              </value>
-            </block>
-          `;
+          xmlsCombinedBlocks = this.generateKeyValueExpression(xmlsKey, xmlsValue);
         }
         return [xmlsKey, xmlsValue, xmlsCombinedBlocks];
       })
     );
+  }
+
+  /**
+   * 根据键、值的xml，生成键值对表达式的xml
+   *
+   * @param {string} key
+   * @param {string} value
+   * @memberof BlocklyService
+   */
+  generateKeyValueExpression(key: string, value: string): string {
+    return `
+      <block type="logic_compare">
+        <field name="OP">EQ</field>
+        <value name="A">
+          ${key}
+        </value>
+        <value name="B">
+          ${value}
+        </value>
+      </block>
+    `;
   }
 
   /**
@@ -169,6 +180,8 @@ export class BlocklyService {
         <block type='${item}'></block>
         <label text="${value}-值"></label>
         <block type="${dropdownType}"></block>
+        <label text="${value}-表达式"></label>
+        ${this.generateKeyValueExpression(`<block type='${item}'></block>`, `<block type="${dropdownType}"></block>`)}
         `;
       }
     });
