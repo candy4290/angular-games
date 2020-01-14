@@ -342,3 +342,30 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
 //   this.addRowSpacing_();
 //   this.finalize_();
 // };
+
+// 变量的下拉列表，去除重命名变量、删除变量选项。
+Blockly.FieldVariable.dropdownCreate = function() {
+  if (!this.variable_) {
+    throw Error('Tried to call dropdownCreate on a variable field with no' +
+        ' variable selected.');
+  }
+  let variableModelList = [];
+  if (this.sourceBlock_ && this.sourceBlock_.workspace) {
+    const variableTypes = this.getVariableTypes_();
+    // Get a copy of the list, so that adding rename and new variable options
+    // doesn't modify the workspace's list.
+    for (let i = 0; i < variableTypes.length; i++) {
+      const variableType = variableTypes[i];
+      const variables =
+        this.sourceBlock_.workspace.getVariablesOfType(variableType);
+      variableModelList = variableModelList.concat(variables);
+    }
+  }
+  variableModelList.sort(Blockly.VariableModel.compareByName);
+  const options = [];
+  for (let i = 0; i < variableModelList.length; i++) {
+    // Set the UUID as the internal representation of the variable.
+    options[i] = [variableModelList[i].name, variableModelList[i].getId()];
+  }
+  return options.length ? options : [['', '']];
+};
